@@ -1,12 +1,5 @@
-#include <readline/readline.h>
-#include <readline/history.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <signal.h>
+#include "test.h"
 
 // typedef struct s_command
 // {
@@ -38,15 +31,42 @@
 // }kkk
 // 바보?????
 
-int main(int argc, char **argv, char **envp)
+char *reading(void)
 {
-	char *test[] = {"/bin/echo", "abcd", "efgh", 0};
 	char *line;
-
 	line = 0;
 
-	while(1)
+	line = readline("./minishell >$");
+	if (line && *line)
+		add_history(line);
+	return (line);
+}
+
+void exec(t_list *list)
+{
+	t_list *now;
+
+	now = list -> next;
+	printf("exec\n");
+	while (now)
 	{
+		printf("%s\n", now->content);
+		now = now->next;
+	}
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	// char *test[] = {"/bin/echo", "abcd", "efgh", 0};
+	char *line;
+	t_list *list;
+
+	line = 0;
+	while (1)
+	{
+		line = reading();
+		list = parsing(line);
+		exec(list);
 		// readline () line 값을 parsing()
 		// parsing () parsing 값을 char **에 담아
 		// exec() char **을 실행시켜 (bulitin 유무 확인) 없으면 (< << > >>) 확인 exec 실행 (pipex)
@@ -54,17 +74,15 @@ int main(int argc, char **argv, char **envp)
 
 		// cd 
 
-		if (line)
-		{
-			free(line);
-			line = (char *)NULL;
-		}
-		line = readline("enter a line :");
-		printf("line i got : |%s|\n", line);
-		if (line && *line)
-			add_history(line); // void
-		
-		
+		// if (line)
+		// {
+		// 	free(line);
+		// 	line = (char *)NULL;
+		// }
+		// line = readline("enter a line :");
+		// printf("line i got : |%s|\n", line);
+		// if (line && *line)
+		// 	add_history(line); 
 		// rl_on_new_line();
 	}
 	// rl_clear_history();
