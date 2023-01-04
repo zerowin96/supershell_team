@@ -10,6 +10,7 @@
 
 #include "libft/libft.h"
 
+
 		//tokens i need to handle :
 		// " ' < << > >> | commands options
 		// quotes, redirections, pipe, commands and options
@@ -32,6 +33,8 @@
 // 	struct s_parse_list	next;
 // 	int					status; //(is_separator);
 // };
+
+
 
 
 static int is_separator(char *string)
@@ -107,11 +110,10 @@ void	tokenize(t_list *list, char *string)
 	// index = 0;
 	//count how many quotes in it.
 
-
 	index = 0;
 	while (string[index])
 	{
-		while (string[index] == ' ')
+		while (string[index] >= 9 && string[index] <= 13)
 			index++;
 		if (string[index] == 0)
 			break ;
@@ -140,18 +142,18 @@ void	tokenize(t_list *list, char *string)
 
 int main(void)
 {
-	char *string = "cat -e | ls -al | while || <<< >> ls ls ls lslsls \" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
+	char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
 	// char *string = "ppplll\'>>>\'lllsss";
-	t_list *list = 0;
-
+	t_list *list = ft_lstnew(0);
+	t_list *head = list;
 	tokenize(list, string);
-	t_list *temp;
-	temp = list;
 
-	while (temp)
+	list = 0;
+
+	while (head)
 	{
-		printf("||%s||\n", temp->content);
-		temp = temp->next;
+		printf("@@@%s@@@\n", head->content);
+		head = head->next;
 	}
 	printf("tokens are stored in linked list\n");
 }
