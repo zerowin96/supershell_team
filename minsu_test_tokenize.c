@@ -1,15 +1,4 @@
-#include <readline/readline.h>
-#include <readline/history.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <signal.h>
-
-#include "libft/libft.h"
-
+#include "test.h"
 
 		//tokens i need to handle :
 		// " ' < << > >> | commands options
@@ -140,22 +129,24 @@ void	tokenize(t_list *list, char *string)
 	}
 }
 
-int main(void)
+t_list *parsing(char *line)
 {
-	char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
+	//char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
 	// char *string = "ppplll\'>>>\'lllsss";
-	t_list *list = ft_lstnew(0);
-	t_list *head = list;
-	tokenize(list, string);
+	t_list *list;
+	t_list *now;
 
-	list = 0;
+	list = ft_lstnew(0);
+	tokenize(list, line);
+	now = list->next;
 
-	while (head)
+	while (now)
 	{
-		printf("@@@%s@@@\n", head->content);
-		head = head->next;
+		printf("@@@%s@@@\n", now->content);
+		now = now->next;
 	}
 	printf("tokens are stored in linked list\n");
+	return (list);
 }
 
 // static void	get_section(char *string, int *index, int *start, int *finish)
