@@ -1,14 +1,4 @@
-#include <readline/readline.h>
-#include <readline/history.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <signal.h>
-
-#include "libft/libft.h"
+#include "test.h"
 
 		//tokens i need to handle :
 		// " ' < << > >> | commands options
@@ -32,6 +22,8 @@
 // 	struct s_parse_list	next;
 // 	int					status; //(is_separator);
 // };
+
+
 
 
 static int is_separator(char *string)
@@ -107,11 +99,10 @@ void	tokenize(t_list *list, char *string)
 	// index = 0;
 	//count how many quotes in it.
 
-
 	index = 0;
 	while (string[index])
 	{
-		while (string[index] == ' ')
+		while (string[index] >= 9 && string[index] <= 13)
 			index++;
 		if (string[index] == 0)
 			break ;
@@ -138,22 +129,24 @@ void	tokenize(t_list *list, char *string)
 	}
 }
 
-int main(void)
+t_list *parsing(char *line)
 {
-	char *string = "cat -e | ls -al | while || <<< >> ls ls ls lslsls \" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
+	//char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
 	// char *string = "ppplll\'>>>\'lllsss";
-	t_list *list = 0;
+	t_list *list;
+	t_list *now;
 
-	tokenize(list, string);
-	t_list *temp;
-	temp = list;
+	list = ft_lstnew(0);
+	tokenize(list, line);
+	now = list->next;
 
-	while (temp)
+	while (now)
 	{
-		printf("||%s||\n", temp->content);
-		temp = temp->next;
+		printf("@@@%s@@@\n", now->content);
+		now = now->next;
 	}
 	printf("tokens are stored in linked list\n");
+	return (list);
 }
 
 // static void	get_section(char *string, int *index, int *start, int *finish)
