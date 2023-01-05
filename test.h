@@ -17,4 +17,11 @@
 
 t_list *parsing(char *line);
 
+typedef struct s_cnt
+{
+	int pipe_cnt;
+	char **order;
+	int q_flag;
+} t_cnt;
+
 #endif
