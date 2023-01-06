@@ -24,11 +24,17 @@
 // };
 
 
-
+int is_order(char c)
+{
+	if (c == '>' || c == '<' || c == '|')
+		return (0);
+	return (1);
+}
 
 static int is_separator(char *string)
 {
 	int	index = 0;
+	t_cnt *pipe;
 	// char *tokens[] = {'\'', '\"', '<', '>', '|'};
 
 	if (string[index] == '\'')
@@ -50,6 +56,7 @@ static int is_separator(char *string)
 		index++;
 		if (string[index] == '>')
 			index++;
+
 	}
 	else if (string[index] == '<')
 	{
@@ -58,19 +65,14 @@ static int is_separator(char *string)
 			index++;
 	}
 	else if (string[index] == '|')
+	{
+		pipe->pipe_cnt++;
 		return (1);
+	}
 	else
 		return (0);
 	return (index);
 }
-
-
-
-
-
-
-
-
 
 
 void	partial_string(t_list *list, char *string, int start, int finish)
@@ -104,8 +106,6 @@ void	tokenize(t_list *list, char *string)
 	{
 		while (string[index] >= 9 && string[index] <= 13)
 			index++;
-		if (string[index] == 0)
-			break ;
 		if (is_separator(&string[index]))
 		{
 			start = index;
@@ -113,11 +113,25 @@ void	tokenize(t_list *list, char *string)
 			finish = index;
 			partial_string(list, string, start, finish);
 		}
-		else if (string[index] && string[index] != ' ')
+		else if (string[index] && string[index] != ' ' && string[index] == '$')
 		{
 			start = index;
 			while (string[index] != ' ' && string[index] && \
 			is_separator(&string[index]) == 0)
+			{
+				index++;
+				if (string[index] == '$')
+					break ;
+			}
+			finish = index - 1;
+			partial_string(list, string, start, finish);
+			index--;
+		}
+		else if (string[index] && string[index] != ' ')
+		{
+			start = index;
+			while (string[index] != ' ' && string[index] && \
+			is_separator(&string[index]) == 0 && string[index] != '$')
 				index++;
 			finish = index - 1;
 			partial_string(list, string, start, finish);
@@ -131,18 +145,18 @@ void	tokenize(t_list *list, char *string)
 
 t_list *parsing(char *line)
 {
-	//char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"|||\'\'//..,,>>><<<\"\" ppplll>>>lllsss";
+	//char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"||$123|\'\'//..,,>>><<<\"\" ppplll>>>lllsss$USERpsdl$user | >>>$hello";
 	// char *string = "ppplll\'>>>\'lllsss";
 	t_list *list;
 	t_list *now;
 
 	list = ft_lstnew(0);
 	tokenize(list, line);
-	now = list->next;
 
+	now = list->next;
 	while (now)
 	{
-		printf("@@@%s@@@\n", now->content);
+		printf("%s\n", now->content);
 		now = now->next;
 	}
 	printf("tokens are stored in linked list\n");

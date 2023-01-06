@@ -48,11 +48,6 @@ void exec(t_list *list)
 
 	now = list -> next;
 	printf("exec\n");
-	while (now)
-	{
-		printf("%s\n", now->content);
-		now = now->next;
-	}
 }
 
 int main(int argc, char **argv, char **envp)
@@ -62,6 +57,7 @@ int main(int argc, char **argv, char **envp)
 	t_list *list;
 
 	line = 0;
+	list = NULL;
 	while (1)
 	{
 		line = reading();
