@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 13:24:12 by minsulee          #+#    #+#             */
-/*   Updated: 2022/12/21 17:46:38 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/01/05 14:50:08 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # define WRITE 1
 # define READ 0
-# include "libft/libft.h"
+# include "../libft/libft.h"
 
 typedef struct s_pipex
 {

@@ -24,17 +24,22 @@
 // };
 
 
-int is_order(char c)
+// int is_order(char c)
+// {
+// 	if (c == '>' || c == '<' || c == '|')
+// 		return (0);
+// 	return (1);
+// }
+
+int	is_ifs(int c)
 {
-	if (c == '>' || c == '<' || c == '|')
-		return (0);
-	return (1);
+	return ((c == ' ' || c =='n' || c == '\t'));
 }
 
 static int is_separator(char *string)
 {
 	int	index = 0;
-	t_cnt *pipe;
+	// t_cnt *pipe;
 	// char *tokens[] = {'\'', '\"', '<', '>', '|'};
 
 	if (string[index] == '\'')
@@ -66,7 +71,7 @@ static int is_separator(char *string)
 	}
 	else if (string[index] == '|')
 	{
-		pipe->pipe_cnt++;
+		// pipe->pipe_cnt++;
 		return (1);
 	}
 	else
@@ -145,7 +150,7 @@ void	tokenize(t_list *list, char *string)
 
 t_list *parsing(char *line)
 {
-	//char *string = "	cat -e |	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"||$123|\'\'//..,,>>><<<\"\" ppplll>>>lllsss$USERpsdl$user | >>>$hello";
+	//char *string = "	'cat -e'"|	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"||$123|\'\'//..,,>>><<<\"\" ppplll>>>lllsss$USERpsdl$user | >>>$hello";
 	// char *string = "ppplll\'>>>\'lllsss";
 	t_list *list;
 	t_list *now;
@@ -162,6 +167,12 @@ t_list *parsing(char *line)
 	printf("tokens are stored in linked list\n");
 	return (list);
 }
+
+// int main(void)
+// {
+// 	char *string = "	$HElloWorld123 $* $& $?$           $";
+// 	parsing(string);
+// }
 
 // static void	get_section(char *string, int *index, int *start, int *finish)
 // {
@@ -250,3 +261,70 @@ t_list *parsing(char *line)
 // 	res = pipex_split_quote_parse(list, command);
 // 	return (res);
 // }
+
+// char *search_on_env()
+
+
+
+void env_expansion(t_list *list, char **envp)
+{
+	char	*string;
+	t_list	*cursor;
+	int		index;
+	int		start;
+	int		finish;
+	char	*temp_string;
+	char 	*temp;
+	int		i;
+	
+	cursor = list->next;
+	while (cursor)
+	{
+		index = 0;
+		string = cursor->content;
+		if ((*string != '\'' && *string != '>' && *string != '|' && *string != '<'))
+		{
+			while (string[index])
+			{
+				while (string[index] != '$' && string[index])
+					index++;
+				if (string[index] == '$')
+				{
+					start = ++index;
+					while (string[index] && string[index] != '$' && string[index] != '\'' && string[index] != '>' && string[index] != ' ' && string[index] != '<' && is_ifs(string[index]) == 0)
+						index++;
+					finish = index - 1;
+
+					temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
+					ft_memmove(temp, &string[start], finish - start + 1);
+					temp[맨 마지막] = '=';
+					while(envp[i])
+					{
+						if (ft_strcmp(envp, temp, ft_strlen(temp)))
+						{
+							temp2 = &(envp[i][ft_strlen(temp) + 1]);
+							break ;
+						}
+					}
+
+					cursor -> content = ft_strjoin(ads, temp2, start, finish);
+
+					
+					// 이제 ENVP에서 찾고 value값 주소 받아오기 (ENVP에서 key의 첫 '='값 다음부터 그 key의 value임)
+					// 지금 들고 있는 위치는 : 1. token   2. expand[start]   3. expand[finish]   4. key의 value   5. 
+					// 새로운 string에 붙여야 하는 부분 : 
+						// (expand[start]은 $USER 의 $, expand[finish]는 $USER의 R부분을 가리킴)
+						// token[0] ~ token[start - 1] (== expand[0]의 전부분)
+						// value
+						// token[finish + 1] == (expand[last]의 다음부분) ~ token[last]
+					// 나머지 전부 free하고 cursor->content 를 새로운 token으로 교체
+					// 이후 처음부터 다시 확장? 이거는 확인해보자
+					// 확장된 다음 부분부터 확장 시작 : 다음 시작 부분은 token[start - 1]의 index + expand[last]의 index(value의 길이) 
+					// == start + ft_strlen(value); 부터 시작하면 될 것
+					//
+			}
+		}
+		cursor = cursor->next;
+	}
+}
+

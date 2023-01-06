@@ -6,7 +6,7 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/21 16:44:40 by minsulee          #+#    #+#              #
-#    Updated: 2023/01/04 10:33:44 by minsulee         ###   ########seoul.kr   #
+#    Updated: 2023/01/05 14:51:19 by minsulee         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CFLAGS	:= -Wall -Werror -Wextra
 AR		:= ar
 ARFLAGS := -rcs
 NAME := pipex
-LIBFT_A := libft/libft.a
+LIBFT_A := ../libft/libft.a
 
 # SRCS := pipex.c \
 # pipex_parent.c \
@@ -56,15 +56,15 @@ $(NAME) : $(OBJECTS) $(LIBFT_A)
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 $(LIBFT_A) :
-	make -C libft all
+	make -C ../libft all
 
 clean :
 	rm -rf $(OBJS) $(OBJS_BONUS)
-	make -C libft clean
+	make -C ../libft clean
 
 fclean : clean
 	rm -rf $(NAME)
-	make -C libft fclean
+	make -C ../libft fclean
 
 re :
 	make fclean
