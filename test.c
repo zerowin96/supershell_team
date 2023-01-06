@@ -81,6 +81,9 @@ int main(int argc, char **argv, char **envp)
 		// 	add_history(line); 
 		// rl_on_new_line();
 	}
+	argc = 0;
+	argv = 0;
+	envp = 0;
 	// rl_clear_history();
 	// execve(test[0], test, envp);
 }
