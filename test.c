@@ -61,7 +61,7 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = reading();
-		list = parsing(line);
+		list = parsing(line, envp);
 		exec(list);
 		// readline () line 값을 parsing()
 		// parsing () parsing 값을 char **에 담아
@@ -80,6 +80,7 @@ int main(int argc, char **argv, char **envp)
 		// if (line && *line)
 		// 	add_history(line); 
 		// rl_on_new_line();
+		perror();
 	}
 	argc = 0;
 	argv = 0;
