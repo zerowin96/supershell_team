@@ -80,7 +80,7 @@ int main(int argc, char **argv, char **envp)
 		// if (line && *line)
 		// 	add_history(line); 
 		// rl_on_new_line();
-		perror();
+		// perror();
 	}
 	argc = 0;
 	argv = 0;

@@ -512,12 +512,12 @@ char	*ft_strjoin2(const char *replace, const char *source, int start, int finish
 	return (ret_str);
 }
 
-int main(int argc, char **argv, char **envp)
-{
-	char *string = "\"  aa$USERauqe$USER$USER$USER\"$USER\' $USER\' $USERAU close$USER";
-	parsing(string, envp);
-	system("leaks a.out | grep leak");
-	// perror("");
-	argc = 0;
-	argv = &argv[0];
-}
+// int main(int argc, char **argv, char **envp)
+// {
+// 	char *string = "\"  aa$USERauqe$USER$USER$USER\"$USER\' $USER\' $USERAU close$USER";
+// 	parsing(string, envp);
+// 	system("leaks a.out | grep leak");
+// 	// perror("");
+// 	argc = 0;
+// 	argv = &argv[0];
+// }
