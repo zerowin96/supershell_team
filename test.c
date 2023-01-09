@@ -42,13 +42,13 @@ char *reading(void)
 	return (line);
 }
 
-void exec(t_list *list)
-{
-	t_list *now;
+void exec(t_list *list);
+// {
+// 	t_list *now;
 
-	now = list -> next;
-	printf("exec\n");
-}
+// 	now = list -> next;
+// 	printf("exec\n");
+// }
 
 int main(int argc, char **argv, char **envp)
 {
@@ -61,6 +61,8 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = reading();
+
+
 		list = parsing(line, envp);
 		exec(list);
 		// readline () line 값을 parsing()
@@ -85,6 +87,26 @@ int main(int argc, char **argv, char **envp)
 	argc = 0;
 	argv = 0;
 	envp = 0;
+	system("leaks a.out");
 	// rl_clear_history();
 	// execve(test[0], test, envp);
+}
+
+void	exec(t_list* list)
+{
+	t_list *now;
+
+	now = list -> next;
+	printf("exec\n");
+
+	// infile 이 있는 경우 : pipe에서 들어온 입력을 무시함
+		// ex) $echo 321785 | cat -e < infile1
+	// outfile이 있는 경우 : pipe가 아닌 outfile에 출력함
+		// ex) $cat -e < infile1 > outfile1 | cat -e
+	// cat -e는 Ctrl-D가 들어올 때까지 계속되는 듯 :: cat이 알아서 할 것
+	// limiter 가 다중으로 있을 경우 순서대로 적용
+		// ex) cat -e << lim1 << lim2
+		// lim2 / lim1 로 끝나지 않고 lim2 적용해야 끝남
+		// lim1 이후부터의 here_doc 값이 출력됨 : 가장 마지막 here_doc만 받는다.
+	
 }
