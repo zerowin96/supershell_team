@@ -295,15 +295,6 @@ void env_expansion(t_list *list, char **envp)
 		printf("CURSOR WHILE LOOP\n");
 		//test
 
-		//PRINT ALL THE LIST
-		// now = list->next;
-		// while (now)
-		// {
-		// 	printf("1                   ||%p\n", now);
-		// 	printf("1                   ||%p\n", now->content);
-		// 	printf("1                   ||%s\n", now->content);
-		// 	now = now->next;
-		// }
 		//test done
 		index = 0;
 		string = cursor->content;
@@ -342,15 +333,16 @@ void env_expansion(t_list *list, char **envp)
 
 					temp2 = 0;
 					int i = 0;
-					while(envp[i])
-					{
-						if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
-						{
-							temp2 = &(envp[i][ft_strlen(temp)]); // envp안에 temp와 같은 key가 있는 경우 value값의 주소를 가져옴
-							break ;
-						}
-						i++;
-					}
+					temp2 = getenv(temp);
+					// while(envp[i])
+					// {
+					// 	if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
+					// 	{
+					// 		temp2 = &(envp[i][ft_strlen(temp)]); // envp안에 temp와 같은 key가 있는 경우 value값의 주소를 가져옴
+					// 		break ;
+					// 	}
+					// 	i++;
+					// }
 					free(temp);
 					printf("its key : %s\n", temp2);
 					// if (envp[i] == 0)
@@ -369,14 +361,14 @@ void env_expansion(t_list *list, char **envp)
 					free(string);
 					string = temp3;
 					cursor->content = temp3;
-					temp2 = 0; //not allocated
+					 //not allocated
 					// printf("4. cursor->content : %p\n", cursor->content);
 					// printf("replaced : ...%s...\n", temp3);
 
 					index = (start - 1) + ft_strlen(temp2);
 					// printf("next index : %d\n", index);
 					// printf("string : %p\n", string);
-					
+					temp2 = 0;
 					// string = 0;
 
 					// printf("temp : %p\n", temp);
@@ -443,9 +435,6 @@ void env_expansion(t_list *list, char **envp)
 	// perror("");
 
 
-
-
-
 	//content가 비어있거나 content[0] = NULL인 list의 node를 삭제하며 다시 연결하기
 	cursor = list->next;
 	t_list	*prev = list;
@@ -467,7 +456,6 @@ void env_expansion(t_list *list, char **envp)
 	}
 }
 
-
 char	*ft_strjoin2(const char *replace, const char *source, int start, int finish)
 {
 
@@ -482,7 +470,7 @@ char	*ft_strjoin2(const char *replace, const char *source, int start, int finish
 
 	// printf("strjoin input : ||%s|| ||%s|| %d %d\n", replace, source, start, finish);
 	
-	len = (ft_strlen(source) - 1) + ( -finish + start - 1 ) + ft_strlen(replace) + 1;
+	len = (ft_strlen(source) - 1) - (finish - start + 1 ) + ft_strlen(replace) + 1;
 	ret_str = (char *)ft_calloc(len, sizeof(char));
 	// ret_str = (char *)malloc(len * sizeof(char));
 	// ft_bzero(ret_str, len);

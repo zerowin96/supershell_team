@@ -46,7 +46,7 @@ static int	sep_kind(t_list *node)
 	return (0);
 }
 
-static int	builtin_check(t_list *node)
+static int	builtin_check(t_list *node, t_copy *e)
 {
 	char *string = (char *)(node->content);
 
@@ -59,9 +59,15 @@ static int	builtin_check(t_list *node)
 	else if (ft_strncmp(string, "export", 7) == 0)
 		return (1);
 	else if (ft_strncmp(string, "unset", 6) == 0)
+	{
+		ft_unset((char *)node->next->content, e);
 		return (1);
+	}
 	else if (ft_strncmp(string, "env", 4) == 0)
+	{
+		ft_env(e);
 		return (1);
+	}
 	else if (ft_strncmp(string, "exit", 5) == 0)
 		return (1);
 	return (0);
@@ -78,7 +84,7 @@ char *reading(void)
 	return (line);
 }
 
-void exec(t_list *list);
+void exec(t_list *list, t_copy *e);
 // {
 // 	t_list *now;
 
@@ -91,16 +97,17 @@ int main(int argc, char **argv, char **envp)
 	// char *test[] = {"/bin/echo", "abcd", "efgh", 0};
 	char *line;
 	t_list *list;
+	t_copy env;
 
 	line = 0;
 	list = NULL;
+	env.cp_envp = envp;
+
 	while (1)
 	{
 		line = reading();
-
-
 		list = parsing(line, envp);
-		exec(list);
+		exec(list, &env);
 		// readline () line 값을 parsing()
 		// parsing () parsing 값을 char **에 담아
 		// exec() char **을 실행시켜 (bulitin 유무 확인) 없으면 (< << > >>) 확인 exec 실행 (pipex)
@@ -128,9 +135,11 @@ int main(int argc, char **argv, char **envp)
 	// execve(test[0], test, envp);
 }
 
-void	exec(t_list* list)
+void	exec(t_list* list, t_copy *e)
 {
 	t_list *now;
+
+	
 
 	now = list->next;
 	printf("exec\n");
@@ -292,7 +301,7 @@ void	exec(t_list* list)
 				// printf("command part : %s", (char *)(temp1->content))
 				if (cmd_sign == 0)
 				{
-					if (builtin_check(temp1))
+					if (builtin_check(temp1, e))
 						printf("builtin : %s\n", (char *)(temp1->content));
 					else
 						printf("command : %s\n", (char *)(temp1->content));

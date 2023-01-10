@@ -15,13 +15,22 @@
 # include <readline/readline.h>
 # include "libft/libft.h"
 
-t_list *parsing(char *line, char **envp);
-
 typedef struct s_cnt
 {
 	int pipe_cnt;
 	char **order;
 	int q_flag;
 } t_cnt;
+
+typedef struct s_copy
+{
+	char **cp_envp;
+} t_copy;
+
+t_list *parsing(char *line, char **envp);
+void ft_unset(char *temp, t_copy *e);
+void ft_env(t_copy *e);
+
+
 
 #endif
