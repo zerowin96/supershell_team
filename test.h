@@ -15,7 +15,7 @@
 # include <readline/readline.h>
 # include "libft/libft.h"
 
-t_list *parsing(char *line);
+t_list *parsing(char *line, char **envp);
 
 typedef struct s_cnt
 {
