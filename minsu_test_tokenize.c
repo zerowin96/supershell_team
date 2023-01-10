@@ -163,14 +163,14 @@ t_list *parsing(char *line, char **envp)
 
 	env_expansion(list, envp);
 
-
+	printf("--------------------TOKENS\n");
 	now = list->next;
 	while (now)
 	{
 		printf("%s\n", now->content);
 		now = now->next;
 	}
-	printf("tokens are stored in linked list\n");
+	printf("--------------------tokens are stored in linked list\n");
 	return (list);
 }
 
@@ -459,8 +459,11 @@ void env_expansion(t_list *list, char **envp)
 			free(cursor);
 			cursor = prev->next;
 		}
-		cursor = cursor->next;
-		prev = prev->next;
+		if (cursor)
+		{
+			cursor = cursor->next;
+			prev = prev->next;
+		}
 	}
 }
 
@@ -514,7 +517,7 @@ char	*ft_strjoin2(const char *replace, const char *source, int start, int finish
 
 // int main(int argc, char **argv, char **envp)
 // {
-// 	char *string = "\"  aa$USERauqe$USER$USER$USER\"$USER\' $USER\' $USERAU close$USER";
+// 	char *string = "$SER";
 // 	parsing(string, envp);
 // 	system("leaks a.out | grep leak");
 // 	// perror("");
