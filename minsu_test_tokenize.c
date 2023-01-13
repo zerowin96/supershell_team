@@ -133,72 +133,73 @@ t_list *parsing(char *line, char **envp)
 	return (list);
 }
 
-void env_expansion(t_list *list, char **envp)
+
+
+
+
+
+
+
+
+
+void	env_expansion_string(char **string, char **envp)
 {
-	char	*string;
-	t_list	*cursor;
-	int		index;
-	int		start;
-	int		finish;
-	int		i = 0;
+	int start = 0;
+	int index = 0;
+	int	finish = 0;
+	int	i = 0;
+
+	// char *temp;
 
 	char 	*temp;
 	char	*temp2;
 	char	*temp3;
-	cursor = list->next;
-	
-	while (cursor)
+
+	if (*string && **string && (**string != '\'' && **string != '>' && **string != '|' && **string != '<'))
 	{
-		// printf("CURSOR WHILE LOOP\n");
-		index = 0;
-		string = cursor->content;
-		if (string && *string && (*string != '\'' && *string != '>' && *string != '|' && *string != '<'))
+		while ((*string)[index])
 		{
-			while (string[index])
+			while ((*string)[index] != '$' && (*string)[index])
+				index++;
+			if ((*string)[index] == '$')
 			{
-				while (string[index] != '$' && string[index])
+				start = ++index;
+				while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
 					index++;
-				if (string[index] == '$')
+				finish = index - 1;
+				temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
+				ft_memmove(temp, &(*string)[start], finish - start + 1);
+				temp[finish - start + 1] = '=';
+				// printf("finding : %s\n", temp);
+				temp2 = 0;
+				while(envp[i])
 				{
-					start = ++index;
-					while (ft_isalpha(string[index]) || ft_isdigit(string[index]))
-						index++;
-					finish = index - 1;
-					temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
-					ft_memmove(temp, &string[start], finish - start + 1);
-					temp[finish - start + 1] = '=';
-					// printf("finding : %s\n", temp);
-					temp2 = 0;
-					while(envp[i])
+					if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
 					{
-						if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
-						{
-							temp2 = &(envp[i][ft_strlen(temp)]);
-							break ;
-						}
-						i++;
+						temp2 = &(envp[i][ft_strlen(temp)]);
+						break ;
 					}
-					free(temp);
-					// printf("its key : %s\n", temp2);
-					temp3 = ft_strjoin2(temp2, string, start, finish);
-					free(string);
-					string = temp3;
-					cursor->content = temp3;
-					index = (start - 1) + ft_strlen(temp2);
-					temp2 = 0;
+					i++;
 				}
+				free(temp);
+				// printf("its key : %s\n", temp2);
+				temp3 = ft_strjoin2(temp2, *string, start, finish);
+				free(*string);
+				*string = temp3;
+				// cursor->content = temp3;
+				index = (start - 1) + ft_strlen(temp2);
+				temp2 = 0;
 			}
 		}
-		if (cursor)
-			cursor = cursor->next;
 	}
+}
 
-	//추가 : 양쪽 따옴표 삭제하기
-	// ml_trim
-	cursor = list->next;
+void	quote_trim(t_list *list)
+{
+	t_list *cursor = list->next;
 	t_list	*prev = list;
-	int		lendex;
-	char	*new_string;
+	int		lendex = 0;
+	char	*new_string = 0;
 
 	while (cursor)
 	{
@@ -214,12 +215,12 @@ void env_expansion(t_list *list, char **envp)
 		}
 		cursor = cursor->next;
 	}
+}
 
-
-
-
-	cursor = list->next;
-	prev = list;
+void	free_empty(t_list *list)
+{
+	t_list *cursor = list->next;
+	t_list *prev = list;
 	while (cursor)
 	{
 		if (cursor->content == 0 || *((char *)(cursor->content)) == 0)
@@ -236,6 +237,34 @@ void env_expansion(t_list *list, char **envp)
 			prev = prev->next;
 		}
 	}
+}
+
+void env_expansion(t_list *list, char **envp)
+{
+	char	*string;
+	t_list	*cursor;
+	// int		index;
+	// int		start;
+	// int		finish;
+	// int		i = 0;
+
+	// char 	*temp;
+	// char	*temp2;
+	// char	*temp3;
+	cursor = list->next;
+	
+	while (cursor)
+	{
+		// printf("CURSOR WHILE LOOP\n");
+		// index = 0;
+		string = cursor->content;
+		env_expansion_string(((char **)&(cursor->content)), envp);
+		if (cursor)
+			cursor = cursor->next;
+	}
+	
+	// quote_trim(list);
+	free_empty(list);
 }
 
 char	*ft_strjoin2(const char *replace, const char *source, int start, int finish)
