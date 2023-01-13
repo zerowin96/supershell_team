@@ -341,7 +341,7 @@ int	command_run(t_list* list, char *line, char **envp)
 		{
 
 			// printf("child process\n");
-			sleep(1);
+			// sleep(1);
 			child_process(temp, line, envp, pipefd);
 			exit (0);
 		}
