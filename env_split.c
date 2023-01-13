@@ -1,47 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bpipex_split_bonus.c                               :+:      :+:    :+:   */
+/*   env_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 11:30:49 by minsulee          #+#    #+#             */
-/*   Updated: 2023/01/13 14:55:50 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/13 15:20:47 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bpipex_bonus.h"
+#include "test.h"
 
 static void	get_section(char *string, int *index, int *start, int *finish)
 {
 	while (string[*index] == ' ')
 		(*index)++;
+	// *start = (*index)++;
 	if (string[*index] == 0)
 		return ;
-	if (string[*index] == '\'')
-	{
-		*start = ++(*index);
-		while (string[*index] != '\'' && string[*index])
-			(*index)++;
-		*finish = (*index)++;
-	}
-	else if (string[*index] == '\"')
-	{
-		*start = ++(*index);
-		while (string[*index] != '\"' && string[*index])
-			(*index)++;
-		*finish = (*index)++;
-	}
-	else if (string[*index] && string[*index] != ' ')
+	if (string[*index] && string[*index] != ' ')
 	{
 		*start = *index;
-		while (string[*index] != ' ' && \
-		string[*index] && string[*index] != '\'' && string[*index] != '\"')
-			(*index)++;
+		while (string[*index] != ' ' && string[*index])
+		{
+			if (string[*index] == '\'')
+			{
+				(*index)++;
+				while (string[*index] != '\'' && string[*index])
+					(*index)++;
+				(*index)++;
+			}
+			else if (string[*index] == '\"')
+			{
+				(*index)++;
+				while (string[*index] != '\"' && string[*index])
+					(*index)++;
+				(*index)++;
+			}
+			else
+				(*index)++;
+		}
 		*finish = *index;
 	}
 }
-
 static char	**ft_linkedlist_to_split(t_list *list)
 {
 	char	**help2;
@@ -84,7 +86,7 @@ static char	**pipex_split_quote_parse(t_list *list, char *string)
 	return (ft_linkedlist_to_split(list));
 }
 
-char	**pipex_split_quote(char *command)
+char	**env_split(char *command)
 {
 	t_list	*list;
 	int		index;
