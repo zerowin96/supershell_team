@@ -176,7 +176,7 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 	flag = 0;
 	now = list->next;
-	printf("exec\n");
+	// printf("exec\n");
 
 	t_list *temp1;
 	t_list *head;
@@ -187,12 +187,12 @@ void	exec(t_list* list, char *line, t_copy *e)
 	last = 0;
 	head = list->next;
 	temp1 = head;
-	while (temp1)
-	{
-		printf("%s ", (char *)(temp1->content));
-		temp1 = temp1->next;
-	}
-	printf("\n");
+	// while (temp1)
+	// {
+	// 	printf("%s ", (char *)(temp1->content));
+	// 	temp1 = temp1->next;
+	// }
+	// printf("\n");
 
 	while (1)
 	{
@@ -209,13 +209,13 @@ void	exec(t_list* list, char *line, t_copy *e)
 			}
 			temp1 = temp1->next;
 		}
-		temp1 = head;
-		while (temp1 && ((char *)(temp1->content))[0] != '|')
-		{
-			printf("%s ", temp1->content);
-			temp1 = temp1->next;
-		}
-		printf("\n");
+		// temp1 = head;
+		// while (temp1 && ((char *)(temp1->content))[0] != '|')
+		// {
+		// 	printf("%s ", temp1->content);
+		// 	temp1 = temp1->next;
+		// }
+		// printf("\n");
 		temp1 = head;
 
 		while (temp1 && ((char *)(temp1->content))[0] != '|')
@@ -230,23 +230,24 @@ void	exec(t_list* list, char *line, t_copy *e)
 				printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
 				break ;
 			}
-			if (sep_kind(temp1) == 1)
-			{
-				printf("infile : %s\n", (char *)(temp1->next->content));
-			}
-			else if (sep_kind(temp1) == 2)
-			{
-				printf("here_doc limiter : %s\n", (char *)(temp1->next->content));
-			}
-			else if (sep_kind(temp1) == 3)
-			{
-				printf("outfile : %s\n", (char *)(temp1->next->content));
-			}
-			else if (sep_kind(temp1) == 4)
-			{
-				printf("outfile_append : %s\n", (char *)(temp1->next->content));
-			}
-			else
+			// if (sep_kind(temp1) == 1)
+			// {
+			// 	printf("infile : %s\n", (char *)(temp1->next->content));
+			// }
+			// else if (sep_kind(temp1) == 2)
+			// {
+			// 	printf("here_doc limiter : %s\n", (char *)(temp1->next->content));
+			// }
+			// else if (sep_kind(temp1) == 3)
+			// {
+			// 	printf("outfile : %s\n", (char *)(temp1->next->content));
+			// }
+			// else if (sep_kind(temp1) == 4)
+			// {
+			// 	printf("outfile_append : %s\n", (char *)(temp1->next->content));
+			// }
+			// else
+			if (sep_kind(temp1) == 0)
 			{
 				// printf("command part : %s", (char *)(temp1->content))
 				if (cmd_sign == 0)
@@ -302,13 +303,13 @@ int	command_run(t_list* list, char *line, char **envp)
 		//test print
 		//test print
 		t_list *temp2 = temp;
-		printf(" running : ");
-		while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
-		{
-			printf("%s ", (char *)temp->content);
-			temp = temp->next;
-		}
-		printf("\n");
+		// printf(" running : ");
+		// while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
+		// {
+		// 	printf("%s ", (char *)temp->content);
+		// 	temp = temp->next;
+		// }
+		// printf("\n");
 		temp = temp2;
 		//test print done
 		//test print done
@@ -332,7 +333,7 @@ int	command_run(t_list* list, char *line, char **envp)
 			pipefd[NEXT][WRITE] = 0;
 			pipefd[NEXT][READ] = 0;
 		}
-		printf("%s : %d %d %d %d\n",(char *)temp->content, pipefd[0][1], pipefd[0][0], pipefd[1][1], pipefd[1][0]);
+		// printf("%s : %d %d %d %d\n",(char *)temp->content, pipefd[0][1], pipefd[0][0], pipefd[1][1], pipefd[1][0]);
 
 
 
@@ -375,7 +376,7 @@ int	command_run(t_list* list, char *line, char **envp)
 
 
 
-	printf("#########parent started waiting##########\n");
+	// printf("#########parent started waiting##########\n");
 	int index = 0;
 	int ret_status = 0;
 	int status = 0;
@@ -389,9 +390,9 @@ int	command_run(t_list* list, char *line, char **envp)
 		if (temp_pid < 0)
 			break;
 	}
-	printf("exit with %d\n", status);
-	if (status)
-		perror("exit code");
+	// printf("exit with %d\n", status);
+	// if (status)
+	// 	perror("exit code");
 	return (status);
 
 
@@ -406,7 +407,7 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 {
 	char **command = 0;
 	t_list *temp = list;
-	printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
+	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
 	// printf("%s $$\n", (char *)(temp->content));
 	// printf("child got : ");
 	// while (temp && ((char *)(temp->content))[0] != '|')
