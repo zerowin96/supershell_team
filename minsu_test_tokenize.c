@@ -118,8 +118,6 @@ t_list *parsing(char *line, char **envp)
 
 	list = ft_lstnew(0);
 	tokenize(list, line);
-
-
 	env_expansion(list, envp);
 
 	printf("--------------------TOKENS\n");

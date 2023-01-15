@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/13 16:22:26 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/14 22:27:40 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,22 @@ void	export_print(char **sorted_envp)
 	}
 }
 
-void	sort_and_print(t_copy *env)
+void	sort_and_print(char **env)
 {
 	int		i;
 	int		j;
 	char	*temp;
 	char	**sorted_envp;
 
-	sorted_envp = env->cp_envp;
 	i = 0;
-	while (sorted_envp[i++])
+	sorted_envp = 0;
+	while (env[i])
+	{
+		sorted_envp = vector_add(sorted_envp, env[i]);
+		i++;
+	}
+	i = 0;
+	while (sorted_envp[i])
 	{
 		j = 0;
 		while (sorted_envp[j + 1])
@@ -80,62 +86,92 @@ void	sort_and_print(t_copy *env)
 			}
 			j++;
 		}
+		i++;
 	}
 	export_print(sorted_envp);
 }
 
-void trim_test(t_list *cursor)
+char *assemble(t_list *dis)
 {
-	int i;
-	cursor = cursor->next;
+	t_list *head;
+	char *a;
 
-	while (cursor)
+	a = ft_strdup("");
+	head = dis;
+	while (head)
 	{
-		i = 0;
-		while (((char *)(cursor->content))[i])
-		{
-			if (((char *)(cursor->content))[i] == '\'' || ((char *)(cursor->content))[i] == '\"')
-			{
-				printf("check\n");
-				while (((char *)(cursor->content))[i + 1])
-				{
-					((char *)(cursor->content))[i] = ((char *)(cursor->content))[i + 1];
-					i++;
-				}
-				((char *)(cursor->content))[i - 1] = '\0';
-				break ;
-			}
-			i++;
-		}
-		printf("trim test === %s\n", cursor->content);
-		cursor = cursor->next;
+		a = ft_strjoin(a, head->content);
+		head = head->next;
 	}
+	return (a);
+}
+
+char *disassemble_assemble(char *fuck, char **envp)
+{
+	t_list *dis;
+	t_list *head;
+	char *a;
+	dis = NULL;
+	// tokenize()
+	dis = parsing(fuck, envp);
+	head = dis->next;
+	// while(head)
+	// {
+	// 	printf("head testing~!!! = %s\n", head->content);
+	// 	head = head -> next;
+	// }
+	quote_trim(head);
+	// while(head)
+	// {
+	// 	printf("trim testing~!!! = %s\n", head->content);
+	// 	head = head -> next;
+	// }
+	free_empty(head);
+	// while(head)
+	// {
+	// 	printf("!!@@@@free testing~!!! = %s\n", head->content);
+	// 	head = head -> next;
+	// }
+	a = assemble(head);
+	return (a);
 }
 
 
-void ft_export(char *line, t_list *node, t_copy *env)
+void ft_export(char *line,t_copy *env)
 {
 	int i = 0;
 	int j = 0;
 	int k = 0;
 	int flag = 0;
+	char *real_test;
 	char *string;
 	char **fuck;
 	t_list *a, *test_a;
-	a = ft_lstnew(0);
 
+	a = ft_lstnew(0);
 	fuck = env_split(line);
+	
 	while(fuck[k])
 	{
-		env_expansion_string(&(fuck[k]), env->cp_envp);
-		ft_lstadd_back(&a, ft_lstnew(fuck[k]));
+		real_test = disassemble_assemble(fuck[k], env->cp_envp);
+		ft_lstadd_back(&a, ft_lstnew(real_test));
 		k++;
 	}
-	trim_test(a);
+
 	test_a = a->next;
+
+	// printf("@@@@@@@@@@@@export TTTOOOKKEENN@@@@@\n");
+	// while(test_a->next)
+	// {
+	// 	printf("%s\n", test_a->next->content);
+	// 	test_a=test_a->next;
+	// }
+	// printf("@@@@@@@@@@@@export TTTOOOKKEENN@@@@@\n");
+	
+	// test_a = a->next;
 	if (test_a->next == NULL)
 	{
-		sort_and_print(env);
+		sort_and_print(env->cp_envp);
 		return ;
 	}
 	else

@@ -106,29 +106,32 @@ static int	builtin_check(char *line, t_list *node, t_copy *e)
 {
 	char *string = (char *)(node->content);
 
-	if (ft_strncmp(string, "echo", 5) == 0)
+	if (ft_strncmp(string, "echo\0", 5) == 0)
+	{
+		ft_echo(line, node);
 		return (1);
-	else if (ft_strncmp(string, "cd", 3) == 0)
-		return (2);
-	else if (ft_strncmp(string, "pwd", 4) == 0)
-		return (3);
-	else if (ft_strncmp(string, "export", 7) == 0)
-	{
-		ft_export(line, node, e);
-		return (4);
 	}
-	else if (ft_strncmp(string, "unset", 6) == 0)
+	else if (ft_strncmp(string, "cd\0", 3) == 0)
+		return (1);
+	else if (ft_strncmp(string, "pwd\0", 4) == 0)
+		return (1);
+	else if (ft_strncmp(string, "export\0", 7) == 0)
 	{
-		ft_unset((char *)node->next->content, e);
-		return (5);
+		ft_export(line, e);
+		return (1);
 	}
-	else if (ft_strncmp(string, "env", 4) == 0)
+	else if (ft_strncmp(string, "unset\0", 6) == 0)
+	{
+		ft_unset(line, e);
+		return (1);
+	}
+	else if (ft_strncmp(string, "env\0", 4) == 0)
 	{
 		ft_env(e);
-		return (6);
+		return (1);
 	}
-	else if (ft_strncmp(string, "exit", 5) == 0)
-		return (7);
+	else if (ft_strncmp(string, "exit\0", 5) == 0)
+		return (1);
 	return (0);
 }
 
@@ -148,21 +151,28 @@ void exec(t_list *list, char *line, t_copy *e);
 
 int main(int argc, char **argv, char **envp)
 {
-
+	int i;
+	int j;
 	char *line;
 	t_list *list;
 	t_copy env;
 
 	line = 0;
 	list = NULL;
+	i = 0;
 	env.cp_envp = envp;
+	env.onlyenv = 0;
+	while (envp[i])
+	{
+		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		i++;
+	}
 
 	while (1)
 	{
 		line = reading();
 		list = parsing(line, envp);
 		exec(list, line, &env);
-
 	}
 	argc = 0;
 	argv = 0;
@@ -252,10 +262,8 @@ void	exec(t_list* list, char *line, t_copy *e)
 				// printf("command part : %s", (char *)(temp1->content))
 				if (cmd_sign == 0)
 				{
-					if (flag == builtin_check(line, temp1, e))
-					{
+					if (builtin_check(line, temp1, e) == 1)
 						printf("builtin : %s\n", (char *)(temp1->content));
-					}
 					else
 						printf("command : %s\n", (char *)(temp1->content));
 					cmd_sign = 1;
@@ -281,7 +289,7 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 
 
-	command_run(list->next, line, e->cp_envp);
+	//command_run(list->next, line, e->cp_envp);
 
 }
 
@@ -313,10 +321,6 @@ int	command_run(t_list* list, char *line, char **envp)
 		temp = temp2;
 		//test print done
 		//test print done
-
-
-
-
 
 		pipefd[PREV][READ] = pipefd[NEXT][READ];
 		pipefd[PREV][WRITE] = 0;
@@ -370,11 +374,6 @@ int	command_run(t_list* list, char *line, char **envp)
 		if (temp)
 			temp = temp->next;
 	}
-
-
-
-
-
 
 	// printf("#########parent started waiting##########\n");
 	int index = 0;
