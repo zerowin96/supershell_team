@@ -1,7 +1,7 @@
 
 #include "test.h"
-int	command_run(t_list* list, char *line, char **envp);
-void	child_process(t_list *list, char *line, char **envp, int fd[2][2]);
+int		command_run(t_list* list, char *line, t_copy *e);
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2]);
 
 # define READ 0
 # define WRITE 1
@@ -183,7 +183,7 @@ void	exec(t_list* list, char *line, t_copy *e)
 {
 	t_list *now;
 	int flag;
-
+	char **envp = e->cp_envp;
 	flag = 0;
 	now = list->next;
 	// printf("exec\n");
@@ -260,22 +260,22 @@ void	exec(t_list* list, char *line, t_copy *e)
 			if (sep_kind(temp1) == 0)
 			{
 				// printf("command part : %s", (char *)(temp1->content))
-				if (cmd_sign == 0)
-				{
-					if (builtin_check(line, temp1, e) == 1)
-						printf("builtin : %s\n", (char *)(temp1->content));
-					else
-						printf("command : %s\n", (char *)(temp1->content));
-					cmd_sign = 1;
-				}
-				else
-					printf("option : %s\n", (char *)(temp1->content));
+				// if (cmd_sign == 0)
+				// {
+				// 	if (builtin_check(line, temp1, e) == 1)
+				// 		printf("builtin : %s\n", (char *)(temp1->content));
+				// 	else
+				// 		printf("command : %s\n", (char *)(temp1->content));
+				// 	cmd_sign = 1;
+				// }
+				// else
+				// 	printf("option : %s\n", (char *)(temp1->content));
 				temp1 = temp1->next;
 				continue;
 			}
 			temp1 = temp1->next->next;
 		}
-		printf("\n");
+		// printf("\n");
 
 		if (temp1)
 			head = last;
@@ -289,17 +289,15 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 
 
-	//command_run(list->next, line, e->cp_envp);
+	command_run(list->next, line, e);
 
 }
 
-int	command_run(t_list* list, char *line, char **envp)
+int	command_run(t_list* list, char *line, t_copy *e)
 {
 	int	pipefd[2][2];
 	int pid = 0;
-	//1. 다음 파이프 확인
-	// 파이프 있으면 pipe
-	// 없으면 그냥 가
+	char **envp = e->cp_envp;
 	t_list *temp = list;
 
 
@@ -307,20 +305,11 @@ int	command_run(t_list* list, char *line, char **envp)
 	pipefd[NEXT][WRITE] = 0;
 	while (temp)
 	{
-		
-		//test print
-		//test print
 		t_list *temp2 = temp;
-		// printf(" running : ");
-		// while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
-		// {
-		// 	printf("%s ", (char *)temp->content);
-		// 	temp = temp->next;
-		// }
-		// printf("\n");
 		temp = temp2;
-		//test print done
-		//test print done
+
+
+
 
 		pipefd[PREV][READ] = pipefd[NEXT][READ];
 		pipefd[PREV][WRITE] = 0;
@@ -328,34 +317,27 @@ int	command_run(t_list* list, char *line, char **envp)
 			pipe(pipefd[NEXT]);
 		else
 		{
-			// if (pipefd[PREV][READ])
-			// {
-			// 	close(pipefd[PREV][READ]);
-			// 	pipefd[PREV][READ] = 0;
-			// }
-			// pipefd[NEXT][WRITE] = 1;
 			pipefd[NEXT][WRITE] = 0;
 			pipefd[NEXT][READ] = 0;
 		}
-		// printf("%s : %d %d %d %d\n",(char *)temp->content, pipefd[0][1], pipefd[0][0], pipefd[1][1], pipefd[1][0]);
+
 
 
 
 		pid = fork();
 		if (pid == 0)
 		{
-
-			// printf("child process\n");
-			// sleep(1);
-			child_process(temp, line, envp, pipefd);
+			child_process(temp, line, e, pipefd);
 			exit (0);
 		}
 		else if (pid < 0)
 		{
-			// printf("fork failed\n");
 			exit (1);
 		}
-		// printf("going parent\n");
+
+
+
+
 		if (pipefd[PREV][READ])
 		{
 			close(pipefd[PREV][READ]);
@@ -402,10 +384,11 @@ int	command_run(t_list* list, char *line, char **envp)
 }
 
 
-void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 {
 	char **command = 0;
 	t_list *temp = list;
+	char **envp = e->cp_envp;
 	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
 	// printf("%s $$\n", (char *)(temp->content));
 	// printf("child got : ");
@@ -423,6 +406,11 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 		if (sep_kind(temp) == 1)
 		{
 			fd[PREV][READ] = open((char *)temp->next->content, O_RDONLY, 0644);
+			if (fd[PREV][READ] < 0)
+			{
+				perror("file not found");
+				exit(1);
+			}
 		}
 		else if (sep_kind(temp) == 2)
 		{
@@ -432,11 +420,21 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 		else if (sep_kind(temp) == 3)
 		{
 			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_TRUNC | O_CREAT, 0644);
+			if (fd[NEXT][NEXT] < 0)
+			{
+				perror("file not found");
+				exit(1);
+			}
 			// printf("outfile : %s\n", (char *)(temp->next->content));
 		}
 		else if (sep_kind(temp) == 4)
 		{
 			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_APPEND | O_CREAT, 0644);
+			if (fd[NEXT][NEXT] < 0)
+			{
+				perror("file not found");
+				exit(1);
+			}
 			// printf("outfile_append : %s\n", (char *)(temp->next->content));
 		}
 		else
@@ -448,7 +446,7 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 		}
 		temp = temp->next->next;
 	}
-	vector_print(command);
+	// vector_print(command);
 
 
 
@@ -469,6 +467,10 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 	}
 
 
+	if (builtin_check(line, list, e))
+		exit (0);
+		//BUILTIN 의 실행 결과에 따라 exit의 인자 바꿔야 함.
+
 	int path_index = 0;
 	char **paths = get_path_split(envp);
 	int errcheck = 0;
@@ -484,7 +486,7 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 		perror("error on execve");
 		exit (1);
 	}
-		// return (perror("error on execve"), 1);
+
 	perror("command not found");
 	vector_free(command);
 	exit(127);
