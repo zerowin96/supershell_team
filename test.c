@@ -102,9 +102,10 @@ static int	sep_kind(t_list *node)
 	return (0);
 }
 
-static int	builtin_check(char *line, t_list *node, t_copy *e)
+// static int	builtin_check(char *line, t_list *node, t_copy *e)
+static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 {
-	char *string = (char *)(node->content);
+	// char *string = (char *)(node->content);
 
 	if (ft_strncmp(string, "echo\0", 5) == 0)
 	{
@@ -149,35 +150,6 @@ char *reading(void)
 void exec(t_list *list, char *line, t_copy *e);
 
 
-int main(int argc, char **argv, char **envp)
-{
-	int i;
-	int j;
-	char *line;
-	t_list *list;
-	t_copy env;
-
-	line = 0;
-	list = NULL;
-	i = 0;
-	env.cp_envp = envp;
-	env.onlyenv = 0;
-	while (envp[i])
-	{
-		env.onlyenv = vector_add(env.onlyenv, envp[i]);
-		i++;
-	}
-
-	while (1)
-	{
-		line = reading();
-		list = parsing(line, envp);
-		exec(list, line, &env);
-	}
-	argc = 0;
-	argv = 0;
-	envp = 0;
-}
 
 void	exec(t_list* list, char *line, t_copy *e)
 {
@@ -305,8 +277,8 @@ int	command_run(t_list* list, char *line, t_copy *e)
 	pipefd[NEXT][WRITE] = 0;
 	while (temp)
 	{
-		t_list *temp2 = temp;
-		temp = temp2;
+		// t_list *temp2 = temp;
+		// temp = temp2;
 
 
 
@@ -400,12 +372,18 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	// printf("\n");
 
 	// temp = list;
+	free_space(list);
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		// printf("current sep kind : %d\n", sep_kind(temp));
+		if (((char *)(temp->content))[0] == ' ')
+		{
+			temp = temp->next;
+			continue;
+		}
 		if (sep_kind(temp) == 1)
 		{
-			fd[PREV][READ] = open((char *)temp->next->content, O_RDONLY, 0644);
+			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
 			if (fd[PREV][READ] < 0)
 			{
 				perror("file not found");
@@ -414,28 +392,29 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 2)
 		{
-			// printf("here_doc limiter : %s\n", (char *)(temp->next->content));
+			// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
 			printf("heredoc not implemented\n");
+			exit(1);
 		}
 		else if (sep_kind(temp) == 3)
 		{
-			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_TRUNC | O_CREAT, 0644);
+			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
 			if (fd[NEXT][NEXT] < 0)
 			{
 				perror("file not found");
 				exit(1);
 			}
-			// printf("outfile : %s\n", (char *)(temp->next->content));
+			// printf("outfile : %s\n", ((char *)((temp->next->content))));
 		}
 		else if (sep_kind(temp) == 4)
 		{
-			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_APPEND | O_CREAT, 0644);
+			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
 			if (fd[NEXT][NEXT] < 0)
 			{
 				perror("file not found");
 				exit(1);
 			}
-			// printf("outfile_append : %s\n", (char *)(temp->next->content));
+			// printf("outfile_append : %s\n", ((char *)((temp->next->content))));
 		}
 		else
 		{
@@ -449,12 +428,10 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	// vector_print(command);
 
 
-
 	// get path
 	
 
 
-	close(fd[NEXT][READ]);
 	if (fd[PREV][READ])
 	{
 		dup2(fd[PREV][READ], 0);
@@ -464,11 +441,31 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	{
 		dup2(fd[NEXT][WRITE], 1);
 		close(fd[NEXT][WRITE]);
+		// close(fd[NEXT][READ]);
 	}
+	if (fd[NEXT][READ])
+		close(fd[NEXT][READ]);
 
 
-	if (builtin_check(line, list, e))
+
+
+	// ft_putstr_fd("file_descriptor : ", 2);
+	// ft_putnbr_fd(fd[PREV][WRITE],2);
+	// ft_putstr_fd("  ", 2);
+	// ft_putnbr_fd(fd[PREV][READ],2);
+	// ft_putstr_fd("  ", 2);
+	// ft_putnbr_fd(fd[NEXT][WRITE],2);
+	// ft_putstr_fd("  ", 2);
+	// ft_putnbr_fd(fd[NEXT][READ],2);
+	// ft_putstr_fd("  done\n", 2);
+
+	// quote_trim(list);
+	if (builtin_check(line, list, e, command[0]))
 		exit (0);
+	write(2,"not built in :", 14);
+	ft_putstr_fd(command[0], 2);
+	write(2,"\n",1);
+	free_space(list);
 		//BUILTIN 의 실행 결과에 따라 exit의 인자 바꿔야 함.
 
 	int path_index = 0;
@@ -492,4 +489,62 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	exit(127);
 }
 
+int	quote_check(t_list *list)
+{
+	int	len;
 
+	while (list->next)
+		list = list->next;
+	len = ft_strlen((char *)(list->content));
+	if (((char *)(list->content))[0] == '\'')
+	{
+		if (((char *)(list->content))[len - 1] != '\'' || len == 1)
+			printf("minishell: quote not closed: close quote to make commands run\n");
+		else
+			return (0);
+	}
+	else if (((char *)(list->content))[0] == '\"')
+	{
+		if (((char *)(list->content))[len - 1] != '\"' || len == 1)
+			printf("minishell: quote not closed: close quote to make commands run\n");
+		else
+			return (0);
+	}
+	else
+		return (0);
+	return (1);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	int i;
+	int j;
+	char *line;
+	t_list *list;
+	t_copy env;
+
+	line = 0;
+	list = NULL;
+	i = 0;
+	env.cp_envp = envp;
+	env.onlyenv = 0;
+	while (envp[i])
+	{
+		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		i++;
+	}
+
+	while (1)
+	{
+		line = reading();
+		list = parsing(line, envp);
+		if (list == 0)
+			continue;
+		// if (quote_check(list->next))
+		// 	continue;
+		exec(list, line, &env);
+	}
+	argc = 0;
+	argv = 0;
+	envp = 0;
+}

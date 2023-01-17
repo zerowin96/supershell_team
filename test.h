@@ -50,5 +50,8 @@ char	*disassemble_assemble(char *fuck, char **envp);
 int	ft_strcmp(const char *s1, const char *s2);
 void	ft_echo(char *line, t_list *node);
 
+void	free_space(t_list *list);
+void	quote_trim(t_list *list);
+int	quote_check(t_list *list);
 // int		command_run(t_list* list, char *line, t_copy *e);
 #endif
