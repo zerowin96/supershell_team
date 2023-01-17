@@ -87,6 +87,16 @@ int pipe_exists(t_list *line)
 	return (0);
 }
 
+typedef struct s_com
+{
+	t_list			*command;
+	t_list			*infile;
+	t_list			*heredoc;
+	t_list			*outfile;
+	t_list			*outfile_append;
+	struct s_com	*next;
+}	t_com;
+
 static int	sep_kind(t_list *node)
 {
 	if (ft_strncmp(node->content, "<", 2) == 0)
@@ -163,7 +173,7 @@ void	exec(t_list* list, char *line, t_copy *e)
 	t_list *temp1;
 	t_list *head;
 	t_list *last;
-	int temp_no;
+	// int temp_no;
 	int	cmd_sign;
 
 	last = 0;
@@ -178,14 +188,14 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 	while (1)
 	{
-		temp_no = 0;
+		// temp_no = 0;
 		cmd_sign = 0;
 		temp1 = head;
 		while (temp1)
 		{
 			if (temp1->content && ((char *)(temp1->content))[0] == '|')
 			{
-				temp_no = 1;
+				// temp_no = 1;
 				last = temp1->next;
 				break;
 			}
@@ -202,10 +212,12 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 		while (temp1 && ((char *)(temp1->content))[0] != '|')
 		{
+
+
 			if (sep_kind(temp1) && !(temp1->next))
 			{
 				printf("invalid syntax\n");
-				break;
+				break ;
 			}
 			if (sep_kind(temp1) && sep_kind(temp1->next))
 			{
@@ -292,6 +304,160 @@ int	command_run(t_list* list, char *line, t_copy *e)
 			pipefd[NEXT][WRITE] = 0;
 			pipefd[NEXT][READ] = 0;
 		}
+
+
+void	child_process(t_list *lines, char **environment_parameter)
+{
+	// 1. 커맨드 파싱
+	t_com	*parsed;
+	int		count[5];
+	char	**cmdv[5];
+	int		index;
+	int		i;
+
+	count[0] = 0;
+	count[1] = 0;
+	count[2] = 0;
+	count[3] = 0;
+	count[4] = 0;
+	
+	t_list *temp = lines;
+	while (temp)
+	{
+		//하나씩 돌아가면서 command vector, in out heredoc append vector를 위한 길이를 구하자.
+		if (sep_kind(temp) == 1)
+			count[1]++;
+		else if (sep_kind(temp) == 2)
+			count[2]++;
+		else if (sep_kind(temp) == 3)
+			count[3]++;
+		else if (sep_kind(temp) == 4)
+			count[4]++;
+		else
+		{
+			count[0]++;
+			temp = temp->next;
+			continue;
+		}
+		temp = temp->next->next;
+	}
+
+	//각 요소의 길이 구했음
+	index = 0;
+	while (index < 5)
+	{
+		cmdv[index] = (char **)ft_calloc(count[index], sizeof(char *) + 1);
+		i = 0;
+		while (cmdv[i])
+		{
+
+			// i++;
+		}
+
+
+
+
+
+
+		index++;
+	}
+}
+
+
+
+
+
+
+int pipe_exists(t_list *line)
+{
+	t_list *temp;
+	while (temp)
+	{
+		if (ft_strncmp(((char *)temp->content), "|", 2) == 0)
+			return (1);
+	}
+	return (0);
+
+}
+
+void	command_run(t_list *lines, char **envp, )
+{
+	pid_t	pid;
+	int		pipefd[2][2];
+	t_list	*temp;
+
+	temp = lines->next;
+
+	pipefd[1][READ] = 0;
+	pipefd[1][WRITE] = 0;
+	while (temp)
+	{
+		pipefd[0][READ] = pipefd[1][READ];
+		pipefd[0][WRITE] = 0;
+		if (pipe_exists(temp))
+		{
+			pipefd[1][WRITE] = 0;
+			pipefd[1][READ] = 0;
+		}
+		else
+		{
+			pipe(pipefd[1]);
+		}
+
+
+
+		pid = fork();
+		if (pid == 0)
+		{
+			// child process
+			//parse cmd
+			child_process(temp, envp);
+		}
+		else if (pid > 0)
+		{
+			// parent process
+			if (pipefd[0][READ])
+			{
+				close(pipefd[0][READ]);
+				pipefd[0][READ] = 0;
+			}
+			if (pipefd[1][WRITE])
+			{
+				close(pipefd[1][WRITE]);
+				pipefd[1][WRITE] = 0;
+			}
+			// temp = next of next pipe, or NULL.
+			while (temp && ft_strncmp((char *)(temp->content), "|", 2) == 0)
+				temp = temp->next;
+		}
+		else
+		{
+			perror("");
+			exit (1);
+		}
+
+	}
+
+		// free all allocated memories
+
+
+		int	status = 0;
+		int	ret_status = 0;
+		int temp_pid = 0;
+		while (1)
+		{
+			temp_pid = waitpid(-1, &status, 0);
+			if (pid == temp_pid)
+			{
+				ret_status = status >> 8;
+			}
+			if (temp_pid == -1)
+				break;
+		}
+		return (ret_status);
+
+
+
 
 
 
