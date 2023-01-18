@@ -120,7 +120,7 @@ void	tokenize(t_list *list, char *string)
 	{
 		if (string[index] >= 9 && string[index] <= 13 || string[index] == ' ')
 		{
-			partial_string(list, " ", 0, 1);
+			// partial_string(list, " ", 0, 1);
 			while (string[index] >= 9 && string[index] <= 13 || string[index] == ' ')
 				index++;
 		}

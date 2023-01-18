@@ -554,6 +554,13 @@ int main(int argc, char **argv, char **envp)
 			continue;
 		// if (quote_check(list->next))
 		// 	continue;
+		if (pipe_exists(list->next) == 0 && builtin_check(line, list, &env, list->next->content))
+		{
+			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
+			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
+			printf("builtin executed without forking\n");
+			continue;
+		}
 		exec(list, line, &env);
 	}
 	argc = 0;
