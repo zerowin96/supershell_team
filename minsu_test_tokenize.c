@@ -339,7 +339,6 @@ void	quote_trim(t_list *list)
 	t_list *cursor = list->next;
 	t_list	*prev = list;
 	int		lendex = 0;
-	int i = 0;
 	char	*new_string = 0;
 
 	while (cursor)

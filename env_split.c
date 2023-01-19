@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 11:30:49 by minsulee          #+#    #+#             */
-/*   Updated: 2023/01/13 15:20:47 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/18 19:44:13 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	get_section(char *string, int *index, int *start, int *finish)
 {
 	while (string[*index] == ' ')
 		(*index)++;
-	// *start = (*index)++;
 	if (string[*index] == 0)
 		return ;
 	if (string[*index] && string[*index] != ' ')

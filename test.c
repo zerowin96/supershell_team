@@ -119,13 +119,29 @@ static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 
 	if (ft_strncmp(string, "echo\0", 5) == 0)
 	{
-		ft_echo(line, node);
+		ft_echo(line, e);
 		return (1);
 	}
 	else if (ft_strncmp(string, "cd\0", 3) == 0)
+	{
+		if (node->next)
+		{
+			if (node->next->next != 0)
+			{
+				perror("Too many argumet\n");
+				return (1);
+			}
+			ft_cd((char *)node->next->content, e);
+		}
+		else
+			ft_cd(NULL, e);
 		return (1);
+	}
 	else if (ft_strncmp(string, "pwd\0", 4) == 0)
+	{
+		ft_pwd();
 		return (1);
+	}
 	else if (ft_strncmp(string, "export\0", 7) == 0)
 	{
 		ft_export(line, e);
@@ -142,7 +158,9 @@ static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 		return (1);
 	}
 	else if (ft_strncmp(string, "exit\0", 5) == 0)
-		return (1);
+	{
+		ft_exit();
+	}
 	return (0);
 }
 
@@ -151,14 +169,13 @@ char *reading(void)
 	char *line;
 	line = 0;
 
-	line = readline("./minishell >$");
+	line = readline("nanoshell MK.X enhanced remastered lib ver.1.16 broodwar << DOWNLOAD >> ");
 	if (line && *line)
 		add_history(line);
 	return (line);
 }
 
 void exec(t_list *list, char *line, t_copy *e);
-
 
 
 void	exec(t_list* list, char *line, t_copy *e)
@@ -495,7 +512,6 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		perror("error on execve");
 		exit (1);
 	}
-
 	perror("command not found");
 	vector_free(command);
 	exit(127);
