@@ -48,5 +48,11 @@ void	free_empty(t_list *list);
 char	*assemble(t_list *dis);
 char	*disassemble_assemble(char *fuck, char **envp);
 int	ft_strcmp(const char *s1, const char *s2);
-void	ft_echo(char *line, t_list *node);
+void	ft_echo(char *line, t_copy *env);
+void	ft_pwd(void);
+void	ft_cd(char *next, t_copy *env);
+static int is_separator(char *string);
+void ft_exit(void);
+
+
 #endif

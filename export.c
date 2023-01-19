@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/14 22:27:40 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/18 19:41:35 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ void	sort_and_print(char **env)
 	export_print(sorted_envp);
 }
 
-char *assemble(t_list *dis)
+char	*assemble(t_list *dis)
 {
-	t_list *head;
-	char *a;
+	t_list	*head;
+	char	*a;
 
 	a = ft_strdup("");
 	head = dis;
@@ -106,38 +106,22 @@ char *assemble(t_list *dis)
 	return (a);
 }
 
-char *disassemble_assemble(char *fuck, char **envp)
+char	*disassemble_assemble(char *fuck, char **envp)
 {
-	t_list *dis;
-	t_list *head;
-	char *a;
-	dis = NULL;
-	// tokenize()
+	t_list	*dis;
+	t_list	*head;
+	char	*a;
+
+	dis = ft_lstnew(0);
 	dis = parsing(fuck, envp);
-	head = dis->next;
-	// while(head)
-	// {
-	// 	printf("head testing~!!! = %s\n", head->content);
-	// 	head = head -> next;
-	// }
+	head = dis;
 	quote_trim(head);
-	// while(head)
-	// {
-	// 	printf("trim testing~!!! = %s\n", head->content);
-	// 	head = head -> next;
-	// }
 	free_empty(head);
-	// while(head)
-	// {
-	// 	printf("!!@@@@free testing~!!! = %s\n", head->content);
-	// 	head = head -> next;
-	// }
 	a = assemble(head);
 	return (a);
 }
 
-
-void ft_export(char *line,t_copy *env)
+void	ft_export(char *line,t_copy *env)
 {
 	int i = 0;
 	int j = 0;

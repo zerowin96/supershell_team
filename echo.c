@@ -6,31 +6,36 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/14 22:52:55 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/17 18:55:28 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-void	ft_echo(char *line, t_list *node)
+void	ft_echo(char *line, t_copy *env)
 {
+	char **echo_line;
+	char *real_test;
+	int flag;
+	int i;
+	t_list *a;
 	t_list *head;
-	t_list *new;
 
-	new = ft_lstnew(0);
-	head = node;
-	while(head)
+	flag = 0;
+	a = ft_lstnew(0);
+	echo_line = env_split(line);
+	i = 0;
+	while (echo_line[i])
 	{
-		ft_lstadd_back(&new, ft_lstnew(head->content));
-		head = head->next;
+		real_test = disassemble_assemble(echo_line[i], env->cp_envp);
+		ft_lstadd_back(&a, ft_lstnew(real_test));
+		i++;
 	}
-	head = new->next;
-	new = new->next;
-	while (new)
+	head = a->next;
+	while (ft_strcmp(head->next->content, "-n") == 0)
 	{
-		quote_trim(new);
-		free_empty(new);
-		new = new->next;
+		head = head->next;
+		flag = 1;
 	}
 	printf("@@@@@@@@@@ echo test@@@@@@@\n");
 	while (head->next)
@@ -38,6 +43,7 @@ void	ft_echo(char *line, t_list *node)
 		printf("%s ", head->next->content);
 		head = head->next;
 	}
-	printf("\n");
+	if (flag == 0)
+		printf("\n");
 	printf("@@@@@@@@@@ echo test@@@@@@@\n");
 }
