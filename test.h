@@ -14,7 +14,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include "libft/libft.h"
-
+# include "get_next_line/get_next_line.h"
 typedef struct s_cnt
 {
 	int pipe_cnt;
@@ -54,5 +54,8 @@ void	ft_cd(char *next, t_copy *env);
 static int is_separator(char *string);
 void ft_exit(void);
 
-
+void	free_space(t_list *list);
+void	quote_trim(t_list *list);
+int	quote_check(t_list *list);
+// int		command_run(t_list* list, char *line, t_copy *e);
 #endif

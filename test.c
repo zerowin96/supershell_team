@@ -1,7 +1,7 @@
 
 #include "test.h"
-int	command_run(t_list* list, char *line, char **envp);
-void	child_process(t_list *list, char *line, char **envp, int fd[2][2]);
+int		command_run(t_list* list, char *line, t_copy *e);
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2]);
 
 # define READ 0
 # define WRITE 1
@@ -112,9 +112,10 @@ static int	sep_kind(t_list *node)
 	return (0);
 }
 
-static int	builtin_check(char *line, t_list *node, t_copy *e)
+// static int	builtin_check(char *line, t_list *node, t_copy *e)
+static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 {
-	char *string = (char *)(node->content);
+	// char *string = (char *)(node->content);
 
 	if (ft_strncmp(string, "echo\0", 5) == 0)
 	{
@@ -176,40 +177,12 @@ char *reading(void)
 
 void exec(t_list *list, char *line, t_copy *e);
 
-int main(int argc, char **argv, char **envp)
-{
-	int i;
-	int j;
-	char *line;
-	t_list *list;
-	t_copy env;
-
-	line = 0;
-	list = NULL;
-	i = 0;
-	env.cp_envp = envp;
-	env.onlyenv = 0;
-	while (envp[i])
-	{
-		env.onlyenv = vector_add(env.onlyenv, envp[i]);
-		i++;
-	}
-	while (1)
-	{
-		line = reading();
-		list = parsing(line, envp);
-		exec(list, line, &env);
-	}
-	argc = 0;
-	argv = 0;
-	envp = 0;
-}
 
 void	exec(t_list* list, char *line, t_copy *e)
 {
 	t_list *now;
 	int flag;
-
+	char **envp = e->cp_envp;
 	flag = 0;
 	now = list->next;
 	// printf("exec\n");
@@ -287,22 +260,23 @@ void	exec(t_list* list, char *line, t_copy *e)
 			// else
 			if (sep_kind(temp1) == 0)
 			{
-				if (cmd_sign == 0)
-				{
-					if (builtin_check(line, temp1, e) == 1)
-						printf("builtin : %s\n", (char *)(temp1->content));
-					else
-						printf("command : %s\n", (char *)(temp1->content));
-					cmd_sign = 1;
-				}
-				else
-					printf("option : %s\n", (char *)(temp1->content));
+				// printf("command part : %s", (char *)(temp1->content))
+				// if (cmd_sign == 0)
+				// {
+				// 	if (builtin_check(line, temp1, e) == 1)
+				// 		printf("builtin : %s\n", (char *)(temp1->content));
+				// 	else
+				// 		printf("command : %s\n", (char *)(temp1->content));
+				// 	cmd_sign = 1;
+				// }
+				// else
+				// 	printf("option : %s\n", (char *)(temp1->content));
 				temp1 = temp1->next;
 				continue;
 			}
 			temp1 = temp1->next->next;
 		}
-		printf("\n");
+		// printf("\n");
 
 		if (temp1)
 			head = last;
@@ -316,17 +290,18 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 
 
-	command_run(list->next, line, e->cp_envp);
+	command_run(list->next, line, e);
 
 }
 
-int	command_run(t_list* list, char *line, char **envp)
+
+
+
+int	command_run(t_list* list, char *line, t_copy *e)
 {
 	int	pipefd[2][2];
 	int pid = 0;
-	//1. 다음 파이프 확인
-	// 파이프 있으면 pipe
-	// 없으면 그냥 가
+	char **envp = e->cp_envp;
 	t_list *temp = list;
 
 
@@ -334,20 +309,11 @@ int	command_run(t_list* list, char *line, char **envp)
 	pipefd[NEXT][WRITE] = 0;
 	while (temp)
 	{
-		
-		//test print
-		//test print
-		t_list *temp2 = temp;
-		// printf(" running : ");
-		// while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
-		// {
-		// 	printf("%s ", (char *)temp->content);
-		// 	temp = temp->next;
-		// }
-		// printf("\n");
-		temp = temp2;
-		//test print done
-		//test print done
+		// t_list *temp2 = temp;
+		// temp = temp2;
+
+
+
 
 		pipefd[PREV][READ] = pipefd[NEXT][READ];
 		pipefd[PREV][WRITE] = 0;
@@ -355,34 +321,24 @@ int	command_run(t_list* list, char *line, char **envp)
 			pipe(pipefd[NEXT]);
 		else
 		{
-			// if (pipefd[PREV][READ])
-			// {
-			// 	close(pipefd[PREV][READ]);
-			// 	pipefd[PREV][READ] = 0;
-			// }
-			// pipefd[NEXT][WRITE] = 1;
 			pipefd[NEXT][WRITE] = 0;
 			pipefd[NEXT][READ] = 0;
 		}
-		// printf("%s : %d %d %d %d\n",(char *)temp->content, pipefd[0][1], pipefd[0][0], pipefd[1][1], pipefd[1][0]);
-
-
 
 		pid = fork();
 		if (pid == 0)
 		{
-
-			// printf("child process\n");
-			// sleep(1);
-			child_process(temp, line, envp, pipefd);
+			child_process(temp, line, e, pipefd);
 			exit (0);
 		}
 		else if (pid < 0)
 		{
-			// printf("fork failed\n");
 			exit (1);
 		}
-		// printf("going parent\n");
+
+
+
+
 		if (pipefd[PREV][READ])
 		{
 			close(pipefd[PREV][READ]);
@@ -429,10 +385,11 @@ int	command_run(t_list* list, char *line, char **envp)
 }
 
 
-void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 {
 	char **command = 0;
 	t_list *temp = list;
+	char **envp = e->cp_envp;
 	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
 	// printf("%s $$\n", (char *)(temp->content));
 	// printf("child got : ");
@@ -444,27 +401,49 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 	// printf("\n");
 
 	// temp = list;
+	free_space(list);
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		// printf("current sep kind : %d\n", sep_kind(temp));
+		if (((char *)(temp->content))[0] == ' ')
+		{
+			temp = temp->next;
+			continue;
+		}
 		if (sep_kind(temp) == 1)
 		{
-			fd[PREV][READ] = open((char *)temp->next->content, O_RDONLY, 0644);
+			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
+			if (fd[PREV][READ] < 0)
+			{
+				perror("file not found");
+				exit(1);
+			}
 		}
 		else if (sep_kind(temp) == 2)
 		{
-			// printf("here_doc limiter : %s\n", (char *)(temp->next->content));
+			// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
 			printf("heredoc not implemented\n");
+			exit(1);
 		}
 		else if (sep_kind(temp) == 3)
 		{
-			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_TRUNC | O_CREAT, 0644);
-			// printf("outfile : %s\n", (char *)(temp->next->content));
+			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
+			if (fd[NEXT][NEXT] < 0)
+			{
+				perror("file not found");
+				exit(1);
+			}
+			// printf("outfile : %s\n", ((char *)((temp->next->content))));
 		}
 		else if (sep_kind(temp) == 4)
 		{
-			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_APPEND | O_CREAT, 0644);
-			// printf("outfile_append : %s\n", (char *)(temp->next->content));
+			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
+			if (fd[NEXT][NEXT] < 0)
+			{
+				perror("file not found");
+				exit(1);
+			}
+			// printf("outfile_append : %s\n", ((char *)((temp->next->content))));
 		}
 		else
 		{
@@ -475,15 +454,13 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 		}
 		temp = temp->next->next;
 	}
-	vector_print(command);
-
+	// vector_print(command);
 
 
 	// get path
 	
 
 
-	close(fd[NEXT][READ]);
 	if (fd[PREV][READ])
 	{
 		dup2(fd[PREV][READ], 0);
@@ -493,8 +470,32 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 	{
 		dup2(fd[NEXT][WRITE], 1);
 		close(fd[NEXT][WRITE]);
+		// close(fd[NEXT][READ]);
 	}
+	if (fd[NEXT][READ])
+		close(fd[NEXT][READ]);
 
+
+
+
+	// ft_putstr_fd("file_descriptor : ", 2);
+	// ft_putnbr_fd(fd[PREV][WRITE],2);
+	// ft_putstr_fd("  ", 2);
+	// ft_putnbr_fd(fd[PREV][READ],2);
+	// ft_putstr_fd("  ", 2);
+	// ft_putnbr_fd(fd[NEXT][WRITE],2);
+	// ft_putstr_fd("  ", 2);
+	// ft_putnbr_fd(fd[NEXT][READ],2);
+	// ft_putstr_fd("  done\n", 2);
+
+	// quote_trim(list);
+	if (builtin_check(line, list, e, command[0]))
+		exit (0);
+	write(2,"not built in :", 14);
+	ft_putstr_fd(command[0], 2);
+	write(2,"\n",1);
+	free_space(list);
+		//BUILTIN 의 실행 결과에 따라 exit의 인자 바꿔야 함.
 
 	int path_index = 0;
 	char **paths = get_path_split(envp);
@@ -511,165 +512,74 @@ void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
 		perror("error on execve");
 		exit (1);
 	}
-		// return (perror("error on execve"), 1);
 	perror("command not found");
 	vector_free(command);
 	exit(127);
 }
 
-void	child_process(t_list *lines, char **environment_parameter)
+int	quote_check(t_list *list)
 {
-	// 1. 커맨드 파싱
-	t_com	*parsed;
-	int		count[5];
-	char	**cmdv[5];
-	int		index;
-	int		i;
+	int	len;
 
-	count[0] = 0;
-	count[1] = 0;
-	count[2] = 0;
-	count[3] = 0;
-	count[4] = 0;
-	
-	t_list *temp = lines;
-	while (temp)
+	while (list->next)
+		list = list->next;
+	len = ft_strlen((char *)(list->content));
+	if (((char *)(list->content))[0] == '\'')
 	{
-		//하나씩 돌아가면서 command vector, in out heredoc append vector를 위한 길이를 구하자.
-		if (sep_kind(temp) == 1)
-			count[1]++;
-		else if (sep_kind(temp) == 2)
-			count[2]++;
-		else if (sep_kind(temp) == 3)
-			count[3]++;
-		else if (sep_kind(temp) == 4)
-			count[4]++;
+		if (((char *)(list->content))[len - 1] != '\'' || len == 1)
+			printf("minishell: quote not closed: close quote to make commands run\n");
 		else
+			return (0);
+	}
+	else if (((char *)(list->content))[0] == '\"')
+	{
+		if (((char *)(list->content))[len - 1] != '\"' || len == 1)
+			printf("minishell: quote not closed: close quote to make commands run\n");
+		else
+			return (0);
+	}
+	else
+		return (0);
+	return (1);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	int i;
+	int j;
+	char *line;
+	t_list *list;
+	t_copy env;
+
+	line = 0;
+	list = NULL;
+	i = 0;
+	env.cp_envp = envp;
+	env.onlyenv = 0;
+	while (envp[i])
+	{
+		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		i++;
+	}
+
+	while (1)
+	{
+		line = reading();
+		list = parsing(line, envp);
+		if (list == 0)
+			continue;
+		// if (quote_check(list->next))
+		// 	continue;
+		if (pipe_exists(list->next) == 0 && builtin_check(line, list, &env, list->next->content))
 		{
-			count[0]++;
-			temp = temp->next;
+			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
+			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
+			printf("builtin executed without forking\n");
 			continue;
 		}
-		temp = temp->next->next;
+		exec(list, line, &env);
 	}
-
-	//각 요소의 길이 구했음
-	index = 0;
-	while (index < 5)
-	{
-		cmdv[index] = (char **)ft_calloc(count[index], sizeof(char *) + 1);
-		i = 0;
-		while (cmdv[i])
-		{
-
-			// i++;
-		}
-
-
-
-
-
-
-		index++;
-	}
-}
-
-
-
-
-
-
-int pipe_exists(t_list *line)
-{
-	t_list *temp;
-	while (temp)
-	{
-		if (ft_strncmp(((char *)temp->content), "|", 2) == 0)
-			return (1);
-	}
-	return (0);
-
-}
-
-void	command_run(t_list *lines, char **envp, )
-{
-	pid_t	pid;
-	int		pipefd[2][2];
-	t_list	*temp;
-
-	temp = lines->next;
-
-	pipefd[1][READ] = 0;
-	pipefd[1][WRITE] = 0;
-	while (temp)
-	{
-		pipefd[0][READ] = pipefd[1][READ];
-		pipefd[0][WRITE] = 0;
-		if (pipe_exists(temp))
-		{
-			pipefd[1][WRITE] = 0;
-			pipefd[1][READ] = 0;
-		}
-		else
-		{
-			pipe(pipefd[1]);
-		}
-
-
-
-		pid = fork();
-		if (pid == 0)
-		{
-			// child process
-			//parse cmd
-			child_process(temp, envp);
-		}
-		else if (pid > 0)
-		{
-			// parent process
-			if (pipefd[0][READ])
-			{
-				close(pipefd[0][READ]);
-				pipefd[0][READ] = 0;
-			}
-			if (pipefd[1][WRITE])
-			{
-				close(pipefd[1][WRITE]);
-				pipefd[1][WRITE] = 0;
-			}
-			// temp = next of next pipe, or NULL.
-			while (temp && ft_strncmp((char *)(temp->content), "|", 2) == 0)
-				temp = temp->next;
-		}
-		else
-		{
-			perror("");
-			exit (1);
-		}
-
-	}
-
-		// free all allocated memories
-
-
-		int	status = 0;
-		int	ret_status = 0;
-		int temp_pid = 0;
-		while (1)
-		{
-			temp_pid = waitpid(-1, &status, 0);
-			if (pid == temp_pid)
-			{
-				ret_status = status >> 8;
-			}
-			if (temp_pid == -1)
-				break;
-		}
-		return (ret_status);
-
-
-
-
-
-
+	argc = 0;
+	argv = 0;
+	envp = 0;
 }
