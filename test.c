@@ -112,14 +112,55 @@ static int	sep_kind(t_list *node)
 	return (0);
 }
 
+char *string_connect(char *dst, char *src)
+{
+	int len1;
+	int len2;
+	char *temp;
+	// len1 = 0;
+	// len2 = 0;
+
+	if (dst)
+	{
+		len1 = ft_strlen(dst);
+	}
+	if (src)
+	{
+		len2 =  ft_strlen(src);
+	}
+	
+	temp = (char *)ft_calloc(len1 + len2 + 1, sizeof(char));
+	if (len1)
+		ft_memmove(temp, dst, len1);
+	if (len2)
+		ft_memmove(&temp[len1], src, len2);
+	if (dst)
+		free(dst);
+	return (temp);
+}
+
+
 // static int	builtin_check(char *line, t_list *node, t_copy *e)
 static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 {
 	// char *string = (char *)(node->content);
+	char	*temp_string = 0;
+	t_list *temp = node;
+	while (temp && ((char *)(temp->content))[0] != '|')
+	{
+		string_connect(temp_string, temp->content);
+		//library function
+		// strcat(temp_string, temp->content);
+		//library function
+		temp = temp->next;
+	}
+	printf("temp_string : %s\n", temp_string);
 
 	if (ft_strncmp(string, "echo\0", 5) == 0)
 	{
-		ft_echo(line, e);
+
+		// ft_echo(line, e);
+		ft_echo(temp_string, e);
 		return (1);
 	}
 	else if (ft_strncmp(string, "cd\0", 3) == 0)
@@ -169,7 +210,7 @@ char *reading(void)
 	char *line;
 	line = 0;
 
-	line = readline("nanoshell MK.X enhanced remastered lib ver.1.16 broodwar << DOWNLOAD >> ");
+	line = readline("minishell-1.0$ ");
 	if (line && *line)
 		add_history(line);
 	return (line);
@@ -401,7 +442,7 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	// printf("\n");
 
 	// temp = list;
-	free_space(list);
+	// free_space(list);
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		// printf("current sep kind : %d\n", sep_kind(temp));
@@ -491,6 +532,9 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	// quote_trim(list);
 	if (builtin_check(line, list, e, command[0]))
 		exit (0);
+	//testtesttest
+
+
 	write(2,"not built in :", 14);
 	ft_putstr_fd(command[0], 2);
 	write(2,"\n",1);
@@ -524,6 +568,8 @@ int	quote_check(t_list *list)
 	while (list->next)
 		list = list->next;
 	len = ft_strlen((char *)(list->content));
+	if (!list || !(list->content))
+		return (0);
 	if (((char *)(list->content))[0] == '\'')
 	{
 		if (((char *)(list->content))[len - 1] != '\'' || len == 1)
@@ -567,19 +613,27 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = reading();
+		// if (!line)
+		// 	continue;
 		list = parsing(line, envp);
-		if (list == 0)
+		if (list->next == 0)
 			continue;
 		// if (quote_check(list->next))
 		// 	continue;
-		if (pipe_exists(list->next) == 0 && builtin_check(line, list, &env, list->next->content))
+		// if (!list)
+
+		if (pipe_exists(list->next) == 0)// && builtin_check(line, list->next, &env, list->next->content))
 		{
+			int result = builtin_check(line, list->next, &env, list->next->content);
+			if (result)
+			{
+				printf("builtin executed without forking\n");
+				continue;
+			}
 			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
 			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
 			// 근데 builtin이 맞으면? builtin 찾아서 실행시키고 실행결과 status로 가져와야 한다.
 			// previous_result = 
-			printf("builtin executed without forking\n");
-			continue;
 		}
 		exec(list, line, &env);
 
