@@ -534,7 +534,9 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	t_list *list;
 	t_copy env;
+	int	previous_result;
 
+	previous_result = 0;
 	line = 0;
 	list = NULL;
 	i = 0;
@@ -558,10 +560,13 @@ int main(int argc, char **argv, char **envp)
 		{
 			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
 			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
+			// 근데 builtin이 맞으면? builtin 찾아서 실행시키고 실행결과 status로 가져와야 한다.
+			// previous_result = 
 			printf("builtin executed without forking\n");
 			continue;
 		}
 		exec(list, line, &env);
+
 	}
 	argc = 0;
 	argv = 0;
