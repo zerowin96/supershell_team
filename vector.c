@@ -141,11 +141,11 @@ char	**vector_add(char **vector, char *string)
 	{
 		while (vector[index])
 		{
-			new_vector[index] = vector[index];
+			new_vector[index] = ft_strdup(vector[index]);
 			index++;
 		}
 	}
-	new_vector[index] = string;
+	new_vector[index] = ft_strdup(string);
 	// new_vector[index + 1] = 0; // ft_calloc이므로 없어도 괜찮다.
 	// vector_free(vector);
 	free(vector);

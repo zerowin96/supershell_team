@@ -1,35 +1,91 @@
 
 #include "test.h"
+int	command_run(t_list* list, char *line, char **envp);
+void	child_process(t_list *list, char *line, char **envp, int fd[2][2]);
 
-// typedef struct s_command
-// {
-// 	char	**command;
-// 	int		priority;
-	// no || or && : all 1s
-	// if any of them available : rise from 1;
-	// example : echo "123" && echo "456"
-	// echo 123 : priority 0;
-	// echo 456 : priority 1;
-	// 아니, 아니지. 선후관계를 어떻게 하면 더 쉽게 파악할 수 있을까?
+# define READ 0
+# define WRITE 1
+# define PREV 0
+# define NEXT 1
 
-// }
+int	check_access_h(char *name, char *path, int permission)
+{
+	char	*temp;
+	char	*temp2;
+	int		index;
 
-// shapeof readline_family(prototype)
-// {
-// 	char *readline(const char *prompt);
-// 	then : "prompt" on prompt;
+	temp2 = 0;
+	temp = 0;
+	index = 0;
+	if (name == 0)
+		return (0);
+	if (path != 0)
+	{
+		temp2 = ft_strjoin(path, "/");
+		temp = ft_strjoin(temp2, name);
+		free(temp2);
+	}
+	if (path == 0)
+		temp = name;
+	if (access(temp, permission) == 0)
+		index = 1;
+	if (path != 0)
+	{
+		free(temp);
+		temp = 0;
+	}
+	return (index);
+}
 
-// 	void rl_clear_history(void);
-// 	then : clear history;
+int	check_access(char *name, char **paths, int permission)
+{
+	int	index;
 
-// 	rl_on_new_line
-// 	rl_replace_line
-// 	re_redisplay
-// 	add_history
+	index = 0;
+	while (paths[index])
+	{
+		if (check_access_h(name, paths[index], permission))
+			return (index + 2);
+		index++;
+	}
+	if (check_access_h(name, 0, permission))
+	{
+		if (name[0] == '.' && name[1] == '/')
+			return (1);
+		else if (name[0] == '/')
+			return (1);
+	}
+	return (-1);
+}
 
+char	**get_path_split(char **envp)
+{
+	int		index;
 
-// }kkk
-// 바보?????
+	index = 0;
+	while (envp[index])
+	{
+		if (ft_strncmp(envp[index], "PATH=", 5) == 0)
+			break ;
+		index++;
+	}
+	if (envp[index] == 0)
+		return (0);
+	return (ft_split(&envp[index][5], ':'));
+}
+
+int pipe_exists(t_list *line)
+{
+	t_list *temp;
+	temp = line;
+	while (temp)
+	{
+		if (ft_strncmp(((char *)temp->content), "|", 2) == 0)
+			return (1);
+		temp = temp->next;
+	}
+	return (0);
+}
 
 typedef struct s_com
 {
@@ -56,30 +112,54 @@ static int	sep_kind(t_list *node)
 	return (0);
 }
 
-static int	builtin_check(t_list *node, t_copy *e)
+static int	builtin_check(char *line, t_list *node, t_copy *e)
 {
 	char *string = (char *)(node->content);
 
-	if (ft_strncmp(string, "echo", 5) == 0)
-		return (1);
-	else if (ft_strncmp(string, "cd", 3) == 0)
-		return (1);
-	else if (ft_strncmp(string, "pwd", 4) == 0)
-		return (1);
-	else if (ft_strncmp(string, "export", 7) == 0)
-		return (1);
-	else if (ft_strncmp(string, "unset", 6) == 0)
+	if (ft_strncmp(string, "echo\0", 5) == 0)
 	{
-		ft_unset((char *)node->next->content, e);
+		ft_echo(line, e);
 		return (1);
 	}
-	else if (ft_strncmp(string, "env", 4) == 0)
+	else if (ft_strncmp(string, "cd\0", 3) == 0)
+	{
+		if (node->next)
+		{
+			if (node->next->next != 0)
+			{
+				perror("Too many argumet\n");
+				return (1);
+			}
+			ft_cd((char *)node->next->content, e);
+		}
+		else
+			ft_cd(NULL, e);
+		return (1);
+	}
+	else if (ft_strncmp(string, "pwd\0", 4) == 0)
+	{
+		ft_pwd();
+		return (1);
+	}
+	else if (ft_strncmp(string, "export\0", 7) == 0)
+	{
+		ft_export(line, e);
+		return (1);
+	}
+	else if (ft_strncmp(string, "unset\0", 6) == 0)
+	{
+		ft_unset(line, e);
+		return (1);
+	}
+	else if (ft_strncmp(string, "env\0", 4) == 0)
 	{
 		ft_env(e);
 		return (1);
 	}
-	else if (ft_strncmp(string, "exit", 5) == 0)
-		return (1);
+	else if (ft_strncmp(string, "exit\0", 5) == 0)
+	{
+		ft_exit();
+	}
 	return (0);
 }
 
@@ -88,152 +168,51 @@ char *reading(void)
 	char *line;
 	line = 0;
 
-	line = readline("./minishell >$");
+	line = readline("nanoshell MK.X enhanced remastered lib ver.1.16 broodwar << DOWNLOAD >> ");
 	if (line && *line)
 		add_history(line);
 	return (line);
 }
 
-void exec(t_list *list, t_copy *e);
-// {
-// 	t_list *now;
-
-// 	now = list -> next;
-// 	printf("exec\n");
-// }
+void exec(t_list *list, char *line, t_copy *e);
 
 int main(int argc, char **argv, char **envp)
 {
-	// char *test[] = {"/bin/echo", "abcd", "efgh", 0};
+	int i;
+	int j;
 	char *line;
 	t_list *list;
 	t_copy env;
 
 	line = 0;
 	list = NULL;
+	i = 0;
 	env.cp_envp = envp;
-
+	env.onlyenv = 0;
+	while (envp[i])
+	{
+		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		i++;
+	}
 	while (1)
 	{
 		line = reading();
 		list = parsing(line, envp);
-		exec(list, &env);
-		// readline () line 값을 parsing()
-		// parsing () parsing 값을 char **에 담아
-		// exec() char **을 실행시켜 (bulitin 유무 확인) 없으면 (< << > >>) 확인 exec 실행 (pipex)
-		// 
-
-		// cd 
-
-		// if (line)
-		// {
-		// 	free(line);
-		// 	line = (char *)NULL;
-		// }
-		// line = readline("enter a line :");
-		// printf("line i got : |%s|\n", line);
-		// if (line && *line)
-		// 	add_history(line); 
-		// rl_on_new_line();
-		// perror();
+		exec(list, line, &env);
 	}
 	argc = 0;
 	argv = 0;
 	envp = 0;
-	// system("leaks a.out");
-	// rl_clear_history();
-	// execve(test[0], test, envp);
 }
 
-void	exec(t_list* list, t_copy *e)
+void	exec(t_list* list, char *line, t_copy *e)
 {
 	t_list *now;
+	int flag;
 
-	
-
+	flag = 0;
 	now = list->next;
-	printf("exec\n");
-
-	
-	// infile 이 있는 경우 : pipe에서 들어온 입력을 무시함
-		// ex) $echo 321785 | cat -e < infile1
-	// outfile이 있는 경우 : pipe가 아닌 outfile에 출력함
-		// ex) $cat -e < infile1 > outfile1 | cat -e
-	// outfile2
-		// ex) $cat -e < infile1 | cat -e > outfile1 | cat -e > outfile2
-	// cat -e는 Ctrl-D가 들어올 때까지 계속되는 듯 :: cat이 알아서 할 것
-	// limiter 가 다중으로 있을 경우 순서대로 적용
-		// ex) cat -e << lim1 << lim2
-		// lim2 / lim1 로 끝나지 않고 lim2 적용해야 끝남
-		// lim1 이후부터의 here_doc 값이 출력됨 : **가장 마지막 here_doc만 받는다**
-	
-	// 전략 : 명령어는 다음 파이프 도달하기 전 까지만 보자
-	// 부모는 앞에서부터 하나씩 읽으면서 파이프에 마주칠 때 마다 명령어 실행 준비
-	// 1. 다음 파이프 있는지 확인 (파이프를 만들지 말지 결정)
-	// 2-1. 파이프가 없다
-		// 1. 파이프가 없으므로 infile outfile 만 신경쓰면 된다
-		// 2. fd 이어주고 execve;
-	// 2-2. 파이프가 있다
-		// 1. 파이프가 있지만 infile outfile 신경쓴다.
-		// 2. infile 이 있을 경우 이전 pipe를 읽지 않고 닫는다. infile을 연결한다.
-		// 3. outfile이 있을 경우 새로운 pipe에 쓰지 않고 닫는다. outfile을 연결한다.
-		// 4. fd 이어주고 execve;
-	// 3. 부모는 waitpid 하면서 signal 확인(?) **wait 하면서 signal 들어오면 프로세스 죽여야 하나?**
-	// 그런데, cd .. | ls 는 현재 폴더의 ls를 반환. cd ..이 무시됨
-	// cd .. | ls | touch 123 해도 아무데도 123 파일이 생기지 않는다
-	
-
-	// while (list)
-	// {
-	// 	check if next pipe sign exists
-	// 	{
-	// 		generate pipe
-	// 	}
-	// 	not exist
-	// 	{
-	// 		nothing special
-	// 	}
-	// 	control fd : previous pipe
-
-	// 	fork
-	// 	child :
-	// 	{
-	// 		while next pipe or NULL
-	// 		{
-	// 			generate pipe
-	// 			if current node is < or <<
-	// 			{
-	// 				check next node
-	// 				open infile or here_doc
-	// 				close read side of new pipe
-	// 			}
-	// 			if current node is > or >>
-	// 			{
-	// 				check next node
-	// 				open outfile
-	// 				close write side of new pipe
-	// 			}
-	// 		}
-	// 		(only lefts command part)
-	// 		run command.(check command, fd control and execve)
-	// 	}
-	// 	parent :
-	// 	{
-	// 		control fd : close pipes
-	// 	}
-	// }
-	// while (1)
-	// {
-	// 	temp = waitpid(-1, &temp_code, 0); // 아무 자식프로세스나 종료되기를 기다림
-	// 	if temp == last_pid // 맨 마지막 프로세스가 종료된 경우
-	// 		exit_code = temp_code >> 8; // 맨 마지막 프로세스의 exit code 반환
-	// 	if temp == -1 // 남은 자식 프로세스가 없는 경우
-	// 		break ; // 끝
-	// }
-	// // exit_code 는 계속 가지고 있으면 된다.
-
-
-	// finding command part : test
+	// printf("exec\n");
 
 	t_list *temp1;
 	t_list *head;
@@ -243,16 +222,13 @@ void	exec(t_list* list, t_copy *e)
 
 	last = 0;
 	head = list->next;
-	
-
-
 	temp1 = head;
-	while (temp1)
-	{
-		printf("%s ", (char *)(temp1->content));
-		temp1 = temp1->next;
-	}
-	printf("\n");
+	// while (temp1)
+	// {
+	// 	printf("%s ", (char *)(temp1->content));
+	// 	temp1 = temp1->next;
+	// }
+	// printf("\n");
 
 	while (1)
 	{
@@ -269,13 +245,13 @@ void	exec(t_list* list, t_copy *e)
 			}
 			temp1 = temp1->next;
 		}
-		temp1 = head;
-		while (temp1 && ((char *)(temp1->content))[0] != '|')
-		{
-			printf("%s ", temp1->content);
-			temp1 = temp1->next;
-		}
-		printf("\n");
+		// temp1 = head;
+		// while (temp1 && ((char *)(temp1->content))[0] != '|')
+		// {
+		// 	printf("%s ", temp1->content);
+		// 	temp1 = temp1->next;
+		// }
+		// printf("\n");
 		temp1 = head;
 
 		while (temp1 && ((char *)(temp1->content))[0] != '|')
@@ -292,34 +268,28 @@ void	exec(t_list* list, t_copy *e)
 				printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
 				break ;
 			}
-			//이 위까지는 처음 커맨드 받아서 파싱 하자마자 바로 보고 오류 내뿜기
-
-
-
-
-			//이 아래부터는 자식 프로세스마다 커맨드 받은 후에 구분 넣기 
-			if (sep_kind(temp1) == 1)
-			{
-				printf("infile : %s\n", (char *)(temp1->next->content));
-
-			}
-			else if (sep_kind(temp1) == 2)
-			{
-				printf("here_doc limiter : %s\n", (char *)(temp1->next->content));
-			}
-			else if (sep_kind(temp1) == 3)
-			{
-				printf("outfile : %s\n", (char *)(temp1->next->content));
-			}
-			else if (sep_kind(temp1) == 4)
-			{
-				printf("outfile_append : %s\n", (char *)(temp1->next->content));
-			}
-			else
+			// if (sep_kind(temp1) == 1)
+			// {
+			// 	printf("infile : %s\n", (char *)(temp1->next->content));
+			// }
+			// else if (sep_kind(temp1) == 2)
+			// {
+			// 	printf("here_doc limiter : %s\n", (char *)(temp1->next->content));
+			// }
+			// else if (sep_kind(temp1) == 3)
+			// {
+			// 	printf("outfile : %s\n", (char *)(temp1->next->content));
+			// }
+			// else if (sep_kind(temp1) == 4)
+			// {
+			// 	printf("outfile_append : %s\n", (char *)(temp1->next->content));
+			// }
+			// else
+			if (sep_kind(temp1) == 0)
 			{
 				if (cmd_sign == 0)
 				{
-					if (builtin_check(temp1, e))
+					if (builtin_check(line, temp1, e) == 1)
 						printf("builtin : %s\n", (char *)(temp1->content));
 					else
 						printf("command : %s\n", (char *)(temp1->content));
@@ -341,8 +311,211 @@ void	exec(t_list* list, t_copy *e)
 	}
 
 
+	//check done;
+
+
+
+
+	command_run(list->next, line, e->cp_envp);
+
 }
 
+int	command_run(t_list* list, char *line, char **envp)
+{
+	int	pipefd[2][2];
+	int pid = 0;
+	//1. 다음 파이프 확인
+	// 파이프 있으면 pipe
+	// 없으면 그냥 가
+	t_list *temp = list;
+
+
+	pipefd[NEXT][READ] = 0;
+	pipefd[NEXT][WRITE] = 0;
+	while (temp)
+	{
+		
+		//test print
+		//test print
+		t_list *temp2 = temp;
+		// printf(" running : ");
+		// while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
+		// {
+		// 	printf("%s ", (char *)temp->content);
+		// 	temp = temp->next;
+		// }
+		// printf("\n");
+		temp = temp2;
+		//test print done
+		//test print done
+
+		pipefd[PREV][READ] = pipefd[NEXT][READ];
+		pipefd[PREV][WRITE] = 0;
+		if (pipe_exists(temp))
+			pipe(pipefd[NEXT]);
+		else
+		{
+			// if (pipefd[PREV][READ])
+			// {
+			// 	close(pipefd[PREV][READ]);
+			// 	pipefd[PREV][READ] = 0;
+			// }
+			// pipefd[NEXT][WRITE] = 1;
+			pipefd[NEXT][WRITE] = 0;
+			pipefd[NEXT][READ] = 0;
+		}
+		// printf("%s : %d %d %d %d\n",(char *)temp->content, pipefd[0][1], pipefd[0][0], pipefd[1][1], pipefd[1][0]);
+
+
+
+		pid = fork();
+		if (pid == 0)
+		{
+
+			// printf("child process\n");
+			// sleep(1);
+			child_process(temp, line, envp, pipefd);
+			exit (0);
+		}
+		else if (pid < 0)
+		{
+			// printf("fork failed\n");
+			exit (1);
+		}
+		// printf("going parent\n");
+		if (pipefd[PREV][READ])
+		{
+			close(pipefd[PREV][READ]);
+			pipefd[PREV][READ] = 0;
+		}
+		if (pipefd[NEXT][WRITE])
+		{
+			close(pipefd[NEXT][WRITE]);
+			pipefd[NEXT][WRITE] = 0;
+		}
+
+
+
+		while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
+			temp = temp->next;
+		if (temp)
+			temp = temp->next;
+	}
+
+	// printf("#########parent started waiting##########\n");
+	int index = 0;
+	int ret_status = 0;
+	int status = 0;
+	int temp_pid = 0;
+	temp_pid = 1;
+	while (temp_pid >= 0)
+	{
+		temp_pid = waitpid(-1, &status, 0);
+		if (temp_pid == pid)
+			ret_status = status >> 8;
+		if (temp_pid < 0)
+			break;
+	}
+	// printf("exit with %d\n", status);
+	// if (status)
+	// 	perror("exit code");
+	return (status);
+
+
+
+
+
+
+}
+
+
+void	child_process(t_list *list, char *line, char **envp, int fd[2][2])
+{
+	char **command = 0;
+	t_list *temp = list;
+	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
+	// printf("%s $$\n", (char *)(temp->content));
+	// printf("child got : ");
+	// while (temp && ((char *)(temp->content))[0] != '|')
+	// {
+	// 	printf("%s ", (char *)(temp->content));
+	// 	temp = temp->next;
+	// }
+	// printf("\n");
+
+	// temp = list;
+	while (temp && ((char *)(temp->content))[0] != '|')
+	{
+		// printf("current sep kind : %d\n", sep_kind(temp));
+		if (sep_kind(temp) == 1)
+		{
+			fd[PREV][READ] = open((char *)temp->next->content, O_RDONLY, 0644);
+		}
+		else if (sep_kind(temp) == 2)
+		{
+			// printf("here_doc limiter : %s\n", (char *)(temp->next->content));
+			printf("heredoc not implemented\n");
+		}
+		else if (sep_kind(temp) == 3)
+		{
+			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_TRUNC | O_CREAT, 0644);
+			// printf("outfile : %s\n", (char *)(temp->next->content));
+		}
+		else if (sep_kind(temp) == 4)
+		{
+			fd[NEXT][WRITE] = open((char *)temp->next->content, O_RDWR | O_APPEND | O_CREAT, 0644);
+			// printf("outfile_append : %s\n", (char *)(temp->next->content));
+		}
+		else
+		{
+			command = vector_add(command, (char *)(temp->content));
+			// printf("command part : %s\n", (char *)(temp->content));
+			temp = temp->next;
+			continue;
+		}
+		temp = temp->next->next;
+	}
+	vector_print(command);
+
+
+
+	// get path
+	
+
+
+	close(fd[NEXT][READ]);
+	if (fd[PREV][READ])
+	{
+		dup2(fd[PREV][READ], 0);
+		close(fd[PREV][READ]);
+	}
+	if (fd[NEXT][WRITE])
+	{
+		dup2(fd[NEXT][WRITE], 1);
+		close(fd[NEXT][WRITE]);
+	}
+
+
+	int path_index = 0;
+	char **paths = get_path_split(envp);
+	int errcheck = 0;
+
+
+	path_index = check_access(command[0], paths, X_OK);
+	if (path_index == 1)
+		errcheck = execve(command[0], command, envp);
+	else if (path_index > 1)
+		errcheck = execve(ft_strjoin(paths[path_index - 2], ft_strjoin("/", command[0])), command, envp);
+	if (errcheck < 0)
+	{
+		perror("error on execve");
+		exit (1);
+	}
+		// return (perror("error on execve"), 1);
+	perror("command not found");
+	vector_free(command);
+	exit(127);
+}
 
 void	child_process(t_list *lines, char **environment_parameter)
 {

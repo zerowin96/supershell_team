@@ -118,8 +118,6 @@ t_list *parsing(char *line, char **envp)
 
 	list = ft_lstnew(0);
 	tokenize(list, line);
-
-
 	env_expansion(list, envp);
 
 	printf("--------------------TOKENS\n");
@@ -155,12 +153,24 @@ void	env_expansion_string(char **string, char **envp)
 	char	*temp2;
 	char	*temp3;
 
-	if (*string && **string && (**string != '\'' && **string != '>' && **string != '|' && **string != '<'))
-	{
+	// if (*string && **string && (**string != '\'' && **string != '>' && **string != '|' && **string != '<'))
+	// {
+			
+
 		while ((*string)[index])
 		{
 			while ((*string)[index] != '$' && (*string)[index])
-				index++;
+			{
+				if((*string)[index] == '\'')
+				{
+					index++;
+					while ((*string)[index] != '\'')
+						index++;
+					index++;
+				}
+				else
+					index++;
+			}
 			if ((*string)[index] == '$')
 			{
 				start = ++index;
@@ -190,7 +200,7 @@ void	env_expansion_string(char **string, char **envp)
 				index = (start - 1) + ft_strlen(temp2);
 				temp2 = 0;
 			}
-		}
+		// }
 	}
 }
 
