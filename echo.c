@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/17 18:55:28 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/19 14:51:44 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,31 @@ void	ft_echo(char *line, t_copy *env)
 		head = head->next;
 		flag = 1;
 	}
+	
+	
+
+	// head = head->next->next;
+
+
+	// t_list	*prev = head;
+	// while (prev)
+	// {
+	// 	if (prev->next)
+	// 		if (prev->next->next == 0)
+	// 		{
+	// 			if (((char *)(prev->next->content))[0] == ' ' && ((char *)(prev->next->content))[1] == 0)
+	// 			free(prev->next->content);
+	// 			free(prev->next);
+	// 			prev->next = 0;
+	// 		}
+	// 	prev = prev->next;
+	// }
+
+
 	printf("@@@@@@@@@@ echo test@@@@@@@\n");
 	while (head->next)
 	{
-		printf("%s ", head->next->content);
+		printf("%s", head->next->content);
 		head = head->next;
 	}
 	if (flag == 0)

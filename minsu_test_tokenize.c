@@ -61,6 +61,54 @@ void	partial_string(t_list *list, char *string, int start, int finish)
 	ft_lstadd_back(&list, ft_lstnew(temp));
 }
 
+// void	tokenize(t_list *list, char *string)
+// {
+// 	int		start = 0;
+// 	int		finish = 0;
+// 	int		index = 0;
+
+// 	index = 0;
+// 	while (string[index])
+// 	{
+// 		while (string[index] >= 9 && string[index] <= 13)
+// 			index++;
+// 		if (is_separator(&string[index]))
+// 		{
+// 			start = index;
+// 			index += (is_separator(&string[index]) - 1);
+// 			finish = index;
+// 			partial_string(list, string, start, finish);
+// 		}
+// 		else if (string[index] && string[index] != ' ' && string[index] == '$')
+// 		{
+// 			start = index;
+// 			while (string[index] != ' ' && string[index] && \
+// 			is_separator(&string[index]) == 0)
+// 			{
+// 				index++;
+// 				if (string[index] == '$')
+// 					break ;
+// 			}
+// 			finish = index - 1;
+// 			partial_string(list, string, start, finish);
+// 			index--;
+// 		}
+// 		else if (string[index] && string[index] != ' ')
+// 		{
+// 			start = index;
+// 			while (string[index] != ' ' && string[index] && \
+// 			is_separator(&string[index]) == 0 && string[index] != '$')
+// 				index++;
+// 			finish = index - 1;
+// 			partial_string(list, string, start, finish);
+// 			index--;
+// 		}
+// 		if (string[index] == 0)
+// 			break ;
+// 		index++;
+// 	}
+// }
+
 void	tokenize(t_list *list, char *string)
 {
 	int		start = 0;
@@ -70,8 +118,12 @@ void	tokenize(t_list *list, char *string)
 	index = 0;
 	while (string[index])
 	{
-		while (string[index] >= 9 && string[index] <= 13)
-			index++;
+		if (string[index] >= 9 && string[index] <= 13 || string[index] == ' ')
+		{
+			// partial_string(list, " ", 0, 1);
+			while (string[index] >= 9 && string[index] <= 13 || string[index] == ' ')
+				index++;
+		}
 		if (is_separator(&string[index]))
 		{
 			start = index;
@@ -118,6 +170,13 @@ t_list *parsing(char *line, char **envp)
 
 	list = ft_lstnew(0);
 	tokenize(list, line);
+
+
+	if (quote_check(list))
+	{
+		//free_all_list(list);
+		return (0);
+	}
 	env_expansion(list, envp);
 
 	printf("--------------------TOKENS\n");
@@ -132,9 +191,77 @@ t_list *parsing(char *line, char **envp)
 }
 
 
+// void	env_replace(char **string, int index, char **envp)
+// {
+// 	int start;
+// 	int finish;
+// 	char *temp;
+// 	char *temp2;
+// 	char *temp3;
+// 	int i;
 
+// 	start = ++index;
+// 	while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
+// 		index++;
+// 	finish = index - 1;
+// 	temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
+// 	ft_memmove(temp, &(*string)[start], finish - start + 1);
+// 	temp[finish - start + 1] = '=';
+// 	temp2 = 0;
+// 	while(envp[i])
+// 	{
+// 		if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
+// 		{
+// 			temp2 = &(envp[i][ft_strlen(temp)]);
+// 			break ;
+// 		}
+// 		i++;
+// 	}
+// 	free(temp);
+// 	// printf("its key : %s\n", temp2);
+// 	temp3 = ft_strjoin2(temp2, *string, start, finish);
+// 	free(*string);
+// 	*string = temp3;
+// 	index = (start - 1) + ft_strlen(temp2);
+// 	temp2 = 0;
+// }
 
+// void	env_expansion_string(char **string, char **envp)
+// {
+// 	int start = 0;
+// 	int index = 0;
+// 	int	finish = 0;
+// 	int	i = 0;
+// 	char 	*temp;
+// 	char	*temp2;
+// 	char	*temp3;
 
+// 	while ((*string)[index])
+// 	{
+// 		// if (string[index] == '\"')
+// 		// {
+// 		// 	index++;
+// 		// 	while (string[index] != '\"' && string[index])
+// 		// 	{
+// 		// 		check_expansion
+// 		// 		index++;
+// 		// 	}
+// 		// }
+// 		// else if (string[index] == '$')
+// 		// {
+// 		// 	check_expansion
+// 		// 	index++;
+// 		// }
+// 		// else if (string[index] == '\'')
+// 		// {
+// 		// 	index++;
+// 		// 	while (string[index] != '\'' && string[index])
+// 		// 		index++;
+// 		// 	if (string[index])
+// 		// 		index++;
+// 		// }
+// 	}
+// }
 
 
 
@@ -156,51 +283,54 @@ void	env_expansion_string(char **string, char **envp)
 	// if (*string && **string && (**string != '\'' && **string != '>' && **string != '|' && **string != '<'))
 	// {
 			
-
-		while ((*string)[index])
-		{
-			while ((*string)[index] != '$' && (*string)[index])
-			{
-				if((*string)[index] == '\'')
-				{
-					index++;
-					while ((*string)[index] != '\'')
-						index++;
-					index++;
-				}
-				else
-					index++;
-			}
-			if ((*string)[index] == '$')
-			{
-				start = ++index;
-				while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
-					index++;
-				finish = index - 1;
-				temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
-				ft_memmove(temp, &(*string)[start], finish - start + 1);
-				temp[finish - start + 1] = '=';
-				// printf("finding : %s\n", temp);
-				temp2 = 0;
-				while(envp[i])
-				{
-					if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
-					{
-						temp2 = &(envp[i][ft_strlen(temp)]);
-						break ;
-					}
-					i++;
-				}
-				free(temp);
-				// printf("its key : %s\n", temp2);
-				temp3 = ft_strjoin2(temp2, *string, start, finish);
-				free(*string);
-				*string = temp3;
-				// cursor->content = temp3;
-				index = (start - 1) + ft_strlen(temp2);
-				temp2 = 0;
-			}
+	if ((*string)[index] == '\'')
+		return ;
+	while ((*string)[index])
+	{
+		// while ((*string)[index] != '$' && (*string)[index])
+		// {
+		// 	if((*string)[index] == '\'')
+		// 	{
+		// 		index++;
+		// 		while ((*string)[index] != '\'')
+		// 			index++;
+		// 		index++;
+		// 	}
+		// 	else
+		// 		index++;
 		// }
+		if ((*string)[index] == '$')
+		{
+			start = ++index;
+			while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
+				index++;
+			finish = index - 1;
+			temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
+			ft_memmove(temp, &(*string)[start], finish - start + 1);
+			temp[finish - start + 1] = '=';
+			// printf("finding : %s\n", temp);
+			temp2 = 0;
+			while(envp[i])
+			{
+				if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
+				{
+					temp2 = &(envp[i][ft_strlen(temp)]);
+					break ;
+				}
+				i++;
+			}
+			free(temp);
+			// printf("its key : %s\n", temp2);
+			temp3 = ft_strjoin2(temp2, *string, start, finish);
+			free(*string);
+			*string = temp3;
+			// cursor->content = temp3;
+			index = (start - 1) + ft_strlen(temp2);
+			temp2 = 0;
+		}
+		else
+			index++;
+	// }
 	}
 }
 
@@ -209,7 +339,6 @@ void	quote_trim(t_list *list)
 	t_list *cursor = list->next;
 	t_list	*prev = list;
 	int		lendex = 0;
-	int i = 0;
 	char	*new_string = 0;
 
 	while (cursor)
@@ -250,6 +379,28 @@ void	free_empty(t_list *list)
 	}
 }
 
+void	free_space(t_list *list)
+{
+	t_list *cursor = list->next;
+	t_list *prev = list;
+	while (cursor)
+	{
+		if (cursor->content && *((char *)(cursor->content)) == ' ')
+		{
+			prev->next = cursor->next;
+			if (cursor->content)
+				free(cursor->content);
+			free(cursor);
+			cursor = prev->next;
+		}
+		if (cursor)
+		{
+			cursor = cursor->next;
+			prev = prev->next;
+		}
+	}
+}
+
 void env_expansion(t_list *list, char **envp)
 {
 	char	*string;
@@ -268,7 +419,7 @@ void env_expansion(t_list *list, char **envp)
 	{
 		// printf("CURSOR WHILE LOOP\n");
 		// index = 0;
-		string = cursor->content;
+		// string = cursor->content;
 		env_expansion_string(((char **)&(cursor->content)), envp);
 		if (cursor)
 			cursor = cursor->next;

@@ -204,4 +204,5 @@ void	vector_replace(char **vector, int replace_index, char *replace_string)
 // 	vector = vector_delete_index(vector, 0);
 // 	vector_print(vector);
 // 	vector_free(vector);
+// 	system("leaks a.out | grep leaked");
 // }
