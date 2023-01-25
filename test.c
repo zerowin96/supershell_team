@@ -74,6 +74,33 @@ char	**get_path_split(char **envp)
 	return (ft_split(&envp[index][5], ':'));
 }
 
+char *string_connect(char *dst, char *src)
+{
+	int len1;
+	int len2;
+	char *temp;
+	len1 = 0;
+	len2 = 0;
+
+	if (dst)
+	{
+		len1 = ft_strlen(dst);
+	}
+	if (src)
+	{
+		len2 =  ft_strlen(src);
+	}
+	
+	temp = (char *)ft_calloc(len1 + len2 + 1, sizeof(char));
+	if (len1)
+		ft_memmove(temp, dst, len1);
+	if (len2)
+		ft_memmove(&temp[len1], src, len2);
+	if (dst)
+		free(dst);
+	return (temp);
+}
+
 int pipe_exists(t_list *line)
 {
 	t_list *temp;
@@ -112,96 +139,76 @@ static int	sep_kind(t_list *node)
 	return (0);
 }
 
-char *string_connect(char *dst, char *src)
-{
-	int len1;
-	int len2;
-	char *temp;
-	// len1 = 0;
-	// len2 = 0;
-
-	if (dst)
-	{
-		len1 = ft_strlen(dst);
-	}
-	if (src)
-	{
-		len2 =  ft_strlen(src);
-	}
-	
-	temp = (char *)ft_calloc(len1 + len2 + 1, sizeof(char));
-	if (len1)
-		ft_memmove(temp, dst, len1);
-	if (len2)
-		ft_memmove(&temp[len1], src, len2);
-	if (dst)
-		free(dst);
-	return (temp);
-}
-
-
 // static int	builtin_check(char *line, t_list *node, t_copy *e)
+// static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
+// {
+// 	// char *string = (char *)(node->content);
+
+// 	if (ft_strncmp(string, "echo\0", 5) == 0)
+// 	{
+// 		ft_echo(line, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "cd\0", 3) == 0)
+// 	{
+// 		if (node->next)
+// 		{
+// 			if (node->next->next != 0)
+// 			{
+// 				perror("Too many argumet\n");
+// 				return (1);
+// 			}
+// 			ft_cd((char *)node->next->content, e);
+// 		}
+// 		else
+// 			ft_cd(NULL, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "pwd\0", 4) == 0)
+// 	{
+// 		ft_pwd();
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "export\0", 7) == 0)
+// 	{
+// 		ft_export(line, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "unset\0", 6) == 0)
+// 	{
+// 		ft_unset(line, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "env\0", 4) == 0)
+// 	{
+// 		ft_env(e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "exit\0", 5) == 0)
+// 	{
+// 		ft_exit();
+// 	}
+// 	return (0);
+// }
+
 static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 {
 	// char *string = (char *)(node->content);
-	char	*temp_string = 0;
-	t_list *temp = node;
-	while (temp && ((char *)(temp->content))[0] != '|')
-	{
-		string_connect(temp_string, temp->content);
-		//library function
-		// strcat(temp_string, temp->content);
-		//library function
-		temp = temp->next;
-	}
-	printf("temp_string : %s\n", temp_string);
 
 	if (ft_strncmp(string, "echo\0", 5) == 0)
-	{
-
-		// ft_echo(line, e);
-		ft_echo(temp_string, e);
 		return (1);
-	}
 	else if (ft_strncmp(string, "cd\0", 3) == 0)
-	{
-		if (node->next)
-		{
-			if (node->next->next != 0)
-			{
-				perror("Too many argumet\n");
-				return (1);
-			}
-			ft_cd((char *)node->next->content, e);
-		}
-		else
-			ft_cd(NULL, e);
-		return (1);
-	}
+		return (2);
 	else if (ft_strncmp(string, "pwd\0", 4) == 0)
-	{
-		ft_pwd();
-		return (1);
-	}
+		return (3);
 	else if (ft_strncmp(string, "export\0", 7) == 0)
-	{
-		ft_export(line, e);
-		return (1);
-	}
+		return (4);
 	else if (ft_strncmp(string, "unset\0", 6) == 0)
-	{
-		ft_unset(line, e);
-		return (1);
-	}
+		return (5);
 	else if (ft_strncmp(string, "env\0", 4) == 0)
-	{
-		ft_env(e);
-		return (1);
-	}
+		return (6);
 	else if (ft_strncmp(string, "exit\0", 5) == 0)
-	{
-		ft_exit();
-	}
+		return (7);
 	return (0);
 }
 
@@ -216,7 +223,77 @@ char *reading(void)
 	return (line);
 }
 
-void exec(t_list *list, char *line, t_copy *e);
+int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
+{
+	//put lines into one character string;
+	// char *string;
+	// string = 
+	char	*temp_string = 0;
+	t_list *temp = node;
+	// printf("builtin_exec input node[0] : %s\n", (char *)(node->content));
+	// while (temp && temp->content && ((char *)(temp->content))[0] != '|')
+	// {
+	// 	temp_string = string_connect(temp_string, temp->content);
+	// 	//library function
+	// 	// strcat(temp_string, temp->content);
+	// 	//library function
+	// 	temp = temp->next;
+	// 	if (temp && temp->content && ((char *)(temp->content))[0] != '|')
+	// 		temp_string = string_connect(temp_string, " ");
+	// }
+	// printf("temp_string : %s\n", temp_string);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	free_space(node);
+	int result = 0;
+	if (index == 1)
+		ft_echo(line, e);
+	else if (index == 2)
+	{
+		if (node->next)
+		{
+			if (node->next->next != 0)
+			{
+				perror("Too many argumet\n");
+				return (1);
+			}
+			ft_cd((char *)node->next->content, e);
+		}
+		else
+			ft_cd(NULL, e);
+	}
+	else if (index == 3)
+		ft_pwd();
+	else if (index == 4)
+		ft_export(line, e);
+	else if (index == 5)
+		ft_unset(line, e);
+	else if (index == 6)
+		ft_env(e);
+	else if (index == 7)
+		ft_exit();
+	// free (string);
+	return (result);
+	// update required : store exit code of result of executed builtin into variable "result"
+}
+
+// void exec(t_list *list, char *line, t_copy *e);
 
 
 void	exec(t_list* list, char *line, t_copy *e)
@@ -272,15 +349,16 @@ void	exec(t_list* list, char *line, t_copy *e)
 		{
 
 
-			if (sep_kind(temp1) && !(temp1->next))
+			if (sep_kind(temp1) && (!(temp1->next) || \
+			(((char *)(temp1->next->content))[0] == ' ') && !(temp1->next->next)))
 			{
 				printf("invalid syntax\n");
-				break ;
+				return ;
 			}
 			if (sep_kind(temp1) && sep_kind(temp1->next))
 			{
 				printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
-				break ;
+				return ;
 			}
 			// if (sep_kind(temp1) == 1)
 			// {
@@ -443,16 +521,30 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 
 	// temp = list;
 	// free_space(list);
+	printf("command : ");
+
+
+
+
+
+	char *temp_string = 0;
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		// printf("current sep kind : %d\n", sep_kind(temp));
 		if (((char *)(temp->content))[0] == ' ')
 		{
 			temp = temp->next;
+			if (command)
+			{
+				printf("(space)");
+				temp_string = string_connect(temp_string, " ");
+			}
 			continue;
 		}
 		if (sep_kind(temp) == 1)
 		{
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
 			if (fd[PREV][READ] < 0)
 			{
@@ -462,14 +554,18 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 2)
 		{
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
 			printf("heredoc not implemented\n");
 			exit(1);
 		}
 		else if (sep_kind(temp) == 3)
 		{
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
-			if (fd[NEXT][NEXT] < 0)
+			if (fd[NEXT][WRITE] < 0)
 			{
 				perror("file not found");
 				exit(1);
@@ -478,8 +574,10 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 4)
 		{
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
-			if (fd[NEXT][NEXT] < 0)
+			if (fd[NEXT][WRITE] < 0)
 			{
 				perror("file not found");
 				exit(1);
@@ -489,6 +587,8 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		else
 		{
 			command = vector_add(command, (char *)(temp->content));
+			printf("%s", temp->content);
+			temp_string = string_connect(temp_string, temp->content);
 			// printf("command part : %s\n", (char *)(temp->content));
 			temp = temp->next;
 			continue;
@@ -496,10 +596,20 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		temp = temp->next->next;
 	}
 	// vector_print(command);
-
-
+	printf("\n");
+	if (ft_strlen(temp_string))
+	{
+		int len = ft_strlen(temp_string);
+		if (temp_string[len - 1] == ' ')
+			temp_string[len - 1] = 0;
+	}
 	// get path
 	
+
+
+
+
+
 
 
 	if (fd[PREV][READ])
@@ -529,12 +639,28 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	// ft_putnbr_fd(fd[NEXT][READ],2);
 	// ft_putstr_fd("  done\n", 2);
 
+	//temp_line
+	// char *temp_line;
+	// int		tli;
+	// tli  = 0;
+	// while (line[tli] && line[tli] != '|')
+	// 	tli++;
+	// temp_line = (char *)ft_calloc(tli + 1, sizeof(char));
+	// ft_memmove(temp_line, line, tli);
+
+
+
 	// quote_trim(list);
-	if (builtin_check(line, list, e, command[0]))
-		exit (0);
-	//testtesttest
+	if (builtin_check(temp_string, list, e, command[0]))
+	{
+		int result = builtin_exec(temp_string, list, e, builtin_check(temp_string, list, e, command[0]));
+		free(temp_string);
+		exit (result);
+	}
+	free(temp_string);
 
-
+		// exit (0);
+	// free_space(list);
 	write(2,"not built in :", 14);
 	ft_putstr_fd(command[0], 2);
 	write(2,"\n",1);
@@ -568,8 +694,6 @@ int	quote_check(t_list *list)
 	while (list->next)
 		list = list->next;
 	len = ft_strlen((char *)(list->content));
-	if (!list || !(list->content))
-		return (0);
 	if (((char *)(list->content))[0] == '\'')
 	{
 		if (((char *)(list->content))[len - 1] != '\'' || len == 1)
@@ -596,9 +720,7 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	t_list *list;
 	t_copy env;
-	int	previous_result;
 
-	previous_result = 0;
 	line = 0;
 	list = NULL;
 	i = 0;
@@ -613,30 +735,38 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = reading();
-		// if (!line)
-		// 	continue;
 		list = parsing(line, envp);
-		if (list->next == 0)
+		if (list == 0)
 			continue;
 		// if (quote_check(list->next))
 		// 	continue;
-		// if (!list)
-
-		if (pipe_exists(list->next) == 0)// && builtin_check(line, list->next, &env, list->next->content))
+		if (pipe_exists(list->next) == 0 && builtin_check(line, list->next, &env, list->next->content))
 		{
-			int result = builtin_check(line, list->next, &env, list->next->content);
-			if (result)
-			{
-				printf("builtin executed without forking\n");
-				continue;
-			}
 			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
 			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
-			// 근데 builtin이 맞으면? builtin 찾아서 실행시키고 실행결과 status로 가져와야 한다.
-			// previous_result = 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			continue;
+			// printf("builtin executed without forking\n");
+			int result = builtin_exec(line, list->next, &env, builtin_check(line, list->next, &env, list->next->content));
+			continue;
 		}
 		exec(list, line, &env);
-
 	}
 	argc = 0;
 	argv = 0;
