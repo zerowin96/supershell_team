@@ -218,6 +218,11 @@ char *reading(void)
 	line = 0;
 
 	line = readline("minishell-1.0$ ");
+	if (line == 0)
+	{
+		write(2, "\nexit\n", 7);
+		exit (0);
+	}
 	if (line && *line)
 		add_history(line);
 	return (line);
