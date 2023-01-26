@@ -504,40 +504,21 @@ int	command_run(t_list* list, char *line, t_copy *e)
 }
 
 
-void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
+void	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_string)
 {
-	char **command = 0;
-	t_list *temp = list;
-	char **envp = e->cp_envp;
-	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
-	// printf("%s $$\n", (char *)(temp->content));
-	// printf("child got : ");
-	// while (temp && ((char *)(temp->content))[0] != '|')
-	// {
-	// 	printf("%s ", (char *)(temp->content));
-	// 	temp = temp->next;
-	// }
-	// printf("\n");
+	// char *(*temp_string) = 0;
+	// char **(*command) = 0;
 
-	// temp = list;
-	// free_space(list);
-	printf("command : ");
-
-
-
-
-
-	char *temp_string = 0;
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		// printf("current sep kind : %d\n", sep_kind(temp));
 		if (((char *)(temp->content))[0] == ' ')
 		{
 			temp = temp->next;
-			if (command)
+			if ((*command))
 			{
 				printf("(space)");
-				temp_string = string_connect(temp_string, " ");
+				(*temp_string) = string_connect((*temp_string), " ");
 			}
 			continue;
 		}
@@ -562,6 +543,7 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 3)
 		{
+			printf("(OUTFILE OPEN  TRUNC)");
 			if (((char *)(temp->next->content))[0] == ' ')
 				temp = temp->next;
 			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
@@ -574,6 +556,7 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 4)
 		{
+			printf("(OUTFILE OPEN APPEND)");
 			if (((char *)(temp->next->content))[0] == ' ')
 				temp = temp->next;
 			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
@@ -586,9 +569,9 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else
 		{
-			command = vector_add(command, (char *)(temp->content));
+			(*command) = vector_add((*command), (char *)(temp->content));
 			printf("%s", temp->content);
-			temp_string = string_connect(temp_string, temp->content);
+			(*temp_string) = string_connect((*temp_string), temp->content);
 			// printf("command part : %s\n", (char *)(temp->content));
 			temp = temp->next;
 			continue;
@@ -597,12 +580,165 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	}
 	// vector_print(command);
 	printf("\n");
-	if (ft_strlen(temp_string))
+
+	// printf("pre__temp_string : %s$\n", (*temp_string));
+	while (1)
 	{
-		int len = ft_strlen(temp_string);
-		if (temp_string[len - 1] == ' ')
-			temp_string[len - 1] = 0;
+		int len = ft_strlen((*temp_string));
+		if (len == 0)
+			break ;
+		if ((*temp_string)[len - 1] == ' ')
+			(*temp_string)[len - 1] = 0;
+		else
+			break ;
 	}
+	// printf("post_temp_string : %s$\n", (*temp_string));
+
+	// return (command);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
+{
+	t_list *temp = list;
+	char **envp = e->cp_envp;
+	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
+	// printf("%s $$\n", (char *)(temp->content));
+	// printf("child got : ");
+	// while (temp && ((char *)(temp->content))[0] != '|')
+	// {
+	// 	printf("%s ", (char *)(temp->content));
+	// 	temp = temp->next;
+	// }
+	// printf("\n");
+
+	// temp = list;
+	// free_space(list);
+	printf("command : ");
+
+
+
+
+
+	char **command = 0;
+	char *temp_string = 0;
+	command_split(list, fd, &command, &temp_string);
+	// while (temp && ((char *)(temp->content))[0] != '|')
+	// {
+	// 	// printf("current sep kind : %d\n", sep_kind(temp));
+	// 	if (((char *)(temp->content))[0] == ' ')
+	// 	{
+	// 		temp = temp->next;
+	// 		if (command)
+	// 		{
+	// 			printf("(space)");
+	// 			temp_string = string_connect(temp_string, " ");
+	// 		}
+	// 		continue;
+	// 	}
+	// 	if (sep_kind(temp) == 1)
+	// 	{
+	// 		if (((char *)(temp->next->content))[0] == ' ')
+	// 			temp = temp->next;
+	// 		fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
+	// 		if (fd[PREV][READ] < 0)
+	// 		{
+	// 			perror("file not found");
+	// 			exit(1);
+	// 		}
+	// 	}
+	// 	else if (sep_kind(temp) == 2)
+	// 	{
+	// 		if (((char *)(temp->next->content))[0] == ' ')
+	// 			temp = temp->next;
+	// 		// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
+	// 		printf("heredoc not implemented\n");
+	// 		exit(1);
+	// 	}
+	// 	else if (sep_kind(temp) == 3)
+	// 	{
+	// 		if (((char *)(temp->next->content))[0] == ' ')
+	// 			temp = temp->next;
+	// 		fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
+	// 		if (fd[NEXT][WRITE] < 0)
+	// 		{
+	// 			perror("file not found");
+	// 			exit(1);
+	// 		}
+	// 		// printf("outfile : %s\n", ((char *)((temp->next->content))));
+	// 	}
+	// 	else if (sep_kind(temp) == 4)
+	// 	{
+	// 		if (((char *)(temp->next->content))[0] == ' ')
+	// 			temp = temp->next;
+	// 		fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
+	// 		if (fd[NEXT][WRITE] < 0)
+	// 		{
+	// 			perror("file not found");
+	// 			exit(1);
+	// 		}
+	// 		// printf("outfile_append : %s\n", ((char *)((temp->next->content))));
+	// 	}
+	// 	else
+	// 	{
+	// 		command = vector_add(command, (char *)(temp->content));
+	// 		printf("%s", temp->content);
+	// 		temp_string = string_connect(temp_string, temp->content);
+	// 		// printf("command part : %s\n", (char *)(temp->content));
+	// 		temp = temp->next;
+	// 		continue;
+	// 	}
+	// 	temp = temp->next->next;
+	// }
+	// // vector_print(command);
+	// printf("\n");
+
+
+
+
+
+
+	// if (ft_strlen(temp_string))
+	// {
+	// 	int len = ft_strlen(temp_string);
+	// 	if (temp_string[len - 1] == ' ')
+	// 		temp_string[len - 1] = 0;
+	// }
+	// printf("pre__temp_string : %s$\n", temp_string);
+	// while (1)
+	// {
+	// 	int len = ft_strlen(temp_string);
+	// 	if (len == 0)
+	// 		break ;
+	// 	if (temp_string[len - 1] == ' ')
+	// 		temp_string[len - 1] = 0;
+	// 	else
+	// 		break ;
+	// }
+	// printf("post_temp_string : %s$\n", temp_string);
+
 	// get path
 	
 
@@ -742,28 +878,65 @@ int main(int argc, char **argv, char **envp)
 		// 	continue;
 		if (pipe_exists(list->next) == 0 && builtin_check(line, list->next, &env, list->next->content))
 		{
+			char **command = 0;
+			char *temp_string = 0;
+			int fd[2][2];
+			int	temp_fd[2];
+			t_list *temp;
+			temp = list->next;
+
+			fd[0][0] = 0;
+			fd[0][1] = 0;
+			fd[1][0] = 0;
+			fd[1][1] = 0;
+			temp_fd[0] = 0;
+			temp_fd[1] = 0;
+			dup2(0, temp_fd[0]);
+			dup2(1, temp_fd[1]);
+
+
+			command_split(list->next, fd, &command, &temp_string);
+			if (fd[PREV][READ])
+			{
+				dup2(fd[PREV][READ], 0);
+				close(fd[PREV][READ]);
+			}
+			if (fd[NEXT][WRITE])
+			{
+				dup2(fd[NEXT][WRITE], 1);
+				close(fd[NEXT][WRITE]);
+				// close(fd[NEXT][READ]);
+			}
+
+
+
+			// printf("builtin %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
+			int result = builtin_exec(temp_string, list->next, &env, builtin_check(temp_string, list->next, &env, list->next->content));
 			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
 			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			continue;
+			// int result = builtin_check(line, list->next, &env, list->next->content);
 			// printf("builtin executed without forking\n");
-			int result = builtin_exec(line, list->next, &env, builtin_check(line, list->next, &env, list->next->content));
+			// continue;
+			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
+			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
+			// 근데 builtin이 맞으면? builtin 찾아서 실행시키고 실행결과 status로 가져와야 한다.
+			// previous_result = 
+
+
+			// continue;
+			// // printf("builtin executed without forking\n");
+			// int result = builtin_exec(line, list->next, &env, builtin_check(line, list->next, &env, list->next->content));
+			if (command)
+				vector_free(command);
+			if (temp_string)
+				free(temp_string);
+			
+			dup2(temp_fd[0], 0);
+			dup2(temp_fd[1], 1);
+			// close(temp_fd[0]);
+			// close(temp_fd[1]);
+
+			// printf("builtin %s : %d %d\n",(char *)list->next->content, temp_fd[0], temp_fd[1]);
 			continue;
 		}
 		exec(list, line, &env);
