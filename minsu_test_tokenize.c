@@ -54,60 +54,12 @@ void	partial_string(t_list *list, char *string, int start, int finish)
 {
 	char *temp;
 
-	printf("partial string : %d~%d", start, finish);
+	// printf("partial string : %d~%d", start, finish);
 	temp = (char *)ft_calloc(finish - start + 2, sizeof(char));
 	ft_memmove(temp, &string[start], finish - start + 1);
-	printf("  ....%s....\n", temp);
+	// printf("  ....%s....\n", temp);
 	ft_lstadd_back(&list, ft_lstnew(temp));
 }
-
-// void	tokenize(t_list *list, char *string)
-// {
-// 	int		start = 0;
-// 	int		finish = 0;
-// 	int		index = 0;
-
-// 	index = 0;
-// 	while (string[index])
-// 	{
-// 		while (string[index] >= 9 && string[index] <= 13)
-// 			index++;
-// 		if (is_separator(&string[index]))
-// 		{
-// 			start = index;
-// 			index += (is_separator(&string[index]) - 1);
-// 			finish = index;
-// 			partial_string(list, string, start, finish);
-// 		}
-// 		else if (string[index] && string[index] != ' ' && string[index] == '$')
-// 		{
-// 			start = index;
-// 			while (string[index] != ' ' && string[index] && \
-// 			is_separator(&string[index]) == 0)
-// 			{
-// 				index++;
-// 				if (string[index] == '$')
-// 					break ;
-// 			}
-// 			finish = index - 1;
-// 			partial_string(list, string, start, finish);
-// 			index--;
-// 		}
-// 		else if (string[index] && string[index] != ' ')
-// 		{
-// 			start = index;
-// 			while (string[index] != ' ' && string[index] && \
-// 			is_separator(&string[index]) == 0 && string[index] != '$')
-// 				index++;
-// 			finish = index - 1;
-// 			partial_string(list, string, start, finish);
-// 			index--;
-// 		}
-// 		if (string[index] == 0)
-// 			break ;
-// 		index++;
-// 	}
-// }
 
 void	tokenize(t_list *list, char *string)
 {
@@ -161,13 +113,12 @@ void	tokenize(t_list *list, char *string)
 	}
 }
 
-t_list *parsing(char *line, char **envp)
+t_list *parsing(char *line, char **envp)//, int result)
 {
-	//char *string = "	'cat -e'"|	 ls -al | while || <<< >> ls ls ls lslsls ><\" \"||$123|\'\'//..,,>>><<<\"\" ppplll>>>lllsss$USERpsdl$user | >>>$hello";
-	// char *string = "ppplll\'>>>\'lllsss";
 	t_list *list;
 	t_list *now;
 
+	// printf("line : $%s$\n", line);
 	list = ft_lstnew(0);
 	tokenize(list, line);
 
@@ -177,97 +128,22 @@ t_list *parsing(char *line, char **envp)
 		//free_all_list(list);
 		return (0);
 	}
-	env_expansion(list, envp);
+	env_expansion(list, envp);//, result);
 
-	printf("--------------------TOKENS\n");
-	now = list->next;
-	while (now)
-	{
-		printf("%s\n", now->content);
-		now = now->next;
-	}
-	printf("--------------------tokens are stored in linked list\n");
+	//TOKEN PRINT
+	// printf("--------------------TOKENS\n");
+	// now = list->next;
+	// while (now)
+	// {
+	// 	printf("%s\n", now->content);
+	// 	now = now->next;
+	// }
+	// printf("--------------------tokens are stored in linked list\n");
 	return (list);
 }
 
 
-// void	env_replace(char **string, int index, char **envp)
-// {
-// 	int start;
-// 	int finish;
-// 	char *temp;
-// 	char *temp2;
-// 	char *temp3;
-// 	int i;
-
-// 	start = ++index;
-// 	while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
-// 		index++;
-// 	finish = index - 1;
-// 	temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
-// 	ft_memmove(temp, &(*string)[start], finish - start + 1);
-// 	temp[finish - start + 1] = '=';
-// 	temp2 = 0;
-// 	while(envp[i])
-// 	{
-// 		if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
-// 		{
-// 			temp2 = &(envp[i][ft_strlen(temp)]);
-// 			break ;
-// 		}
-// 		i++;
-// 	}
-// 	free(temp);
-// 	// printf("its key : %s\n", temp2);
-// 	temp3 = ft_strjoin2(temp2, *string, start, finish);
-// 	free(*string);
-// 	*string = temp3;
-// 	index = (start - 1) + ft_strlen(temp2);
-// 	temp2 = 0;
-// }
-
-// void	env_expansion_string(char **string, char **envp)
-// {
-// 	int start = 0;
-// 	int index = 0;
-// 	int	finish = 0;
-// 	int	i = 0;
-// 	char 	*temp;
-// 	char	*temp2;
-// 	char	*temp3;
-
-// 	while ((*string)[index])
-// 	{
-// 		// if (string[index] == '\"')
-// 		// {
-// 		// 	index++;
-// 		// 	while (string[index] != '\"' && string[index])
-// 		// 	{
-// 		// 		check_expansion
-// 		// 		index++;
-// 		// 	}
-// 		// }
-// 		// else if (string[index] == '$')
-// 		// {
-// 		// 	check_expansion
-// 		// 	index++;
-// 		// }
-// 		// else if (string[index] == '\'')
-// 		// {
-// 		// 	index++;
-// 		// 	while (string[index] != '\'' && string[index])
-// 		// 		index++;
-// 		// 	if (string[index])
-// 		// 		index++;
-// 		// }
-// 	}
-// }
-
-
-
-
-
-void	env_expansion_string(char **string, char **envp)
+void	env_expansion_string(char **string, char **envp)//, int result)
 {
 	int start = 0;
 	int index = 0;
@@ -280,48 +156,48 @@ void	env_expansion_string(char **string, char **envp)
 	char	*temp2;
 	char	*temp3;
 
-	// if (*string && **string && (**string != '\'' && **string != '>' && **string != '|' && **string != '<'))
-	// {
-			
 	if ((*string)[index] == '\'')
 		return ;
 	while ((*string)[index])
 	{
-		// while ((*string)[index] != '$' && (*string)[index])
-		// {
-		// 	if((*string)[index] == '\'')
-		// 	{
-		// 		index++;
-		// 		while ((*string)[index] != '\'')
-		// 			index++;
-		// 		index++;
-		// 	}
-		// 	else
-		// 		index++;
-		// }
 		if ((*string)[index] == '$')
 		{
 			start = ++index;
-			while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
+			if ((*string)[index] == '?')
 				index++;
+			else
+				while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
+					index++;
 			finish = index - 1;
-			temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
-			ft_memmove(temp, &(*string)[start], finish - start + 1);
-			temp[finish - start + 1] = '=';
-			// printf("finding : %s\n", temp);
-			temp2 = 0;
-			while(envp[i])
+
+
+			if ((*string)[finish] == '?' && start == finish)
 			{
-				if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
-				{
-					temp2 = &(envp[i][ft_strlen(temp)]);
-					break ;
-				}
-				i++;
+				// temp2 : 바꿔줄 int값 string;
+				temp2 = ft_itoa(123);
 			}
-			free(temp);
+			else
+			{
+				temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
+				ft_memmove(temp, &(*string)[start], finish - start + 1);
+				temp[finish - start + 1] = '=';
+				// printf("finding : %s\n", temp);
+				temp2 = 0;
+				while(envp[i])
+				{
+					if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
+					{
+						temp2 = &(envp[i][ft_strlen(temp)]);
+						break ;
+					}
+					i++;
+				}
+				free(temp);
+			}
 			// printf("its key : %s\n", temp2);
 			temp3 = ft_strjoin2(temp2, *string, start, finish);
+			if ((*string)[finish] == '?' && start == finish)
+				free(temp2);
 			free(*string);
 			*string = temp3;
 			// cursor->content = temp3;
@@ -405,21 +281,11 @@ void env_expansion(t_list *list, char **envp)
 {
 	char	*string;
 	t_list	*cursor;
-	// int		index;
-	// int		start;
-	// int		finish;
-	// int		i = 0;
 
-	// char 	*temp;
-	// char	*temp2;
-	// char	*temp3;
 	cursor = list->next;
 	
 	while (cursor)
 	{
-		// printf("CURSOR WHILE LOOP\n");
-		// index = 0;
-		// string = cursor->content;
 		env_expansion_string(((char **)&(cursor->content)), envp);
 		if (cursor)
 			cursor = cursor->next;

@@ -301,7 +301,7 @@ int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
 // void exec(t_list *list, char *line, t_copy *e);
 
 
-void	exec(t_list* list, char *line, t_copy *e)
+int	exec(t_list* list, char *line, t_copy *e)
 {
 	t_list *now;
 	int flag;
@@ -358,12 +358,12 @@ void	exec(t_list* list, char *line, t_copy *e)
 			(((char *)(temp1->next->content))[0] == ' ') && !(temp1->next->next)))
 			{
 				printf("invalid syntax\n");
-				return ;
+				return -11;
 			}
 			if (sep_kind(temp1) && sep_kind(temp1->next))
 			{
 				printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
-				return ;
+				return -11;
 			}
 			// if (sep_kind(temp1) == 1)
 			// {
@@ -414,7 +414,7 @@ void	exec(t_list* list, char *line, t_copy *e)
 
 
 
-	command_run(list->next, line, e);
+	return (command_run(list->next, line, e));
 
 }
 
@@ -802,27 +802,33 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 
 		// exit (0);
 	// free_space(list);
-	write(2,"not built in :", 14);
-	ft_putstr_fd(command[0], 2);
-	write(2,"\n",1);
+	// write(2,"not built in :", 14);
+	// ft_putstr_fd(command[0], 2);
+	// write(2,"\n",1);
 	free_space(list);
 		//BUILTIN 의 실행 결과에 따라 exit의 인자 바꿔야 함.
-
 	int path_index = 0;
+	write(2, "1\n", 2);
 	char **paths = get_path_split(envp);
+	write(2, "2\n", 2);
 	int errcheck = 0;
 
 
 	path_index = check_access(command[0], paths, X_OK);
+	write(2, "path_index is : ", 17);
+	ft_putnbr_fd(path_index, 2);
+	write(2, "\n", 1);
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
 	else if (path_index > 1)
 		errcheck = execve(ft_strjoin(paths[path_index - 2], ft_strjoin("/", command[0])), command, envp);
+	write(2, "not executed : ", 16);
 	if (errcheck < 0)
 	{
 		perror("error on execve");
 		exit (1);
 	}
+	write(2, "Command not found\n", 19);
 	perror("command not found");
 	vector_free(command);
 	exit(127);
@@ -861,6 +867,7 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	t_list *list;
 	t_copy env;
+	int result = 0;
 
 	line = 0;
 	list = NULL;
@@ -876,7 +883,9 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = reading();
-		list = parsing(line, envp);
+		if (line == 0 || *line == 0)
+			continue;
+		list = parsing(line, envp);//, result);
 		if (list == 0)
 			continue;
 		// if (quote_check(list->next))
@@ -899,7 +908,6 @@ int main(int argc, char **argv, char **envp)
 			dup2(0, temp_fd[0]);
 			dup2(1, temp_fd[1]);
 
-
 			command_split(list->next, fd, &command, &temp_string);
 			if (fd[PREV][READ])
 			{
@@ -910,27 +918,9 @@ int main(int argc, char **argv, char **envp)
 			{
 				dup2(fd[NEXT][WRITE], 1);
 				close(fd[NEXT][WRITE]);
-				// close(fd[NEXT][READ]);
 			}
 
-
-
-			// printf("builtin %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
-			int result = builtin_exec(temp_string, list->next, &env, builtin_check(temp_string, list->next, &env, list->next->content));
-			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
-			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
-			// int result = builtin_check(line, list->next, &env, list->next->content);
-			// printf("builtin executed without forking\n");
-			// continue;
-			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
-			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
-			// 근데 builtin이 맞으면? builtin 찾아서 실행시키고 실행결과 status로 가져와야 한다.
-			// previous_result = 
-
-
-			// continue;
-			// // printf("builtin executed without forking\n");
-			// int result = builtin_exec(line, list->next, &env, builtin_check(line, list->next, &env, list->next->content));
+			result = builtin_exec(temp_string, list->next, &env, builtin_check(temp_string, list->next, &env, list->next->content));
 			if (command)
 				vector_free(command);
 			if (temp_string)
@@ -938,13 +928,23 @@ int main(int argc, char **argv, char **envp)
 			
 			dup2(temp_fd[0], 0);
 			dup2(temp_fd[1], 1);
-			// close(temp_fd[0]);
-			// close(temp_fd[1]);
 
-			// printf("builtin %s : %d %d\n",(char *)list->next->content, temp_fd[0], temp_fd[1]);
-			continue;
+
+			// $_ 업데이트 : 수행된 명령어 맨 마지막 부분 집어넣기
+			// $? 업데이트하기 (result 값)
+			// continue;
 		}
-		exec(list, line, &env);
+		else if (pipe_exists(list->next) == 0)
+		{
+			result = exec(list, line, &env);
+			// $_ 업데이트 : 수행된 명령어 맨 마지막 부분 집어넣기
+			// $? 업데이트하기 (result 값)
+		}
+		else
+		{
+			result = exec(list, line, &env);
+			// $? 업데이트하기 (result 값)
+		}
 	}
 	argc = 0;
 	argv = 0;
