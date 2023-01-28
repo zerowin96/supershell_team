@@ -28,7 +28,7 @@ typedef struct s_copy
 	char **onlyenv;
 } t_copy;
 
-
+t_list *first_parsing(char *line, char **envp, int prev_result);
 t_list *parsing(char *line, char **envp);
 void ft_unset(char *line, t_copy *env);
 void ft_env(t_copy *e);
@@ -57,5 +57,7 @@ void ft_exit(void);
 void	free_space(t_list *list);
 void	quote_trim(t_list *list);
 int	quote_check(t_list *list);
+
+// t_list *parsing(char *line, char **envp, int result);
 // int		command_run(t_list* list, char *line, t_copy *e);
 #endif

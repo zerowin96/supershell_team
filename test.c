@@ -308,23 +308,18 @@ int	exec(t_list* list, char *line, t_copy *e)
 	char **envp = e->cp_envp;
 	flag = 0;
 	now = list->next;
-	// printf("exec\n");
+
 
 	t_list *temp1;
 	t_list *head;
 	t_list *last;
-	// int temp_no;
+
 	int	cmd_sign;
 
 	last = 0;
 	head = list->next;
 	temp1 = head;
-	// while (temp1)
-	// {
-	// 	printf("%s ", (char *)(temp1->content));
-	// 	temp1 = temp1->next;
-	// }
-	// printf("\n");
+
 
 	while (1)
 	{
@@ -335,25 +330,15 @@ int	exec(t_list* list, char *line, t_copy *e)
 		{
 			if (temp1->content && ((char *)(temp1->content))[0] == '|')
 			{
-				// temp_no = 1;
 				last = temp1->next;
 				break;
 			}
 			temp1 = temp1->next;
 		}
-		// temp1 = head;
-		// while (temp1 && ((char *)(temp1->content))[0] != '|')
-		// {
-		// 	printf("%s ", temp1->content);
-		// 	temp1 = temp1->next;
-		// }
-		// printf("\n");
 		temp1 = head;
 
 		while (temp1 && ((char *)(temp1->content))[0] != '|')
 		{
-
-
 			if (sep_kind(temp1) && (!(temp1->next) || \
 			(((char *)(temp1->next->content))[0] == ' ') && !(temp1->next->next)))
 			{
@@ -365,57 +350,19 @@ int	exec(t_list* list, char *line, t_copy *e)
 				printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
 				return -11;
 			}
-			// if (sep_kind(temp1) == 1)
-			// {
-			// 	printf("infile : %s\n", (char *)(temp1->next->content));
-			// }
-			// else if (sep_kind(temp1) == 2)
-			// {
-			// 	printf("here_doc limiter : %s\n", (char *)(temp1->next->content));
-			// }
-			// else if (sep_kind(temp1) == 3)
-			// {
-			// 	printf("outfile : %s\n", (char *)(temp1->next->content));
-			// }
-			// else if (sep_kind(temp1) == 4)
-			// {
-			// 	printf("outfile_append : %s\n", (char *)(temp1->next->content));
-			// }
-			// else
 			if (sep_kind(temp1) == 0)
 			{
-				// printf("command part : %s", (char *)(temp1->content))
-				// if (cmd_sign == 0)
-				// {
-				// 	if (builtin_check(line, temp1, e) == 1)
-				// 		printf("builtin : %s\n", (char *)(temp1->content));
-				// 	else
-				// 		printf("command : %s\n", (char *)(temp1->content));
-				// 	cmd_sign = 1;
-				// }
-				// else
-				// 	printf("option : %s\n", (char *)(temp1->content));
 				temp1 = temp1->next;
 				continue;
 			}
 			temp1 = temp1->next->next;
 		}
-		// printf("\n");
-
 		if (temp1)
 			head = last;
 		else
 			break;
 	}
-
-
-	//check done;
-
-
-
-
 	return (command_run(list->next, line, e));
-
 }
 
 
@@ -499,7 +446,7 @@ int	command_run(t_list* list, char *line, t_copy *e)
 	// printf("exit with %d\n", status);
 	// if (status)
 	// 	perror("exit code");
-	return (status);
+	return (ret_status);
 
 
 
@@ -629,128 +576,11 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 {
 	t_list *temp = list;
 	char **envp = e->cp_envp;
-	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
-	// printf("%s $$\n", (char *)(temp->content));
-	// printf("child got : ");
-	// while (temp && ((char *)(temp->content))[0] != '|')
-	// {
-	// 	printf("%s ", (char *)(temp->content));
-	// 	temp = temp->next;
-	// }
-	// printf("\n");
-
-	// temp = list;
-	// free_space(list);
-	printf("command : ");
-
-
-
 
 
 	char **command = 0;
 	char *temp_string = 0;
 	command_split(list, fd, &command, &temp_string);
-	// while (temp && ((char *)(temp->content))[0] != '|')
-	// {
-	// 	// printf("current sep kind : %d\n", sep_kind(temp));
-	// 	if (((char *)(temp->content))[0] == ' ')
-	// 	{
-	// 		temp = temp->next;
-	// 		if (command)
-	// 		{
-	// 			printf("(space)");
-	// 			temp_string = string_connect(temp_string, " ");
-	// 		}
-	// 		continue;
-	// 	}
-	// 	if (sep_kind(temp) == 1)
-	// 	{
-	// 		if (((char *)(temp->next->content))[0] == ' ')
-	// 			temp = temp->next;
-	// 		fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
-	// 		if (fd[PREV][READ] < 0)
-	// 		{
-	// 			perror("file not found");
-	// 			exit(1);
-	// 		}
-	// 	}
-	// 	else if (sep_kind(temp) == 2)
-	// 	{
-	// 		if (((char *)(temp->next->content))[0] == ' ')
-	// 			temp = temp->next;
-	// 		// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
-	// 		printf("heredoc not implemented\n");
-	// 		exit(1);
-	// 	}
-	// 	else if (sep_kind(temp) == 3)
-	// 	{
-	// 		if (((char *)(temp->next->content))[0] == ' ')
-	// 			temp = temp->next;
-	// 		fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
-	// 		if (fd[NEXT][WRITE] < 0)
-	// 		{
-	// 			perror("file not found");
-	// 			exit(1);
-	// 		}
-	// 		// printf("outfile : %s\n", ((char *)((temp->next->content))));
-	// 	}
-	// 	else if (sep_kind(temp) == 4)
-	// 	{
-	// 		if (((char *)(temp->next->content))[0] == ' ')
-	// 			temp = temp->next;
-	// 		fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
-	// 		if (fd[NEXT][WRITE] < 0)
-	// 		{
-	// 			perror("file not found");
-	// 			exit(1);
-	// 		}
-	// 		// printf("outfile_append : %s\n", ((char *)((temp->next->content))));
-	// 	}
-	// 	else
-	// 	{
-	// 		command = vector_add(command, (char *)(temp->content));
-	// 		printf("%s", temp->content);
-	// 		temp_string = string_connect(temp_string, temp->content);
-	// 		// printf("command part : %s\n", (char *)(temp->content));
-	// 		temp = temp->next;
-	// 		continue;
-	// 	}
-	// 	temp = temp->next->next;
-	// }
-	// // vector_print(command);
-	// printf("\n");
-
-
-
-
-
-
-	// if (ft_strlen(temp_string))
-	// {
-	// 	int len = ft_strlen(temp_string);
-	// 	if (temp_string[len - 1] == ' ')
-	// 		temp_string[len - 1] = 0;
-	// }
-	// printf("pre__temp_string : %s$\n", temp_string);
-	// while (1)
-	// {
-	// 	int len = ft_strlen(temp_string);
-	// 	if (len == 0)
-	// 		break ;
-	// 	if (temp_string[len - 1] == ' ')
-	// 		temp_string[len - 1] = 0;
-	// 	else
-	// 		break ;
-	// }
-	// printf("post_temp_string : %s$\n", temp_string);
-
-	// get path
-	
-
-
-
-
-
 
 
 	if (fd[PREV][READ])
@@ -770,27 +600,6 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 
 
 
-	// ft_putstr_fd("file_descriptor : ", 2);
-	// ft_putnbr_fd(fd[PREV][WRITE],2);
-	// ft_putstr_fd("  ", 2);
-	// ft_putnbr_fd(fd[PREV][READ],2);
-	// ft_putstr_fd("  ", 2);
-	// ft_putnbr_fd(fd[NEXT][WRITE],2);
-	// ft_putstr_fd("  ", 2);
-	// ft_putnbr_fd(fd[NEXT][READ],2);
-	// ft_putstr_fd("  done\n", 2);
-
-	//temp_line
-	// char *temp_line;
-	// int		tli;
-	// tli  = 0;
-	// while (line[tli] && line[tli] != '|')
-	// 	tli++;
-	// temp_line = (char *)ft_calloc(tli + 1, sizeof(char));
-	// ft_memmove(temp_line, line, tli);
-
-
-
 	// quote_trim(list);
 	if (builtin_check(temp_string, list, e, command[0]))
 	{
@@ -798,19 +607,14 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		free(temp_string);
 		exit (result);
 	}
-	free(temp_string);
 
-		// exit (0);
-	// free_space(list);
-	// write(2,"not built in :", 14);
-	// ft_putstr_fd(command[0], 2);
-	// write(2,"\n",1);
+
+	free(temp_string);
 	free_space(list);
-		//BUILTIN 의 실행 결과에 따라 exit의 인자 바꿔야 함.
+
+
 	int path_index = 0;
-	write(2, "1\n", 2);
 	char **paths = get_path_split(envp);
-	write(2, "2\n", 2);
 	int errcheck = 0;
 
 
@@ -885,7 +689,7 @@ int main(int argc, char **argv, char **envp)
 		line = reading();
 		if (line == 0 || *line == 0)
 			continue;
-		list = parsing(line, envp);//, result);
+		list = first_parsing(line, env.onlyenv, result);//, result);
 		if (list == 0)
 			continue;
 		// if (quote_check(list->next))
@@ -929,15 +733,11 @@ int main(int argc, char **argv, char **envp)
 			dup2(temp_fd[0], 0);
 			dup2(temp_fd[1], 1);
 
-
-			// $_ 업데이트 : 수행된 명령어 맨 마지막 부분 집어넣기
 			// $? 업데이트하기 (result 값)
-			// continue;
 		}
 		else if (pipe_exists(list->next) == 0)
 		{
 			result = exec(list, line, &env);
-			// $_ 업데이트 : 수행된 명령어 맨 마지막 부분 집어넣기
 			// $? 업데이트하기 (result 값)
 		}
 		else
