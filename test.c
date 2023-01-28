@@ -681,6 +681,7 @@ int main(int argc, char **argv, char **envp)
 	while (envp[i])
 	{
 		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		printf("%s\n", envp[i]);
 		i++;
 	}
 
@@ -732,21 +733,13 @@ int main(int argc, char **argv, char **envp)
 			
 			dup2(temp_fd[0], 0);
 			dup2(temp_fd[1], 1);
-
-			// $? 업데이트하기 (result 값)
 		}
-		else if (pipe_exists(list->next) == 0)
-		{
-			result = exec(list, line, &env);
-			// $? 업데이트하기 (result 값)
-		}
+		// else if (pipe_exists(list->next) == 0)
+		// 	result = exec(list, line, &env);
 		else
-		{
 			result = exec(list, line, &env);
-			// $? 업데이트하기 (result 값)
-		}
 	}
-	argc = 0;
-	argv = 0;
-	envp = 0;
+	// argc = 0;
+	// argv = 0;
+	// envp = 0;
 }

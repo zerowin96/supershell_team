@@ -153,7 +153,6 @@ t_list *first_parsing(char *line, char **envp, int prev_result)//, int result)
 	list = ft_lstnew(0);
 	tokenize(list, line);
 
-
 	if (quote_check(list))
 	{
 		//free_all_list(list);
@@ -161,6 +160,14 @@ t_list *first_parsing(char *line, char **envp, int prev_result)//, int result)
 		//::change the value of return into "command not found-ish"
 	}
 	qmark_expansion(list, prev_result);
+	printf("--------------------TOKENS\n");
+	now = list->next;
+	while (now)
+	{
+		printf("%s\n", now->content);
+		now = now->next;
+	}
+	printf("--------------------tokens are stored in linked list\n");
 	env_expansion(list, envp);//, result);
 
 	//TOKEN PRINT
@@ -342,6 +349,24 @@ void	free_space(t_list *list)
 	}
 }
 
+// void	free_last_space(t_list *list)
+// {
+// 	t_list *cursor = list->next;
+
+// 	while (1)
+// 	{
+// 		if (cursor == 0)
+// 			return ;
+// 		if (cursor->next == 0 && ((char *)(cursor->content))[0] == ' ' && !((char *)(cursor->content))[0])
+// 		{
+// 			free(cursor->content);
+// 			free(cursor);
+// 			cursor = list->next;
+// 		}
+// 		cursor = cursor->next;
+// 	}
+// }
+
 void env_expansion(t_list *list, char **envp)
 {
 	char	*string;
@@ -358,6 +383,7 @@ void env_expansion(t_list *list, char **envp)
 	
 	// quote_trim(list);
 	free_empty(list);
+	// free_last_space(list);
 }
 
 void qmark_expansion(t_list *list, int pres)
