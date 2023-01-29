@@ -215,9 +215,12 @@ static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 char *reading(void)
 {
 	char *line;
-	line = 0;
 
+	printf("reading phase\n");
+	// line = readline("whydon'tyou??? ");
 	line = readline("minishell-1.0$ ");
+	if (line == 0)
+		write(2, "\nwtf is going on,,,\n", 21);
 	if (line == 0)
 	{
 		write(2, "\nexit\n", 7);
@@ -476,6 +479,7 @@ void	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_stri
 		}
 		if (sep_kind(temp) == 1)
 		{
+			printf("(INPUT OPEN)");
 			if (((char *)(temp->next->content))[0] == ' ')
 				temp = temp->next;
 			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
@@ -487,11 +491,17 @@ void	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_stri
 		}
 		else if (sep_kind(temp) == 2)
 		{
+			printf("(HEREDOC OPEN)");
 			if (((char *)(temp->next->content))[0] == ' ')
 				temp = temp->next;
+			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
+			if (fd[PREV][READ] < 0)
+			{
+				perror("heredoc temp file error");
+				exit(1);
+			}
 			// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
-			printf("heredoc not implemented\n");
-			exit(1);
+			// printf("heredoc not implemented\n");
 		}
 		else if (sep_kind(temp) == 3)
 		{
@@ -664,6 +674,8 @@ int	quote_check(t_list *list)
 	return (1);
 }
 
+void	print_fds(int fd, int fds[2][2]);
+
 int main(int argc, char **argv, char **envp)
 {
 	int i;
@@ -681,18 +693,20 @@ int main(int argc, char **argv, char **envp)
 	while (envp[i])
 	{
 		env.onlyenv = vector_add(env.onlyenv, envp[i]);
-		printf("%s\n", envp[i]);
+		// printf("%s\n", envp[i]);
 		i++;
 	}
 
 	while (1)
 	{
+		// printf("before reading\n");
 		line = reading();
 		if (line == 0 || *line == 0)
 			continue;
 		list = first_parsing(line, env.onlyenv, result);//, result);
 		if (list == 0)
 			continue;
+		heredoc(list->next);
 		// if (quote_check(list->next))
 		// 	continue;
 		if (pipe_exists(list->next) == 0 && builtin_check(line, list->next, &env, list->next->content))
@@ -708,10 +722,14 @@ int main(int argc, char **argv, char **envp)
 			fd[0][1] = 0;
 			fd[1][0] = 0;
 			fd[1][1] = 0;
-			temp_fd[0] = 0;
-			temp_fd[1] = 0;
-			dup2(0, temp_fd[0]);
-			dup2(1, temp_fd[1]);
+			// temp_fd[0] = 0;
+			// temp_fd[1] = 0;
+			temp_fd[0] = dup(0);
+			temp_fd[1] = dup(1);
+			// dup2(0, temp_fd[0]);
+			// dup2(1, temp_fd[1]);
+			// printf("tempfd : %d %d\n", temp_fd[0], temp_fd[1]);
+			// print_fds(2, fd);
 
 			command_split(list->next, fd, &command, &temp_string);
 			if (fd[PREV][READ])
@@ -733,13 +751,33 @@ int main(int argc, char **argv, char **envp)
 			
 			dup2(temp_fd[0], 0);
 			dup2(temp_fd[1], 1);
+			close(temp_fd[0]);
+			close(temp_fd[1]);
+			// print_fds(2, fd);
 		}
 		// else if (pipe_exists(list->next) == 0)
 		// 	result = exec(list, line, &env);
 		else
 			result = exec(list, line, &env);
+		delete_local_file(list->next);
+		free(line);
+		// free_all(list);
 	}
 	// argc = 0;
 	// argv = 0;
 	// envp = 0;
+}
+
+
+void	print_fds(int fd, int fds[2][2])
+{
+	write(2, "fd list : ", 11);
+	ft_putnbr_fd(fds[0][1], 2);
+	write(2, " ", 1);
+	ft_putnbr_fd(fds[0][0], 2);
+	write(2, " ", 1);
+	ft_putnbr_fd(fds[1][1], 2);
+	write(2, " ", 1);
+	ft_putnbr_fd(fds[1][0], 2);
+	write(2, "\n", 1);
 }

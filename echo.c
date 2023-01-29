@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/25 17:02:57 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/01/29 15:25:28 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	ft_echo(char *line, t_copy *env)
 		i++;
 	}
 	head = a->next;
-	while (ft_strcmp(head->next->content, "-n") == 0)
-	{
-		head = head->next;
-		flag = 1;
-	}
+	// while (ft_strcmp(head->next->content, "-n") == 0)
+	// {
+	// 	head = head->next;
+	// 	flag = 1;
+	// }
 	
 	
 

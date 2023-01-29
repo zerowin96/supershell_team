@@ -14,7 +14,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include "libft/libft.h"
-# include "get_next_line/get_next_line.h"
+// # include "get_next_line/get_next_line.h"
 typedef struct s_cnt
 {
 	int pipe_cnt;
@@ -58,6 +58,9 @@ void	free_space(t_list *list);
 void	quote_trim(t_list *list);
 int	quote_check(t_list *list);
 
+
+int	heredoc(t_list *list);
+int	delete_local_file(t_list *list);
 // t_list *parsing(char *line, char **envp, int result);
 // int		command_run(t_list* list, char *line, t_copy *e);
 #endif

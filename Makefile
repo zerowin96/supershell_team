@@ -6,7 +6,7 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/01/28 14:09:16 by minsulee         ###   ########seoul.kr   #
+#    Updated: 2023/01/29 19:17:23 by minsulee         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,5 +42,13 @@
 # .PHONY : all clean fclean re
 
 all :
-	gcc -g3 -lreadline libft/libft.a get_next_line/get_next_line.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c
+	make -C libft bonus
+#	make -C libft clean
+#	make -C get_next_line all
+#	make -C get_next_line clean
+	gcc -g3 -lreadline libft/libft.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c heredoc.c
 #	gcc -g3 -o minishell -lreadline libft/libft.a get_next_line/get_next_line.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c && chmod 777 minishell
+
+clean :
+	make -C libft clean
+#	make -C get_next_line clean
