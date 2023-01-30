@@ -8,6 +8,23 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2]);
 # define PREV 0
 # define NEXT 1
 
+void	free_list(t_list *list)
+{
+	t_list *temp;
+
+	while (list)
+	{
+		temp = list->next;
+		if (list->content)
+		{
+			free(list->content);
+			list->content = 0;
+		}
+		free(list);
+		list = temp;
+	}
+}
+
 int	check_access_h(char *name, char *path, int permission)
 {
 	char	*temp;
@@ -219,11 +236,12 @@ char *reading(void)
 	printf("reading phase\n");
 	// line = readline("whydon'tyou??? ");
 	line = readline("minishell-1.0$ ");
-	if (line == 0)
-		write(2, "\nwtf is going on,,,\n", 21);
+	// if (line == 0)
+	// 	write(2, "\nwtf is going on,,,\n", 21);
 	if (line == 0)
 	{
-		write(2, "\nexit\n", 7);
+		rl_replace_line("", 1);
+		write(2, "exit\n", 5);
 		exit (0);
 	}
 	if (line && *line)
@@ -297,6 +315,7 @@ int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
 	else if (index == 7)
 		ft_exit();
 	// free (string);
+	
 	return (result);
 	// update required : store exit code of result of executed builtin into variable "result"
 }
@@ -703,7 +722,8 @@ int main(int argc, char **argv, char **envp)
 		line = reading();
 		if (line == 0 || *line == 0)
 			continue;
-		list = first_parsing(line, env.onlyenv, result);//, result);
+		// list = first_parsing(line, env.onlyenv, result);//, result);
+		list = first_parsing(line, env.cp_envp, result);//, result);
 		if (list == 0)
 			continue;
 		heredoc(list->next);
@@ -713,7 +733,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			char **command = 0;
 			char *temp_string = 0;
-			int fd[2][2];
+			int fd[3][2];
 			int	temp_fd[2];
 			t_list *temp;
 			temp = list->next;
@@ -722,14 +742,11 @@ int main(int argc, char **argv, char **envp)
 			fd[0][1] = 0;
 			fd[1][0] = 0;
 			fd[1][1] = 0;
-			// temp_fd[0] = 0;
-			// temp_fd[1] = 0;
-			temp_fd[0] = dup(0);
-			temp_fd[1] = dup(1);
-			// dup2(0, temp_fd[0]);
-			// dup2(1, temp_fd[1]);
-			// printf("tempfd : %d %d\n", temp_fd[0], temp_fd[1]);
-			// print_fds(2, fd);
+			// temp_fd[0] = dup(0);
+			// temp_fd[1] = dup(1);
+			fd[2][0] = dup(0);
+			fd[2][1] = dup(1);
+
 
 			command_split(list->next, fd, &command, &temp_string);
 			if (fd[PREV][READ])
@@ -749,23 +766,18 @@ int main(int argc, char **argv, char **envp)
 			if (temp_string)
 				free(temp_string);
 			
-			dup2(temp_fd[0], 0);
-			dup2(temp_fd[1], 1);
-			close(temp_fd[0]);
-			close(temp_fd[1]);
-			// print_fds(2, fd);
+			dup2(fd[2][0], 0);
+			dup2(fd[2][1], 1);
+			close(fd[2][0]);
+			close(fd[2][1]);
 		}
-		// else if (pipe_exists(list->next) == 0)
-		// 	result = exec(list, line, &env);
 		else
 			result = exec(list, line, &env);
 		delete_local_file(list->next);
 		free(line);
-		// free_all(list);
+		free_list(list);
+		// system("leaks a.out");
 	}
-	// argc = 0;
-	// argv = 0;
-	// envp = 0;
 }
 
 
