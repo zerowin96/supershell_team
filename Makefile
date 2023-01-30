@@ -6,37 +6,49 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/01/04 10:33:44 by minsulee         ###   ########seoul.kr   #
+#    Updated: 2023/01/29 19:17:23 by minsulee         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+# NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
 
-LDFLAGS	= -L$(shell brew --prefix readline)/lib
-CPPFLAGS = -I$(shell brew --prefix readline)/include
+# LDFLAGS	= -L$(shell brew --prefix readline)/lib
+# CPPFLAGS = -I$(shell brew --prefix readline)/include
 
-SRCS	= test.c hello.c
-OBJS	= $(SRCS:.c=.o)
+# SRCS	= test.c hello.c
+# OBJS	= $(SRCS:.c=.o)
 
-all : $(NAME)
+# all : $(NAME)
 
-$(NAME): $(OBJS)
-	cc $(CFLAGS) $(OBJS) -o $(NAME) -lreadline $(LDFLAGS) $(CPPFLAGS)
+# $(NAME): $(OBJS)
+# 	cc $(CFLAGS) $(OBJS) -o $(NAME) -lreadline $(LDFLAGS) $(CPPFLAGS)
 
-%.o : %.c
-	cc $(CFLAGS) -c $< -o $@
+# %.o : %.c
+# 	cc $(CFLAGS) -c $< -o $@
+
+# clean :
+# 	rm -f $(OBJS)
+
+# fclean :
+# 	make clean
+# 	rm -f $(NAME)
+
+# re : 
+# 	make fclean
+# 	make all
+
+# .PHONY : all clean fclean re
+
+all :
+	make -C libft bonus
+#	make -C libft clean
+#	make -C get_next_line all
+#	make -C get_next_line clean
+	gcc -g3 -lreadline libft/libft.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c heredoc.c
+#	gcc -g3 -o minishell -lreadline libft/libft.a get_next_line/get_next_line.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c && chmod 777 minishell
 
 clean :
-	rm -f $(OBJS)
-
-fclean :
-	make clean
-	rm -f $(NAME)
-
-re : 
-	make fclean
-	make all
-
-.PHONY : all clean fclean re
+	make -C libft clean
+#	make -C get_next_line clean

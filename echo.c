@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/19 14:51:44 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/29 15:25:28 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	ft_echo(char *line, t_copy *env)
 		i++;
 	}
 	head = a->next;
-	while (ft_strcmp(head->next->content, "-n") == 0)
-	{
-		head = head->next;
-		flag = 1;
-	}
+	// while (ft_strcmp(head->next->content, "-n") == 0)
+	// {
+	// 	head = head->next;
+	// 	flag = 1;
+	// }
 	
 	
 
@@ -63,8 +63,17 @@ void	ft_echo(char *line, t_copy *env)
 	{
 		printf("%s", head->next->content);
 		head = head->next;
+		if (head->next)
+			printf(" ");
 	}
 	if (flag == 0)
 		printf("\n");
 	printf("@@@@@@@@@@ echo test@@@@@@@\n");
 }
+
+// int main(int argc, char **argv, char **envp)
+// {
+// 	t_copy c;
+// 	c.cp_envp = envp;
+// 	ft_echo("android life\n", 0)
+// }

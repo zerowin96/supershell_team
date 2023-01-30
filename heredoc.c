@@ -11,27 +11,40 @@ void	here_doc_help2(int fd, char *limiter)
 	char	*mod_limiter;
 	int		len;
 
+	// len = ft_strlen(limiter);
+	// mod_limiter = (char *)ft_calloc(len + 2, sizeof(char));
+	// ft_memmove(mod_limiter, limiter, len);
+	// mod_limiter[len] = '\n';
+	// // mod_limiter[len + 1] = 0;
+	// len = len + 2;//0까지
 	len = ft_strlen(limiter);
-	mod_limiter = (char *)ft_calloc(len + 2, sizeof(char));
-	ft_memmove(mod_limiter, limiter, len);
-	mod_limiter[len] = '\n';
-	// mod_limiter[len + 1] = 0;
-	len = len + 2;//0까지
 	while (1)
 	{
-		ft_putstr_fd("> ", 2);
-		line = get_next_line(0);
-		if (ft_strncmp(mod_limiter, line, len) == 0 || line == 0 || *line == 0)
+		// ft_putstr_fd("> ", 2);
+		// line = get_next_line(0);
+		line = readline("> ");
+		// printf("line : $%s$\n", line);
+		// if (ft_strncmp(mod_limiter, line, len) == 0 || line == 0 || *line == 0)
+		if (line == 0)
+		{
+			// printf("line is zero\n");
+			break;
+		}
+		else if (ft_strncmp(limiter, line, len) == 0)
 		{
 			free(line);
 			break;
 		}
+		
 		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 	}
+	// line = readline("temporary");
+	// free(line);
 	close(fd);
-	free(mod_limiter);
-	printf("gere_doc_help2 finished\n");
+	// free(mod_limiter);
+	// printf("here_doc_help2 finished\n");
 	// free(line);
 }
 
@@ -58,6 +71,8 @@ int	heredoc(t_list *list)
 		{
 			if (ft_strncmp((list->content), "<<", 3) == 0)
 			{
+				if (((char *)(list->next->content))[0] == ' ')
+					list = list->next;
 				if (!(list->next) || !(list->next->content))
 				{
 					printf("syntax error near undexpected token \'newline\'");
@@ -68,7 +83,7 @@ int	heredoc(t_list *list)
 					here_doc_help(list);
 					// list = list->next->next;
 					// continue;
-					list = list->next;
+					// list = list->next;
 					// return (1);
 				}
 			}
@@ -93,9 +108,10 @@ char *get_filename(void)
 	int		index;
 	int		len;
 
-	string = (char *)ft_calloc(10, sizeof(char));
+	string = (char *)ft_calloc(17, sizeof(char));
 	// ft_memmove(string, "/tmp/")
-	string[0] = '0';
+	ft_memmove(string, "100000000000.tmp", 16);
+	// string[0] = '1';
 	while (access(string, F_OK) == 0)
 	{
 		index = 0;
@@ -110,7 +126,7 @@ char *get_filename(void)
 				if(index + 1 == len)
 					len++;
 			}
-			if (string[index] < '0')
+			if (string[index] < '0' && string[index] != '.')
 				string[index] = '0';
 			index++;
 		}
@@ -128,12 +144,15 @@ char *get_filename(void)
 
 int	delete_local_file(t_list *list)
 {
+	// free_space(list);
 	while (list)
 	{
 		if (list->content)
 		{
 			if (ft_strncmp((list->content), "<<", 3) == 0)
 			{
+				if (((char *)(list->next->content))[0] == ' ')
+					list = list->next;
 				if (!(list->next) || !(list->next->content))
 				{
 					printf("syntax error near undexpected token \'newline\'");
@@ -142,10 +161,7 @@ int	delete_local_file(t_list *list)
 				else
 				{
 					unlink((char *)(list->next->content));
-					// list = list->next->next;
-					// continue;
-					list = list->next;
-					// return (1);
+					// list = list->next;
 				}
 			}
 		}
@@ -155,39 +171,58 @@ int	delete_local_file(t_list *list)
 }
 
 
-int main(void)
-{
-	t_list **list;
+// int main(void)
+// {
+// 	t_list **list=0;
+// 	t_list *temp=0;
+// 	printf("list   : %p\n", list);
+// 	printf("*list  : %p\n", *list);
 
-	// list = (t_list *)ft_calloc(1, sizeof(t_list *));
-	ft_lstadd_back(list, ft_lstnew(ft_strdup("echo")));
-	ft_lstadd_back(list, ft_lstnew(ft_strdup("<<")));
-	ft_lstadd_back(list, ft_lstnew(ft_strdup("limiter")));
-	ft_lstadd_back(list, ft_lstnew(ft_strdup("|")));
-	ft_lstadd_back(list, ft_lstnew(ft_strdup("<<")));
-	ft_lstadd_back(list, ft_lstnew(ft_strdup("limi")));
+// 	*list = ft_lstnew(ft_strdup(""));
+// 	// list = &temp;
+// 	// temp = 0;
+// 	printf("list   : %p\n", list);
+// 	printf("*list  : %p\n", *list);
+// 	// printf("*list  : %p", *list);
+// 	// temp = *list;
 
-	t_list *temp;
-	temp = *list;
-	printf("stored : ");
-	while (temp)
-	{
-		printf("%s ", ((char *)(temp->content)));
-		temp = temp->next;
-	}
-	printf("\n");
-	heredoc(*list);
-	temp = *list;
-	printf("modified : ");
-	while (temp)
-	{
-		printf("%s ", ((char *)(temp->content)));
-		temp = temp->next;
-	}
-	printf("\n");
-	delete_local_file(*list);
-	system("leaks a.out | grep leaked");
-}
+// 	// list = (t_list *)ft_calloc(1, sizeof(t_list *));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup("echo")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup("<")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup("limiter")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup("|")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup("<")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup(" ")));
+// 	ft_lstadd_back(list, ft_lstnew(ft_strdup("limi")));
+
+// 	// t_list *temp;
+// 	// temp = (*list);
+// 	printf("stored : ");
+// 	while (temp)
+// 	{
+// 		printf("%s ", ((char *)(temp->content)));
+// 		temp = temp->next;
+// 	}
+// 	printf("\n");
 
 
-// gcc -g3 get_next_line/get_next_line.a -lreadline libft/libft.a heredoc.c
+// 	heredoc(*list);
+// 	temp = (*list)->next;
+// 	printf("modified : ");
+// 	while (temp)
+// 	{
+// 		printf("%s ", ((char *)(temp->content)));
+// 		temp = temp->next;
+// 		printf(".");
+// 	}
+// 	printf("\n");
+// 	delete_local_file((*list)->next);
+// 	system("leaks a.out | grep leaked");
+// }
+
+
+// // gcc -g3 get_next_line/get_next_line.a -lreadline libft/libft.a heredoc.c

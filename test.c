@@ -74,6 +74,33 @@ char	**get_path_split(char **envp)
 	return (ft_split(&envp[index][5], ':'));
 }
 
+char *string_connect(char *dst, char *src)
+{
+	int len1;
+	int len2;
+	char *temp;
+	len1 = 0;
+	len2 = 0;
+
+	if (dst)
+	{
+		len1 = ft_strlen(dst);
+	}
+	if (src)
+	{
+		len2 =  ft_strlen(src);
+	}
+	
+	temp = (char *)ft_calloc(len1 + len2 + 1, sizeof(char));
+	if (len1)
+		ft_memmove(temp, dst, len1);
+	if (len2)
+		ft_memmove(&temp[len1], src, len2);
+	if (dst)
+		free(dst);
+	return (temp);
+}
+
 int pipe_exists(t_list *line)
 {
 	t_list *temp;
@@ -113,16 +140,139 @@ static int	sep_kind(t_list *node)
 }
 
 // static int	builtin_check(char *line, t_list *node, t_copy *e)
+// static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
+// {
+// 	// char *string = (char *)(node->content);
+
+// 	if (ft_strncmp(string, "echo\0", 5) == 0)
+// 	{
+// 		ft_echo(line, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "cd\0", 3) == 0)
+// 	{
+// 		if (node->next)
+// 		{
+// 			if (node->next->next != 0)
+// 			{
+// 				perror("Too many argumet\n");
+// 				return (1);
+// 			}
+// 			ft_cd((char *)node->next->content, e);
+// 		}
+// 		else
+// 			ft_cd(NULL, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "pwd\0", 4) == 0)
+// 	{
+// 		ft_pwd();
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "export\0", 7) == 0)
+// 	{
+// 		ft_export(line, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "unset\0", 6) == 0)
+// 	{
+// 		ft_unset(line, e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "env\0", 4) == 0)
+// 	{
+// 		ft_env(e);
+// 		return (1);
+// 	}
+// 	else if (ft_strncmp(string, "exit\0", 5) == 0)
+// 	{
+// 		ft_exit();
+// 	}
+// 	return (0);
+// }
+
 static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 {
 	// char *string = (char *)(node->content);
 
 	if (ft_strncmp(string, "echo\0", 5) == 0)
-	{
-		ft_echo(line, e);
 		return (1);
-	}
 	else if (ft_strncmp(string, "cd\0", 3) == 0)
+		return (2);
+	else if (ft_strncmp(string, "pwd\0", 4) == 0)
+		return (3);
+	else if (ft_strncmp(string, "export\0", 7) == 0)
+		return (4);
+	else if (ft_strncmp(string, "unset\0", 6) == 0)
+		return (5);
+	else if (ft_strncmp(string, "env\0", 4) == 0)
+		return (6);
+	else if (ft_strncmp(string, "exit\0", 5) == 0)
+		return (7);
+	return (0);
+}
+
+char *reading(void)
+{
+	char *line;
+
+	printf("reading phase\n");
+	// line = readline("whydon'tyou??? ");
+	line = readline("minishell-1.0$ ");
+	if (line == 0)
+		write(2, "\nwtf is going on,,,\n", 21);
+	if (line == 0)
+	{
+		write(2, "\nexit\n", 7);
+		exit (0);
+	}
+	if (line && *line)
+		add_history(line);
+	return (line);
+}
+
+int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
+{
+	//put lines into one character string;
+	// char *string;
+	// string = 
+	char	*temp_string = 0;
+	t_list *temp = node;
+	// printf("builtin_exec input node[0] : %s\n", (char *)(node->content));
+	// while (temp && temp->content && ((char *)(temp->content))[0] != '|')
+	// {
+	// 	temp_string = string_connect(temp_string, temp->content);
+	// 	//library function
+	// 	// strcat(temp_string, temp->content);
+	// 	//library function
+	// 	temp = temp->next;
+	// 	if (temp && temp->content && ((char *)(temp->content))[0] != '|')
+	// 		temp_string = string_connect(temp_string, " ");
+	// }
+	// printf("temp_string : %s\n", temp_string);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	free_space(node);
+	int result = 0;
+	if (index == 1)
+		ft_echo(line, e);
+	else if (index == 2)
 	{
 		if (node->next)
 		{
@@ -135,73 +285,44 @@ static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 		}
 		else
 			ft_cd(NULL, e);
-		return (1);
 	}
-	else if (ft_strncmp(string, "pwd\0", 4) == 0)
-	{
+	else if (index == 3)
 		ft_pwd();
-		return (1);
-	}
-	else if (ft_strncmp(string, "export\0", 7) == 0)
-	{
+	else if (index == 4)
 		ft_export(line, e);
-		return (1);
-	}
-	else if (ft_strncmp(string, "unset\0", 6) == 0)
-	{
+	else if (index == 5)
 		ft_unset(line, e);
-		return (1);
-	}
-	else if (ft_strncmp(string, "env\0", 4) == 0)
-	{
+	else if (index == 6)
 		ft_env(e);
-		return (1);
-	}
-	else if (ft_strncmp(string, "exit\0", 5) == 0)
-	{
+	else if (index == 7)
 		ft_exit();
-	}
-	return (0);
+	// free (string);
+	return (result);
+	// update required : store exit code of result of executed builtin into variable "result"
 }
 
-char *reading(void)
-{
-	char *line;
-	line = 0;
-
-	line = readline("nanoshell MK.X enhanced remastered lib ver.1.16 broodwar << DOWNLOAD >> ");
-	if (line && *line)
-		add_history(line);
-	return (line);
-}
-
-void exec(t_list *list, char *line, t_copy *e);
+// void exec(t_list *list, char *line, t_copy *e);
 
 
-void	exec(t_list* list, char *line, t_copy *e)
+int	exec(t_list* list, char *line, t_copy *e)
 {
 	t_list *now;
 	int flag;
 	char **envp = e->cp_envp;
 	flag = 0;
 	now = list->next;
-	// printf("exec\n");
+
 
 	t_list *temp1;
 	t_list *head;
 	t_list *last;
-	// int temp_no;
+
 	int	cmd_sign;
 
 	last = 0;
 	head = list->next;
 	temp1 = head;
-	// while (temp1)
-	// {
-	// 	printf("%s ", (char *)(temp1->content));
-	// 	temp1 = temp1->next;
-	// }
-	// printf("\n");
+
 
 	while (1)
 	{
@@ -212,86 +333,39 @@ void	exec(t_list* list, char *line, t_copy *e)
 		{
 			if (temp1->content && ((char *)(temp1->content))[0] == '|')
 			{
-				// temp_no = 1;
 				last = temp1->next;
 				break;
 			}
 			temp1 = temp1->next;
 		}
-		// temp1 = head;
-		// while (temp1 && ((char *)(temp1->content))[0] != '|')
-		// {
-		// 	printf("%s ", temp1->content);
-		// 	temp1 = temp1->next;
-		// }
-		// printf("\n");
 		temp1 = head;
 
 		while (temp1 && ((char *)(temp1->content))[0] != '|')
 		{
-
-
-			if (sep_kind(temp1) && !(temp1->next))
+			if (sep_kind(temp1) && (!(temp1->next) || \
+			(((char *)(temp1->next->content))[0] == ' ') && !(temp1->next->next)))
 			{
 				printf("invalid syntax\n");
-				break ;
+				return -11;
 			}
 			if (sep_kind(temp1) && sep_kind(temp1->next))
 			{
 				printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
-				break ;
+				return -11;
 			}
-			// if (sep_kind(temp1) == 1)
-			// {
-			// 	printf("infile : %s\n", (char *)(temp1->next->content));
-			// }
-			// else if (sep_kind(temp1) == 2)
-			// {
-			// 	printf("here_doc limiter : %s\n", (char *)(temp1->next->content));
-			// }
-			// else if (sep_kind(temp1) == 3)
-			// {
-			// 	printf("outfile : %s\n", (char *)(temp1->next->content));
-			// }
-			// else if (sep_kind(temp1) == 4)
-			// {
-			// 	printf("outfile_append : %s\n", (char *)(temp1->next->content));
-			// }
-			// else
 			if (sep_kind(temp1) == 0)
 			{
-				// printf("command part : %s", (char *)(temp1->content))
-				// if (cmd_sign == 0)
-				// {
-				// 	if (builtin_check(line, temp1, e) == 1)
-				// 		printf("builtin : %s\n", (char *)(temp1->content));
-				// 	else
-				// 		printf("command : %s\n", (char *)(temp1->content));
-				// 	cmd_sign = 1;
-				// }
-				// else
-				// 	printf("option : %s\n", (char *)(temp1->content));
 				temp1 = temp1->next;
 				continue;
 			}
 			temp1 = temp1->next->next;
 		}
-		// printf("\n");
-
 		if (temp1)
 			head = last;
 		else
 			break;
 	}
-
-
-	//check done;
-
-
-
-
-	command_run(list->next, line, e);
-
+	return (command_run(list->next, line, e));
 }
 
 
@@ -375,7 +449,7 @@ int	command_run(t_list* list, char *line, t_copy *e)
 	// printf("exit with %d\n", status);
 	// if (status)
 	// 	perror("exit code");
-	return (status);
+	return (ret_status);
 
 
 
@@ -385,33 +459,29 @@ int	command_run(t_list* list, char *line, t_copy *e)
 }
 
 
-void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
+void	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_string)
 {
-	char **command = 0;
-	t_list *temp = list;
-	char **envp = e->cp_envp;
-	// printf("child %s : %d %d %d %d\n",(char *)list->content, fd[0][1], fd[0][0], fd[1][1], fd[1][0]);
-	// printf("%s $$\n", (char *)(temp->content));
-	// printf("child got : ");
-	// while (temp && ((char *)(temp->content))[0] != '|')
-	// {
-	// 	printf("%s ", (char *)(temp->content));
-	// 	temp = temp->next;
-	// }
-	// printf("\n");
+	// char *(*temp_string) = 0;
+	// char **(*command) = 0;
 
-	// temp = list;
-	free_space(list);
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		// printf("current sep kind : %d\n", sep_kind(temp));
 		if (((char *)(temp->content))[0] == ' ')
 		{
 			temp = temp->next;
+			if ((*command))
+			{
+				printf("(space)");
+				(*temp_string) = string_connect((*temp_string), " ");
+			}
 			continue;
 		}
 		if (sep_kind(temp) == 1)
 		{
+			printf("(INPUT OPEN)");
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
 			if (fd[PREV][READ] < 0)
 			{
@@ -421,14 +491,25 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 2)
 		{
+			printf("(HEREDOC OPEN)");
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
+			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
+			if (fd[PREV][READ] < 0)
+			{
+				perror("heredoc temp file error");
+				exit(1);
+			}
 			// printf("here_doc limiter : %s\n", ((char *)((temp->next->content))));
-			printf("heredoc not implemented\n");
-			exit(1);
+			// printf("heredoc not implemented\n");
 		}
 		else if (sep_kind(temp) == 3)
 		{
+			printf("(OUTFILE OPEN  TRUNC)");
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
-			if (fd[NEXT][NEXT] < 0)
+			if (fd[NEXT][WRITE] < 0)
 			{
 				perror("file not found");
 				exit(1);
@@ -437,8 +518,11 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else if (sep_kind(temp) == 4)
 		{
+			printf("(OUTFILE OPEN APPEND)");
+			if (((char *)(temp->next->content))[0] == ' ')
+				temp = temp->next;
 			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
-			if (fd[NEXT][NEXT] < 0)
+			if (fd[NEXT][WRITE] < 0)
 			{
 				perror("file not found");
 				exit(1);
@@ -447,7 +531,9 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		}
 		else
 		{
-			command = vector_add(command, (char *)(temp->content));
+			(*command) = vector_add((*command), (char *)(temp->content));
+			printf("%s", temp->content);
+			(*temp_string) = string_connect((*temp_string), temp->content);
 			// printf("command part : %s\n", (char *)(temp->content));
 			temp = temp->next;
 			continue;
@@ -455,10 +541,56 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 		temp = temp->next->next;
 	}
 	// vector_print(command);
+	printf("\n");
+
+	// printf("pre__temp_string : %s$\n", (*temp_string));
+	while (1)
+	{
+		int len = ft_strlen((*temp_string));
+		if (len == 0)
+			break ;
+		if ((*temp_string)[len - 1] == ' ')
+			(*temp_string)[len - 1] = 0;
+		else
+			break ;
+	}
+	// printf("post_temp_string : %s$\n", (*temp_string));
+
+	// return (command);
+}
 
 
-	// get path
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
+{
+	t_list *temp = list;
+	char **envp = e->cp_envp;
+
+
+	char **command = 0;
+	char *temp_string = 0;
+	command_split(list, fd, &command, &temp_string);
 
 
 	if (fd[PREV][READ])
@@ -478,24 +610,18 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 
 
 
-	// ft_putstr_fd("file_descriptor : ", 2);
-	// ft_putnbr_fd(fd[PREV][WRITE],2);
-	// ft_putstr_fd("  ", 2);
-	// ft_putnbr_fd(fd[PREV][READ],2);
-	// ft_putstr_fd("  ", 2);
-	// ft_putnbr_fd(fd[NEXT][WRITE],2);
-	// ft_putstr_fd("  ", 2);
-	// ft_putnbr_fd(fd[NEXT][READ],2);
-	// ft_putstr_fd("  done\n", 2);
-
 	// quote_trim(list);
-	if (builtin_check(line, list, e, command[0]))
-		exit (0);
-	write(2,"not built in :", 14);
-	ft_putstr_fd(command[0], 2);
-	write(2,"\n",1);
+	if (builtin_check(temp_string, list, e, command[0]))
+	{
+		int result = builtin_exec(temp_string, list, e, builtin_check(temp_string, list, e, command[0]));
+		free(temp_string);
+		exit (result);
+	}
+
+
+	free(temp_string);
 	free_space(list);
-		//BUILTIN 의 실행 결과에 따라 exit의 인자 바꿔야 함.
+
 
 	int path_index = 0;
 	char **paths = get_path_split(envp);
@@ -503,15 +629,20 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 
 
 	path_index = check_access(command[0], paths, X_OK);
+	write(2, "path_index is : ", 17);
+	ft_putnbr_fd(path_index, 2);
+	write(2, "\n", 1);
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
 	else if (path_index > 1)
 		errcheck = execve(ft_strjoin(paths[path_index - 2], ft_strjoin("/", command[0])), command, envp);
+	write(2, "not executed : ", 16);
 	if (errcheck < 0)
 	{
 		perror("error on execve");
 		exit (1);
 	}
+	write(2, "Command not found\n", 19);
 	perror("command not found");
 	vector_free(command);
 	exit(127);
@@ -543,6 +674,8 @@ int	quote_check(t_list *list)
 	return (1);
 }
 
+void	print_fds(int fd, int fds[2][2]);
+
 int main(int argc, char **argv, char **envp)
 {
 	int i;
@@ -550,6 +683,7 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	t_list *list;
 	t_copy env;
+	int result = 0;
 
 	line = 0;
 	list = NULL;
@@ -559,27 +693,91 @@ int main(int argc, char **argv, char **envp)
 	while (envp[i])
 	{
 		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		// printf("%s\n", envp[i]);
 		i++;
 	}
 
 	while (1)
 	{
+		// printf("before reading\n");
 		line = reading();
-		list = parsing(line, envp);
+		if (line == 0 || *line == 0)
+			continue;
+		list = first_parsing(line, env.onlyenv, result);//, result);
 		if (list == 0)
 			continue;
+		heredoc(list->next);
 		// if (quote_check(list->next))
 		// 	continue;
-		if (pipe_exists(list->next) == 0 && builtin_check(line, list, &env, list->next->content))
+		if (pipe_exists(list->next) == 0 && builtin_check(line, list->next, &env, list->next->content))
 		{
-			//이거 근데 이렇게 하면 안 되고, << infile cat -e 처럼 명령어가 나중에 들어오는 경우 있으니까 명령어 찾아주는 것 부터 해야 함. 
-			//이거는 다른 함수에 있는 거 독립시켜서 끌어오는 게 맞다.
-			printf("builtin executed without forking\n");
-			continue;
+			char **command = 0;
+			char *temp_string = 0;
+			int fd[2][2];
+			int	temp_fd[2];
+			t_list *temp;
+			temp = list->next;
+
+			fd[0][0] = 0;
+			fd[0][1] = 0;
+			fd[1][0] = 0;
+			fd[1][1] = 0;
+			// temp_fd[0] = 0;
+			// temp_fd[1] = 0;
+			temp_fd[0] = dup(0);
+			temp_fd[1] = dup(1);
+			// dup2(0, temp_fd[0]);
+			// dup2(1, temp_fd[1]);
+			// printf("tempfd : %d %d\n", temp_fd[0], temp_fd[1]);
+			// print_fds(2, fd);
+
+			command_split(list->next, fd, &command, &temp_string);
+			if (fd[PREV][READ])
+			{
+				dup2(fd[PREV][READ], 0);
+				close(fd[PREV][READ]);
+			}
+			if (fd[NEXT][WRITE])
+			{
+				dup2(fd[NEXT][WRITE], 1);
+				close(fd[NEXT][WRITE]);
+			}
+
+			result = builtin_exec(temp_string, list->next, &env, builtin_check(temp_string, list->next, &env, list->next->content));
+			if (command)
+				vector_free(command);
+			if (temp_string)
+				free(temp_string);
+			
+			dup2(temp_fd[0], 0);
+			dup2(temp_fd[1], 1);
+			close(temp_fd[0]);
+			close(temp_fd[1]);
+			// print_fds(2, fd);
 		}
-		exec(list, line, &env);
+		// else if (pipe_exists(list->next) == 0)
+		// 	result = exec(list, line, &env);
+		else
+			result = exec(list, line, &env);
+		delete_local_file(list->next);
+		free(line);
+		// free_all(list);
 	}
-	argc = 0;
-	argv = 0;
-	envp = 0;
+	// argc = 0;
+	// argv = 0;
+	// envp = 0;
+}
+
+
+void	print_fds(int fd, int fds[2][2])
+{
+	write(2, "fd list : ", 11);
+	ft_putnbr_fd(fds[0][1], 2);
+	write(2, " ", 1);
+	ft_putnbr_fd(fds[0][0], 2);
+	write(2, " ", 1);
+	ft_putnbr_fd(fds[1][1], 2);
+	write(2, " ", 1);
+	ft_putnbr_fd(fds[1][0], 2);
+	write(2, "\n", 1);
 }
