@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/18 19:41:35 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/30 19:27:42 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char	*disassemble_assemble(char *fuck, char **envp)
 	return (a);
 }
 
-void	ft_export(char *line,t_copy *env)
+void	ft_export(char *line, t_copy *env)
 {
 	int i = 0;
 	int j = 0;
@@ -185,6 +185,22 @@ void	ft_export(char *line,t_copy *env)
 					{
 						env->cp_envp[i] = string;
 						env->cp_envp[i + 1] = 0;
+					}
+					i = 0;
+					flag = 1;
+					while (env->onlyenv[i])
+					{
+						if (ft_strncmp(env->onlyenv[i], string, j) == 0)
+						{
+							env->onlyenv[i] = string;
+							flag = 2;
+							break ;
+						}
+						i++;
+					}
+					if (flag == 1)
+					{
+						env->onlyenv = vector_add(env->onlyenv, string);
 					}
 					break ;
 				}

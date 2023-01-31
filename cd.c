@@ -6,35 +6,65 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 19:07:18 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/18 20:30:02 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/30 21:19:58 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-void	change_oldpwd(t_copy *env)
+char	*get_pwd(t_copy *env)
 {
 	int	i;
 
 	i = 0;
+	while (env->cp_envp[i])
+	{
+		if (ft_strncmp(env->cp_envp[i], "PWD=", 4) == 0)
+			return (env->cp_envp[i] + 4);
+		i++;
+	}
+	return (0);
+}
+
+char	*get_home(t_copy *env)
+{
+	int	i;
+
+	i = 0;
+	while (env->cp_envp[i])
+	{
+		if (ft_strncmp(env->cp_envp[i], "HOME=", 5) == 0)
+			return (env->cp_envp[i] + 5);
+		i++;
+	}
+	return (0);
+}
+
+void	change_oldpwd(t_copy *env)
+{
+	char	*env_pwd;
+	int		i;
+
+	i = 0;
+	env_pwd = get_pwd(env);
 	while (env->cp_envp[i] && env->onlyenv[i])
 	{
 		if (ft_strncmp(env->cp_envp[i], "OLDPWD=", 7) == 0)
-			env->cp_envp[i] = ft_strjoin("OLDPWD=", getenv("PWD"));
+			env->cp_envp[i] = ft_strjoin("OLDPWD=", env_pwd);
 		if (ft_strncmp(env->onlyenv[i], "OLDPWD=", 7) == 0)
-			env->onlyenv[i] = ft_strjoin("OLDPWD=", getenv("PWD"));
+			env->onlyenv[i] = ft_strjoin("OLDPWD=", env_pwd);
 		i++;
 	}
 	while (env->cp_envp[i])
 	{
 		if (ft_strncmp(env->cp_envp[i], "OLDPWD=", 7) == 0)
-			env->cp_envp[i] = ft_strjoin("OLDPWD=", getenv("PWD"));
+			env->cp_envp[i] = ft_strjoin("OLDPWD=", env_pwd);
 		i++;
 	}
 	while (env->onlyenv[i])
 	{
 		if (ft_strncmp(env->onlyenv[i], "OLDPWD=", 7) == 0)
-			env->onlyenv[i] = ft_strjoin("OLDPWD=", getenv("PWD"));
+			env->onlyenv[i] = ft_strjoin("OLDPWD=", env_pwd);
 		i++;
 	}
 }
@@ -54,14 +84,14 @@ void	change_pwd(t_copy *env, char *pwd)
 	}
 	while (env->cp_envp[i])
 	{
-		if (ft_strncmp(env->cp_envp[i], "pwd=", 4) == 0)
-			env->cp_envp[i] = ft_strjoin("pwd=", getenv("PWD"));
+		if (ft_strncmp(env->cp_envp[i], "PWD=", 4) == 0)
+			env->cp_envp[i] = ft_strjoin("PWD=", pwd);
 		i++;
 	}
 	while (env->onlyenv[i])
 	{
-		if (ft_strncmp(env->onlyenv[i], "pwd=", 4) == 0)
-			env->onlyenv[i] = ft_strjoin("pwd=", getenv("PWD"));
+		if (ft_strncmp(env->onlyenv[i], "PWD=", 4) == 0)
+			env->onlyenv[i] = ft_strjoin("PWD=", pwd);
 		i++;
 	}
 }
@@ -69,8 +99,10 @@ void	change_pwd(t_copy *env, char *pwd)
 void	ft_cd(char *next, t_copy *env)
 {
 	char	*now;
+	char	*env_home;
 
-	if (next == NULL && chdir(getenv("HOME")) == 0)
+	env_home = get_home(env);
+	if (next == NULL && chdir(env_home) == 0)
 	{
 		now = getcwd(NULL, 0);
 		change_oldpwd(env);
@@ -86,7 +118,6 @@ void	ft_cd(char *next, t_copy *env)
 	}
 	else
 	{
-		printf("없을때!!\n");
 		perror("No such file o directory\n");
 	}
 }

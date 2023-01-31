@@ -6,30 +6,22 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 20:13:34 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/15 14:33:28 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/30 21:25:16 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-char	**find_key(char **env)
+char	**only_pick_key(char **key_vector)
 {
-	char	**key_vector;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
-	i = 0;
-	key_vector = 0;
-	while (env[i])
-	{
-		key_vector = vector_add(key_vector, env[i]);
-		i++;
-	}
 	i = 0;
 	while (key_vector[i])
 	{
 		j = 0;
-		while (key_vector[i][j])
+		while (key_vector[j])
 		{
 			if (key_vector[i][j] == '=')
 			{
@@ -40,40 +32,45 @@ char	**find_key(char **env)
 		}
 		i++;
 	}
-
-	for (int i = 0; key_vector[i]; i++)
-		printf("@@@@@@ key vector == %s\n", key_vector[i]);
-	
-
 	return (key_vector);
 }
 
-void ft_unset(char *line, t_copy *env)
+char	**find_key(char **env)
+{
+	char	**key_vector;
+	int		i;
+
+	key_vector = 0;
+	i = 0;
+	while (env[i])
+	{
+		key_vector = vector_add(key_vector, env[i]);
+		i++;
+	}
+	return (only_pick_key(key_vector));
+}
+
+void	ft_unset(char *line, t_copy *env)
 {
 	int i;
 	int j;
 	char *real_test;
-	char **fuck;
+	char **string;
 	char **key_env;
 	char **key_export;
 	t_list *a;
 	t_list *test_a;
 
 	a = ft_lstnew(0);
-	fuck = env_split(line);
-	i = 0;
-	while( fuck[i])
-	{
-		real_test = disassemble_assemble(fuck[i], env->cp_envp);
-		ft_lstadd_back(&a, ft_lstnew(real_test));
-		i++;
-	}
+	string = env_split(line);
+	blank_list_module(string, env, a);
 	test_a = a->next;
 	if (test_a->next == NULL)
 		return ;
 	key_export = 0;
 	key_export = find_key(env->cp_envp);
 	key_env = find_key(env->onlyenv);
+
 	while (test_a->next)
 	{
 		i = 0;

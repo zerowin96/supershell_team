@@ -1,40 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/10 19:17:01 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/30 21:29:14 by yeham            ###   ########.fr       */
+/*   Created: 2023/01/30 11:41:32 by yeham             #+#    #+#             */
+/*   Updated: 2023/01/30 19:39:35 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-void	ft_env(t_copy *env)
+void	ft_signal(int signum)
 {
-	int	i;
-
-	i = 0;
-	while (env->onlyenv[i])
-	{
-		printf("%s\n", env->onlyenv[i]);
-		i++;
-	}
-	return ;
+	if (signum != SIGINT)
+		return ;
+	printf("\n");
+	if (rl_on_new_line() == -1)
+		exit(1);
+	rl_replace_line("", 1);
+	rl_redisplay();
 }
 
-void	blank_list_module(char **string, t_copy *env, t_list *new)
+void	handle_signal(void)
 {
-	char	*temp;
-	int		i;
+	struct sigaction	new;
 
-	i = 0;
-	while (string[i])
-	{
-		temp = disassemble_assemble(string[i], env->cp_envp);
-		ft_lstadd_back(&new, ft_lstnew(temp));
-		i++;
-	}
+	new.sa_flags = 0;
+	sigemptyset(&new.sa_mask);
+	new.__sigaction_u.__sa_handler = ft_signal;
+	sigaction(SIGINT, &new, 0);
+	new.__sigaction_u.__sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &new, 0);
 }
