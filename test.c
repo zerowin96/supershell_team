@@ -126,16 +126,6 @@ int pipe_exists(t_list *line)
 	return (0);
 }
 
-// typedef struct s_com
-// {
-// 	t_list			*command;
-// 	t_list			*infile;
-// 	t_list			*heredoc;
-// 	t_list			*outfile;
-// 	t_list			*outfile_append;
-// 	struct s_com	*next;
-// }	t_com;
-
 static int	sep_kind(t_list *node)
 {
 	if (ft_strncmp(node->content, "<", 2) == 0)
@@ -177,7 +167,7 @@ char *reading(void)
 {
 	char *line;
 
-	printf("reading phase\n");
+	// printf("reading phase\n");
 	line = readline("minishell-1.0$ ");
 	if (line == 0)
 	{
@@ -281,6 +271,33 @@ int	status_return(int pid)
 	return (ret_status);
 }
 
+void	command_run_fd_prev(t_list *temp, int (*fd)[2])
+{
+	fd[PREV][READ] = fd[NEXT][READ];
+	fd[PREV][WRITE] = 0;
+	if (pipe_exists(temp))
+		pipe(fd[NEXT]);
+	else
+	{
+		fd[NEXT][WRITE] = 0;
+		fd[NEXT][READ] = 0;
+	}
+}
+
+void	command_run_fd_post(int (*fd)[2])
+{
+	if (fd[PREV][READ])
+	{
+		close(fd[PREV][READ]);
+		fd[PREV][READ] = 0;
+	}
+	if (fd[NEXT][WRITE])
+	{
+		close(fd[NEXT][WRITE]);
+		fd[NEXT][WRITE] = 0;
+	}
+}
+
 int	command_run(t_list* list, char *line, t_copy *e)
 {
 	int	pipefd[2][2];
@@ -292,40 +309,16 @@ int	command_run(t_list* list, char *line, t_copy *e)
 	pipefd[NEXT][WRITE] = 0;
 	while (temp)
 	{
-		//sep
-		pipefd[PREV][READ] = pipefd[NEXT][READ];
-		pipefd[PREV][WRITE] = 0;
-		if (pipe_exists(temp))
-			pipe(pipefd[NEXT]);
-		else
-		{
-			pipefd[NEXT][WRITE] = 0;
-			pipefd[NEXT][READ] = 0;
-		}
-		//sep
+		command_run_fd_prev(temp, pipefd);
 		pid = fork();
 		if (pid == 0)
-		{
 			child_process(temp, line, e, pipefd);
-			exit (127);
-		}
 		else if (pid < 0)
 		{
 			perror("fork failed");
 			exit (1);
 		}
-		//sep
-		if (pipefd[PREV][READ])
-		{
-			close(pipefd[PREV][READ]);
-			pipefd[PREV][READ] = 0;
-		}
-		if (pipefd[NEXT][WRITE])
-		{
-			close(pipefd[NEXT][WRITE]);
-			pipefd[NEXT][WRITE] = 0;
-		}
-		//sep
+		command_run_fd_post(pipefd);
 		while (temp && ft_strncmp(((char *)temp->content), "|", 2) != 0)
 			temp = temp->next;
 		if (temp)
@@ -348,12 +341,42 @@ void	command_split_delspace(t_list *list, char **temp_string)
 	}
 }
 
+int	command_split_separator(t_list *temp, int (*fd)[2], int sep)
+{
+	if (sep == 1 || sep == 2)
+	{
+		fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
+		if (fd[PREV][READ] < 0)
+		{
+			if (sep == 1)
+				perror("file not found");
+			else
+				perror("heredoc temp file error");
+			return (1);
+		}
+	}
+	else
+	{
+		if (sep == 3)
+			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
+		else
+			fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
+		if (fd[NEXT][WRITE] < 0)
+		{
+			perror("file open error");
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_string)
 {
 	int sep;
 
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
+		sep = sep_kind(temp);
 		if (((char *)(temp->content))[0] == ' ')
 		{
 			temp = temp->next;
@@ -361,31 +384,8 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_strin
 				(*temp_string) = string_connect((*temp_string), " ");
 			continue;
 		}
-		sep = sep_kind(temp);
-		if (sep == 1 || sep == 2)
-		{
-			fd[PREV][READ] = open(((char *)(temp->next->content)), O_RDONLY);
-			if (fd[PREV][READ] < 0)
-			{
-				if (sep == 1)
-					perror("file not found");
-				else
-					perror("heredoc temp file error");
-				return (1);
-			}
-		}
-		else if (sep == 3 || sep == 4)
-		{
-			if (sep == 3)
-				fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_TRUNC | O_CREAT, 0644);
-			else
-				fd[NEXT][WRITE] = open(((char *)(temp->next->content)), O_RDWR | O_APPEND | O_CREAT, 0644);
-			if (fd[NEXT][WRITE] < 0)
-			{
-				perror("file open error");
-				exit(1);
-			}
-		}
+		else if (sep >= 1 && sep <= 4)
+			command_split_separator(temp, fd, sep);
 		else
 		{
 			(*command) = vector_add((*command), (char *)(temp->content));
@@ -400,19 +400,8 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **temp_strin
 }
 
 
-void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
+void	child_process_fd_pre(int (*fd)[2])
 {
-	t_list *temp = list;
-	char **envp = e->cp_envp;
-
-	char **command = 0;
-	char *temp_string = 0;
-
-	int tnum;
-	tnum = command_split(list, fd, &command, &temp_string);
-	if (tnum)
-		exit (tnum);
-
 	if (fd[PREV][READ])
 	{
 		dup2(fd[PREV][READ], 0);
@@ -425,21 +414,17 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	}
 	if (fd[NEXT][READ])
 		close(fd[NEXT][READ]);
+}
 
-	if (builtin_check(temp_string, list, e, command[0]))
-	{
-		int result = builtin_exec(temp_string, list, e, builtin_check(temp_string, list, e, command[0]));
-		free(temp_string);
-		exit (result);
-	}
+void	child_process_run(char **command, char **envp)
+{
+	int path_index;
+	char **paths;
+	int errcheck;
 
-	free(temp_string);
-	free_space(list);
-
-	int path_index = 0;
-	char **paths = get_path_split(envp);
-	int errcheck = 0;
-
+	path_index = 0;
+	errcheck = 0;
+	paths = get_path_split(envp);
 	path_index = check_access(command[0], paths, X_OK);
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
@@ -453,6 +438,28 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	perror("command not found");
 	vector_free(command);
 	exit(127);
+}
+
+void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
+{
+	t_list *temp = list;
+	char **command = 0;
+	char *temp_string = 0;
+	int tnum;
+
+	tnum = command_split(list, fd, &command, &temp_string);
+	if (tnum)
+		exit (tnum);
+	child_process_fd_pre(fd);
+	if (builtin_check(temp_string, list, e, command[0]))
+	{
+		int result = builtin_exec(temp_string, list, e, builtin_check(temp_string, list, e, command[0]));
+		free(temp_string);
+		exit (result);
+	}
+	free(temp_string);
+	free_space(list);
+	child_process_run(command, e->cp_envp);
 }
 
 int	quote_check(t_list *list)
@@ -483,8 +490,6 @@ int	quote_check(t_list *list)
 
 int main(int argc, char **argv, char **envp)
 {
-	int i;
-	int j;
 	char *line;
 	t_list *list;
 	t_copy env;
@@ -492,17 +497,24 @@ int main(int argc, char **argv, char **envp)
 
 	line = 0;
 	list = NULL;
-	i = 0;
 	env.cp_envp = envp;
 	env.onlyenv = 0;
+
+
+
+	int i;
+	i = 0;
 	while (envp[i])
 	{
 		env.onlyenv = vector_add(env.onlyenv, envp[i]);
 		i++;
 	}
 
+
+
 	while (1)
 	{
+		handle_signal();
 		line = reading();
 		if (line == 0 || *line == 0)
 			continue;
@@ -516,7 +528,22 @@ int main(int argc, char **argv, char **envp)
 			free_list(list);
 			continue;
 		}
+
+		// int heredoc_status;
+		// int heredoc_pid;
+		// heredoc_pid = fork();
+		// if (heredoc_pid == 0)
+		// {
+		// 	heredoc(list->next);
+		// 	exit(0);
+		// }
+		// else
+		// 	waitpid(heredoc_pid, &heredoc_status, 0);
+		// if (heredoc_status == SIGINT)
+		// 	continue ;
+		// printf("heredoc has done\n");
 		heredoc(list->next);
+
 		if (pipe_exists(list->next) == 0 && builtin_check(line, list->next, &env, list->next->content))
 		{
 			char **command = 0;
