@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/31 22:03:41 by yeham            ###   ########.fr       */
+/*   Updated: 2023/01/31 22:08:22 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,14 @@ int	flag_check(int flag, char *string)
 	return (check);
 }
 
+void check_print(int check)
+{
+	if (check == 0)
+		printf("\n");
+	if (check == 1)
+		printf("\b");
+}
+
 void	ft_echo(char *line, t_copy *env)
 {
 	t_list	*head;
@@ -63,6 +71,5 @@ void	ft_echo(char *line, t_copy *env)
 		}
 		head = head->next;
 	}
-	if (check == 0)
-		printf("\n");
+	check_print(check);
 }
