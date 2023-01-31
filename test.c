@@ -182,6 +182,9 @@ char *reading(void)
 
 void	builtin_exec_cd(t_list *node, t_copy *e)
 {
+	int	result;
+
+	result = 0;
 	if (node->next)
 	{
 		if (node->next->next != 0)
@@ -190,9 +193,11 @@ void	builtin_exec_cd(t_list *node, t_copy *e)
 			ft_putstr_fd("too many arguments\n", 2);
 			return ;
 		}
+		// result = ft_cd((char *)node->next->content, e);
 		ft_cd((char *)node->next->content, e);
 	}
 	else
+		// result = ft_cd(NULL, e);
 		ft_cd(NULL, e);
 }
 
@@ -224,31 +229,61 @@ int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
 int	command_check(t_list *list)
 {
 	t_list *temp1;
+	int		index;
 
+	index = 0;
 	temp1 = list->next;
 	while (temp1)
 	{
-		if ((sep_kind(temp1) && !(temp1->next)))
-		{
-			printf("syntax error near unexpected token `newline'\n");
-			return (258);
-		}
-		else if ((sep_kind(temp1) && sep_kind(temp1->next)) || \
-		(sep_kind(temp1) && (((char *)(temp1->next->content))[0] == ' ') \
-		&& sep_kind(temp1->next->next)))
-		{
-			printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
-			return (258);
-		}
+		if ((sep_kind(temp1) && (!(temp1->next) || ((((char *)(temp1->next->content))[0] == ' ') && !(temp1->next->next)))))
+			index = printf("syntax error near unexpected token `newline'\n");
+		else if (sep_kind(temp1) && (((char *)(temp1->next->content))[0] == ' ') && sep_kind(temp1->next->next))
+			index = printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->next->content));
+		else if (sep_kind(temp1) && sep_kind(temp1->next))
+			index = printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
 		else if (sep_kind(temp1) == 0)
 		{
 			temp1 = temp1->next;
 			continue;
 		}
+		if (index)
+			return (258);
 		temp1 = temp1->next->next;
 	}
 	return (0);
 }
+
+// int	command_check(t_list *list)
+// {
+// 	t_list *temp1;
+
+// 	temp1 = list->next;
+// 	while (temp1)
+// 	{
+// 		if ((sep_kind(temp1) && (!(temp1->next) || ((((char *)(temp1->next->content))[0] == ' ') && !(temp1->next->next)))))
+// 		{
+// 			printf("syntax error near unexpected token `newline'\n");
+// 			return (258);
+// 		}
+// 		else if (sep_kind(temp1) && (((char *)(temp1->next->content))[0] == ' ') && sep_kind(temp1->next->next))
+// 		{
+// 			printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->next->content));
+// 			return (258);
+// 		}
+// 		else if (sep_kind(temp1) && sep_kind(temp1->next))
+// 		{
+// 			printf("syntax error near unexpected token '%s'\n", (char *)(temp1->next->content));
+// 			return (258);
+// 		}
+// 		else if (sep_kind(temp1) == 0)
+// 		{
+// 			temp1 = temp1->next;
+// 			continue;
+// 		}
+// 		temp1 = temp1->next->next;
+// 	}
+// 	return (0);
+// }
 
 int	exec(t_list* list, char *line, t_copy *e)
 {
@@ -303,7 +338,7 @@ void	command_run_fd_post(int (*fd)[2])
 int	command_run(t_list* list, char *line, t_copy *e)
 {
 	int	pipefd[2][2];
-	int pid = 0;
+	int pid;
 	t_list *temp;
 
 	temp = list;
