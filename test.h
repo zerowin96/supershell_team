@@ -16,6 +16,7 @@
 // # include "~/.brew/opt/readline/include/readline.h"
 // # include "~/.brew/opt/readline/include/history.h"
 # include "libft/libft.h"
+
 // # include "get_next_line/get_next_line.h"
 typedef struct s_cnt
 {
@@ -55,6 +56,9 @@ void	ft_pwd(void);
 void	ft_cd(char *next, t_copy *env);
 static int is_separator(char *string);
 void ft_exit(void);
+void	handle_signal(void);
+void	blank_list_module(char **string, t_copy *env, t_list *new);
+
 
 void	free_space(t_list *list);
 void	quote_trim(t_list *list);
