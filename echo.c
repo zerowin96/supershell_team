@@ -3,77 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/29 15:25:28 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/01/31 22:03:41 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-void	ft_echo(char *line, t_copy *env)
+int	only_n_check(char *string)
 {
-	char **echo_line;
-	char *real_test;
-	int flag;
-	int i;
-	t_list *a;
-	t_list *head;
+	int	i;
 
-	flag = 0;
-	a = ft_lstnew(0);
-	echo_line = env_split(line);
-	i = 0;
-	while (echo_line[i])
+	i = 1;
+	while (string[i])
 	{
-		real_test = disassemble_assemble(echo_line[i], env->cp_envp);
-		ft_lstadd_back(&a, ft_lstnew(real_test));
+		if (string[i] != 'n')
+			return (2);
 		i++;
 	}
-	head = a->next;
-	// while (ft_strcmp(head->next->content, "-n") == 0)
-	// {
-	// 	head = head->next;
-	// 	flag = 1;
-	// }
-	
-	
-
-	// head = head->next->next;
-
-
-	// t_list	*prev = head;
-	// while (prev)
-	// {
-	// 	if (prev->next)
-	// 		if (prev->next->next == 0)
-	// 		{
-	// 			if (((char *)(prev->next->content))[0] == ' ' && ((char *)(prev->next->content))[1] == 0)
-	// 			free(prev->next->content);
-	// 			free(prev->next);
-	// 			prev->next = 0;
-	// 		}
-	// 	prev = prev->next;
-	// }
-
-
-	printf("@@@@@@@@@@ echo test@@@@@@@\n");
-	while (head->next)
-	{
-		printf("%s", head->next->content);
-		head = head->next;
-		if (head->next)
-			printf(" ");
-	}
-	if (flag == 0)
-		printf("\n");
-	printf("@@@@@@@@@@ echo test@@@@@@@\n");
+	return (1);
 }
 
-// int main(int argc, char **argv, char **envp)
-// {
-// 	t_copy c;
-// 	c.cp_envp = envp;
-// 	ft_echo("android life\n", 0)
-// }
+int	flag_check(int flag, char *string)
+{
+	int	check;
+
+	check = 0;
+	if (flag == 1)
+		check = 1;
+	else if (flag == 2)
+		printf("%s ", string);
+	return (check);
+}
+
+void	ft_echo(char *line, t_copy *env)
+{
+	t_list	*head;
+	int		flag;
+	int		check;
+
+	flag = 0;
+	check = 0;
+	head = ft_lstnew(0);
+	blank_list_module(env_split(line), env, head);
+	head = head->next;
+	while (head->next)
+	{
+		if (ft_strncmp(head->next->content, "-n", 2) == 0 && flag != 2)
+		{
+			flag = only_n_check(head->next->content);
+			check = flag_check(flag, head->next->content);
+		}
+		else
+		{
+			printf("%s ", head->next->content);
+			flag = 2;
+		}
+		head = head->next;
+	}
+	if (check == 0)
+		printf("\n");
+}
