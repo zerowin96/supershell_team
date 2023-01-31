@@ -180,6 +180,22 @@ char *reading(void)
 	return (line);
 }
 
+void	builtin_exec_cd(t_list *node, t_copy *e)
+{
+	if (node->next)
+	{
+		if (node->next->next != 0)
+		{
+			// perror("Too many argumet");
+			ft_putstr_fd("too many arguments\n", 2);
+			return ;
+		}
+		ft_cd((char *)node->next->content, e);
+	}
+	else
+		ft_cd(NULL, e);
+}
+
 int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
 {
 	char	*temp_string = 0;
@@ -190,21 +206,7 @@ int		builtin_exec(char *line, t_list *node, t_copy *e, int index)
 	if (index == 1)
 		ft_echo(line, e);
 	else if (index == 2)
-	{
-		//이 부분 cd 안에 넣기
-		if (node->next)
-		{
-			if (node->next->next != 0)
-			{
-				// perror("Too many argumet");
-				ft_putstr_fd("too many arguments\n", 2);
-				return (1);
-			}
-			ft_cd((char *)node->next->content, e);
-		}
-		else
-			ft_cd(NULL, e);
-	}
+		builtin_exec_cd(node, e);
 	else if (index == 3)
 		ft_pwd();
 	else if (index == 4)
@@ -528,22 +530,7 @@ int main(int argc, char **argv, char **envp)
 			free_list(list);
 			continue;
 		}
-
-		// int heredoc_status;
-		// int heredoc_pid;
-		// heredoc_pid = fork();
-		// if (heredoc_pid == 0)
-		// {
-		// 	heredoc(list->next);
-		// 	exit(0);
-		// }
-		// else
-		// 	waitpid(heredoc_pid, &heredoc_status, 0);
-		// if (heredoc_status == SIGINT)
-		// 	continue ;
-		// printf("heredoc has done\n");
 		heredoc(list->next);
-
 		if (pipe_exists(list->next) == 0 && builtin_check(line, list->next, &env, list->next->content))
 		{
 			char **command = 0;
