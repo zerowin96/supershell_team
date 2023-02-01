@@ -60,6 +60,7 @@ void	handle_signal(void);
 void	blank_list_module(char **string, t_copy *env, t_list *new);
 void	parent_handle_signal(void);
 void	heredoc_handle_signal(void);
+void	sort_and_print(char **string);
 
 void	free_space(t_list *list);
 void	quote_trim(t_list *list);

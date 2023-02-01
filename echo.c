@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 18:59:39 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/01 13:55:33 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	flag_check(int flag, char *string)
 	return (check);
 }
 
-void check_print(int check)
+void	check_print(int check)
 {
 	if (check == 0)
 		printf("\n");
@@ -72,5 +72,4 @@ void	ft_echo(char *line, t_copy *env)
 		head = head->next;
 	}
 	check_print(check);
-	free_list(head);
 }

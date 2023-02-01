@@ -525,12 +525,13 @@ void	init_env(t_copy *env, char **envp)
 {
 	int	i;
 
-	env->cp_envp = envp;
+	env->cp_envp = 0;
 	env->onlyenv = 0;
 	i = 0;
 	while (envp[i])
 	{
 		env->onlyenv = vector_add(env->onlyenv, envp[i]);
+		env->cp_envp = vector_add(env->cp_envp, envp[i]);
 		i++;
 	}
 }

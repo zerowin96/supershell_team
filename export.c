@@ -6,226 +6,98 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/30 19:27:42 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 17:12:58 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	unsigned char	*ss1;
-	unsigned char	*ss2;
-
-	ss1 = (unsigned char *)s1;
-	ss2 = (unsigned char *)s2;
-	while (*ss1 && *ss2)
-	{
-		if (*ss1 != *ss2)
-			return (*ss1 - *ss2);
-		ss1++;
-		ss2++;
-	}
-	return (*ss1 - *ss2);
-}
-
-void	export_print(char **sorted_envp)
+void	replace_cp_env_key(t_copy *env, char *string, int j)
 {
 	int	i;
+
+	i = 0;
+	while (env->cp_envp[i])
+	{
+		if (ft_strncmp(env->cp_envp[i], string, j) == 0)
+		{
+			vector_replace(env->cp_envp, i, string);
+			return ;
+		}
+		i++;
+	}
+	env->cp_envp = vector_add(env->cp_envp, string);
+}
+
+void	replace_onlyenv_key(t_copy *env, char *string, int j)
+{
+	int	i;
+
+	i = 0;
+	while (env->onlyenv[i])
+	{
+		if (ft_strncmp(env->onlyenv[i], string, j) == 0)
+		{
+			vector_replace(env->onlyenv, i, string);
+			return ;
+		}
+		i++;
+	}
+	env->onlyenv = vector_add(env->onlyenv, string);
+}
+
+void	same_check(t_copy *env, char *string)
+{
+	int	flag;
+	int	i;
+
+	i = 0;
+	while (env->cp_envp[i])
+	{
+		if (ft_strncmp(env->cp_envp[i], string, ft_strlen(string)) == 0)
+			return ;
+		i++;
+	}
+	env->cp_envp = vector_add(env->cp_envp, string);
+}
+
+void	find_equals_sign(char *string, t_copy *env)
+{
 	int	j;
 	int	flag;
 
-	i = 0;
-	while (sorted_envp[i])
+	j = 0;
+	flag = 0;
+	while (string[j])
 	{
-		write(1, "declare -x ", 11);
-		j = 0;
-		flag = 0;
-		while (sorted_envp[i][j])
+		if (string[j] == '=')
 		{
-			write(1, &sorted_envp[i][j], 1);
-			if (sorted_envp[i][j] == '=' && flag == 0)
-			{
-				write(1, "\"", 1);
-				flag = 1;
-			}
-			j++;
+			flag = 1;
+			replace_cp_env_key(env, string, j);
+			replace_onlyenv_key(env, string, j);
+			break ;
 		}
-		if (flag == 1)
-			write(1, "\"", 1);
-		write(1, "\n", 1);
-		i++;
+		j++;
 	}
-}
-
-void	sort_and_print(char **env)
-{
-	int		i;
-	int		j;
-	char	*temp;
-	char	**sorted_envp;
-
-	i = 0;
-	sorted_envp = 0;
-	while (env[i])
-	{
-		sorted_envp = vector_add(sorted_envp, env[i]);
-		i++;
-	}
-	i = 0;
-	while (sorted_envp[i])
-	{
-		j = 0;
-		while (sorted_envp[j + 1])
-		{
-			if (ft_strcmp(sorted_envp[j], sorted_envp[j + 1]) > 0)
-			{
-				temp = sorted_envp[j];
-				sorted_envp[j] = sorted_envp[j + 1];
-				sorted_envp[j + 1] = temp;
-			}
-			j++;
-		}
-		i++;
-	}
-	export_print(sorted_envp);
-}
-
-char	*assemble(t_list *dis)
-{
-	t_list	*head;
-	char	*a;
-
-	a = ft_strdup("");
-	head = dis;
-	while (head)
-	{
-		a = ft_strjoin(a, head->content);
-		head = head->next;
-	}
-	return (a);
-}
-
-char	*disassemble_assemble(char *fuck, char **envp)
-{
-	t_list	*dis;
-	t_list	*head;
-	char	*a;
-
-	dis = ft_lstnew(0);
-	dis = parsing(fuck, envp);
-	head = dis;
-	quote_trim(head);
-	free_empty(head);
-	a = assemble(head);
-	return (a);
+	if (flag == 0)
+		same_check(env, string);
 }
 
 void	ft_export(char *line, t_copy *env)
 {
-	int i = 0;
-	int j = 0;
-	int k = 0;
-	int flag = 0;
-	char *real_test;
-	char *string;
-	char **fuck;
-	t_list *a, *test_a;
+	t_list	*head;
 
-	a = ft_lstnew(0);
-	fuck = env_split(line);
-	
-	while(fuck[k])
-	{
-		real_test = disassemble_assemble(fuck[k], env->cp_envp);
-		ft_lstadd_back(&a, ft_lstnew(real_test));
-		k++;
-	}
-
-	test_a = a->next;
-
-	// printf("@@@@@@@@@@@@export TTTOOOKKEENN@@@@@\n");
-	// while(test_a->next)
-	// {
-	// 	printf("%s\n", test_a->next->content);
-	// 	test_a=test_a->next;
-	// }
-	// printf("@@@@@@@@@@@@export TTTOOOKKEENN@@@@@\n");
-	
-	// test_a = a->next;
-	if (test_a->next == NULL)
+	head = ft_lstnew(0);
+	blank_list_module(env_split(line), env, head);
+	head = head->next;
+	if (head->next == NULL)
 	{
 		sort_and_print(env->cp_envp);
 		return ;
 	}
-	else
+	while (head->next)
 	{
-		while (test_a->next)
-		{
-			i = 0;
-			j = 0;
-			flag = 0;
-			string = (test_a->next->content);
-			while (string[j])
-			{
-				if (string[j] == '=')
-				{
-					flag = 1;
-					while (env->cp_envp[i])
-					{
-						if (ft_strncmp(env->cp_envp[i], string, j) == 0)
-						{
-							env->cp_envp[i] = string;
-							flag = 2;
-							break ;
-						}
-						i++;
-					}
-					if (flag == 1)
-					{
-						env->cp_envp[i] = string;
-						env->cp_envp[i + 1] = 0;
-					}
-					i = 0;
-					flag = 1;
-					while (env->onlyenv[i])
-					{
-						if (ft_strncmp(env->onlyenv[i], string, j) == 0)
-						{
-							env->onlyenv[i] = string;
-							flag = 2;
-							break ;
-						}
-						i++;
-					}
-					if (flag == 1)
-					{
-						env->onlyenv = vector_add(env->onlyenv, string);
-					}
-					break ;
-				}
-				j++;
-			}
-			if (flag == 0)
-			{
-				i = 0;
-				while (env->cp_envp[i])
-				{
-					if (ft_strncmp(env->cp_envp[i], string, \
-						ft_strlen(string)) == 0)
-					{
-						flag = 3;
-						break ;
-					}
-					i++;
-				}
-				if (flag == 0)
-				{
-					env->cp_envp[i] = string;
-					env->cp_envp[i + 1] = 0;
-				}
-			}
-			test_a = test_a->next;
-		}
+		find_equals_sign(head->next->content, env);
+		head = head->next;
 	}
 }

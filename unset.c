@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 20:13:34 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/30 21:25:16 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 19:31:11 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,63 +50,61 @@ char	**find_key(char **env)
 	return (only_pick_key(key_vector));
 }
 
+void	erase_export(t_copy *env, char ***key_export, char *string)
+{
+	int	i;
+
+	i = 0;
+	while (env->cp_envp[i])
+	{
+		if (ft_strcmp((*key_export)[i], string) == 0)
+		{
+			env->cp_envp = vector_delete_index(env->cp_envp, i);
+			*key_export = vector_delete_index(*key_export, i);
+			break ;
+		}
+		i++;
+	}	
+}
+
+void	erase_env(t_copy *env, char ***key_env, char *string)
+{
+	int	i;
+
+	i = 0;
+	while (env->onlyenv[i])
+	{
+		if (ft_strcmp((*key_env)[i], string) == 0)
+		{
+			env->onlyenv = vector_delete_index(env->onlyenv, i);
+			*key_env = vector_delete_index(*key_env, i);
+			break ;
+		}
+		i++;
+	}	
+}
+
 void	ft_unset(char *line, t_copy *env)
 {
-	int i;
-	int j;
-	char *real_test;
-	char **string;
-	char **key_env;
-	char **key_export;
-	t_list *a;
-	t_list *test_a;
+	char	**key_env;
+	char	**key_export;
+	t_list	*head;
+	t_list	*temp;
 
-	a = ft_lstnew(0);
-	string = env_split(line);
-	blank_list_module(string, env, a);
-	test_a = a->next;
-	if (test_a->next == NULL)
+	head = ft_lstnew(0);
+	blank_list_module(env_split(line), env, head);
+	temp = head;
+	head = head->next;
+	if (head->next == NULL)
 		return ;
 	key_export = 0;
+	key_env = 0;
 	key_export = find_key(env->cp_envp);
 	key_env = find_key(env->onlyenv);
-
-	while (test_a->next)
+	while (head->next)
 	{
-		i = 0;
-		while (env->cp_envp[i])
-		{
-			if (ft_strcmp(key_export[i], test_a->next->content) == 0)
-			{
-				while (env->cp_envp[i + 1])
-				{
-					env->cp_envp[i] = env->cp_envp[i + 1];
-					key_export[i] = key_export[i + 1];
-					i++;
-				}
-				env->cp_envp[i] = NULL;
-				key_export[i] = NULL;
-				break ;
-			}
-			i++;
-		}
-		i = 0;
-		while (env->onlyenv[i])
-		{
-			if (ft_strcmp(key_env[i], test_a->next->content) == 0)
-			{
-				while (env->onlyenv[i + 1])
-				{
-					env->onlyenv[i] = env->onlyenv[i + 1];
-					key_env[i] = key_env[i + 1];
-					i++;
-				}
-				env->onlyenv[i] = NULL;
-				key_env[i] = NULL;
-				break ;
-			}
-			i++;
-		}
-		test_a = test_a->next;
+		erase_export(env, &key_export, head->next->content);
+		erase_env(env, &key_env, head->next->content);
+		head = head->next;
 	}
 }
