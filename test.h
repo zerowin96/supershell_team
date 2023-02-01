@@ -11,8 +11,10 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/errno.h>
-# include <readline/history.h>
 # include <readline/readline.h>
+# include <readline/history.h>
+// # include "~/.brew/opt/readline/include/readline.h"
+// # include "~/.brew/opt/readline/include/history.h"
 # include "libft/libft.h"
 
 // # include "get_next_line/get_next_line.h"

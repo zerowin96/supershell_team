@@ -6,13 +6,15 @@ char	*ft_strjoin2(const char *replace, const char *source, int start, int finish
 
 int	is_ifs(int c)
 {
-	return ((c == ' ' || c =='n' || c == '\t'));
+	return ((c == ' ' || c =='\n' || c == '\t'));
 }
 
-static int is_separator(char *string)
-{
-	int	index = 0;
 
+static int is_separator_quote(char *string)
+{
+	int	index;
+
+	index = 0;
 	if (string[index] == '\'')
 	{
 		index++;
@@ -27,12 +29,20 @@ static int is_separator(char *string)
 			index++;
 		index++;
 	}
+	return (index);
+}
+static int is_separator(char *string)
+{
+	int	index = 0;
+
+	index = 0;
+	if (string[index] == '\'' || string[index] == '\"')
+		return (is_separator_quote(string));
 	else if (string[index] == '>')
 	{
 		index++;
 		if (string[index] == '>')
 			index++;
-
 	}
 	else if (string[index] == '<')
 	{
@@ -41,10 +51,7 @@ static int is_separator(char *string)
 			index++;
 	}
 	else if (string[index] == '|')
-	{
-		// pipe->pipe_cnt++;
 		return (1);
-	}
 	else
 		return (0);
 	return (index);
@@ -55,18 +62,57 @@ void	partial_string(t_list *list, char *string, int start, int finish)
 {
 	char *temp;
 
-	// printf("partial string : %d~%d", start, finish);
 	temp = (char *)ft_calloc(finish - start + 2, sizeof(char));
 	ft_memmove(temp, &string[start], finish - start + 1);
-	// printf("  ....%s....\n", temp);
 	ft_lstadd_back(&list, ft_lstnew(temp));
+}
+
+void	tokenize_expansion(t_list *list, char *string, int *index)
+{
+	int	start;
+	int	finish;
+
+	start = (*index);
+	while (string[(*index)] != ' ' && string[(*index)] && \
+	is_separator(&string[(*index)]) == 0)
+	{
+		(*index)++;
+		if (string[(*index)] == '$')
+			break ;
+	}
+	finish = (*index) - 1;
+	partial_string(list, string, start, finish);
+	(*index)--;
+}
+
+void	tokenize_space(t_list *list, char *string, int *index)
+{
+	int	start;
+	int	finish;
+
+	start = (*index);
+	while (string[(*index)] != ' ' && string[(*index)] && \
+	is_separator(&string[(*index)]) == 0 && string[(*index)] != '$')
+		(*index)++;
+	finish = (*index) - 1;
+	partial_string(list, string, start, finish);
+	(*index)--;
+}
+
+void	tokenize_separator(t_list *list, char *string, int *index)
+{
+	int	start;
+	int	finish;
+
+	start = (*index);
+	(*index) += (is_separator(&string[(*index)]) - 1);
+	finish = (*index);
+	partial_string(list, string, start, finish);
 }
 
 void	tokenize(t_list *list, char *string)
 {
-	int		start = 0;
-	int		finish = 0;
-	int		index = 0;
+	int		index;
 
 	index = 0;
 	while (string[index])
@@ -78,58 +124,62 @@ void	tokenize(t_list *list, char *string)
 				index++;
 		}
 		if (is_separator(&string[index]))
-		{
-			start = index;
-			index += (is_separator(&string[index]) - 1);
-			finish = index;
-			partial_string(list, string, start, finish);
-		}
-		else if (string[index] && string[index] != ' ' && string[index] == '$')
-		{
-			start = index;
-			while (string[index] != ' ' && string[index] && \
-			is_separator(&string[index]) == 0)
-			{
-				index++;
-				if (string[index] == '$')
-					break ;
-			}
-			finish = index - 1;
-			partial_string(list, string, start, finish);
-			index--;
-		}
+			tokenize_separator(list, string, &index);
+		else if (string[index] && string[index] == '$')
+			tokenize_expansion(list, string, &index);
 		else if (string[index] && string[index] != ' ')
-		{
-			start = index;
-			while (string[index] != ' ' && string[index] && \
-			is_separator(&string[index]) == 0 && string[index] != '$')
-				index++;
-			finish = index - 1;
-			partial_string(list, string, start, finish);
-			index--;
-		}
+			tokenize_space(list, string, &index);
 		if (string[index] == 0)
 			break ;
 		index++;
 	}
 }
 
-t_list *parsing(char *line, char **envp)//, int result)
+t_list *parsing(char *line, char **envp)
 {
 	t_list *list;
 	t_list *now;
 
-	// printf("line : $%s$\n", line);
 	list = ft_lstnew(0);
 	tokenize(list, line);
+	if (quote_check(list))
+		return (0);
+	env_expansion(list, envp);
 
+	//TOKEN PRINT
+	// printf("--------------------TOKENS\n");
+	// now = list->next;
+	// while (now)
+	// {
+	// 	printf("%s\n", now->content);
+	// 	now = now->next;
+	// }
+	// printf("--------------------tokens are stored in linked list\n");
+	return (list);
+}
 
+t_list *first_parsing(char *line, char **envp, int prev_result)
+{
+	t_list *list;
+	t_list *now;
+
+	list = ft_lstnew(0);
+	tokenize(list, line);
 	if (quote_check(list))
 	{
 		//free_all_list(list);
 		return (0);
 		//::change the value of return into "command not found-ish"
 	}
+	qmark_expansion(list, prev_result);
+	// printf("--------------------TOKENS\n");
+	// now = list->next;
+	// while (now)
+	// {
+	// 	printf("%s\n", now->content);
+	// 	now = now->next;
+	// }
+	// printf("--------------------tokens are stored in linked list\n");
 	env_expansion(list, envp);//, result);
 
 	//TOKEN PRINT
@@ -144,141 +194,88 @@ t_list *parsing(char *line, char **envp)//, int result)
 	return (list);
 }
 
-t_list *first_parsing(char *line, char **envp, int prev_result)//, int result)
+char	*env_expansion_string_a_env(char **string, char **envp, char *temp)
 {
-	t_list *list;
-	t_list *now;
+	char	*temp2;
+	int		index;
 
-	// printf("line : $%s$\n", line);
-	list = ft_lstnew(0);
-	tokenize(list, line);
+	temp2 = 0;
+	index = 0;
+	while(envp[index])
+	{
+		if (ft_strncmp(envp[index], temp, ft_strlen(temp)) == 0)
+		{
+			temp2 = &(envp[index][ft_strlen(temp)]);
+			break ;
+		}
+		index++;
+	}
+	return (temp2);
+}
 
-	if (quote_check(list))
-	{
-		//free_all_list(list);
-		return (0);
-		//::change the value of return into "command not found-ish"
-	}
-	qmark_expansion(list, prev_result);
-	printf("--------------------TOKENS\n");
-	now = list->next;
-	while (now)
-	{
-		printf("%s\n", now->content);
-		now = now->next;
-	}
-	printf("--------------------tokens are stored in linked list\n");
-	env_expansion(list, envp);//, result);
+void	env_expansion_string_a(char **string, char **envp, int *index)
+{
+	int		start;
+	int		finish;
+	char	*temp[3];
 
-	//TOKEN PRINT
-	printf("--------------------TOKENS\n");
-	now = list->next;
-	while (now)
-	{
-		printf("%s\n", now->content);
-		now = now->next;
-	}
-	printf("--------------------tokens are stored in linked list\n");
-	return (list);
+	start = ++(*index);
+	while (ft_isalpha((*string)[(*index)]) || ft_isdigit((*string)[(*index)]))
+		(*index)++;
+	finish = (*index) - 1;
+	temp[0] = (char *)ft_calloc(finish - start + 3, sizeof(char));
+	ft_memmove(temp[0], &(*string)[start], finish - start + 1);
+	temp[0][finish - start + 1] = '=';
+	temp[1] = env_expansion_string_a_env(string, envp, temp[0]);
+	free(temp[0]);
+	temp[2] = ft_strjoin2(temp[1], *string, start, finish);
+	free(*string);
+	*string = temp[2];
+	(*index) = (start - 1) + ft_strlen(temp[1]);
 }
 
 void	env_expansion_string(char **string, char **envp)
 {
-	int start = 0;
-	int index = 0;
-	int	finish = 0;
+	int	index = 0;
 	int	i = 0;
-
-	// char *temp;
-
-	char 	*temp;
-	char	*temp2;
-	char	*temp3;
-
 
 	if ((*string)[index] == '\'')
 		return ;
 	while ((*string)[index])
 	{
 		if ((*string)[index] == '$' && (*string)[index + 1])
-		{
-			start = ++index;
-			// if ((*string)[index] == 0)
-			// 	continue;
-			while (ft_isalpha((*string)[index]) || ft_isdigit((*string)[index]))
-				index++;
-			finish = index - 1;
-			temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
-			ft_memmove(temp, &(*string)[start], finish - start + 1);
-			temp[finish - start + 1] = '=';
-			// printf("finding : %s\n", temp);
-			temp2 = 0;
-			while(envp[i])
-			{
-				if (ft_strncmp(envp[i], temp, ft_strlen(temp)) == 0)
-				{
-					temp2 = &(envp[i][ft_strlen(temp)]);
-					break ;
-				}
-				i++;
-			}
-			free(temp);
-			// printf("its key : %s\n", temp2);
-			temp3 = ft_strjoin2(temp2, *string, start, finish);
-			free(*string);
-			*string = temp3;
-			// cursor->content = temp3;
-			index = (start - 1) + ft_strlen(temp2);
-			temp2 = 0;
-		}
+			env_expansion_string_a(string, envp, &index);
 		else
 			index++;
-	// }
 	}
 }
 
 void	qmark_expansion_string(char **string, int previous_code)
 {
-	int start = 0;
-	int index = 0;
-	int	finish = 0;
-	int	i = 0;
+	int		start;
+	int		index;
+	int		finish;
+	char	*temp[3];
 
-	// char *temp;
-
-	char 	*temp;
-	char	*temp2;
-	char	*temp3;
-
-
+	index = 0;
 	if ((*string)[index] == '\'')
 		return ;
 	while ((*string)[index])
 	{
-		// printf("current string : %s\n", *string);
 		if ((*string)[index] == '$' && (*string)[index + 1] == '?')
 		{
 			start = ++index;
-			// finish = index - 1;
 			finish = index;
-			temp = (char *)ft_calloc(finish - start + 3, sizeof(char));
-			ft_memmove(temp, &(*string)[start], finish - start + 1);
-			temp[finish - start + 1] = '=';
-			// printf("finding : %s\n", temp);
-			temp2 = 0;
-			temp2 = ft_itoa(previous_code);
-
-			free(temp);
-			temp3 = ft_strjoin2(temp2, *string, start, finish);
+			temp[1] = ft_itoa(previous_code);
+			temp[2] = ft_strjoin2(temp[1], *string, start, finish);
 			free(*string);
-			*string = temp3;
-			index = (start - 1) + ft_strlen(temp2);
-			free(temp2);
-			temp2 = 0;
+			*string = temp[2];
+			index = (start - 1) + ft_strlen(temp[1]);
+			free(temp[1]);
+			temp[1] = 0;
 		}
 		else
 			index++;
-	// }
 	}
 }
 
