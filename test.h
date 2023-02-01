@@ -67,6 +67,9 @@ void	quote_trim(t_list *list);
 int	quote_check(t_list *list);
 void	free_list(t_list *list);
 
+
+// int	ft_strcmp(const char *s1, const char *s2);
+
 int	heredoc(t_list *list);
 int	delete_local_file(t_list *list);
 // t_list *parsing(char *line, char **envp, int result);

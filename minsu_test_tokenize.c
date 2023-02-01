@@ -9,8 +9,7 @@ int	is_ifs(int c)
 	return ((c == ' ' || c =='\n' || c == '\t'));
 }
 
-
-static int is_separator_quote(char *string)
+static int	is_separator_quote(char *string)
 {
 	int	index;
 
@@ -31,9 +30,10 @@ static int is_separator_quote(char *string)
 	}
 	return (index);
 }
-static int is_separator(char *string)
+
+static int	is_separator(char *string)
 {
-	int	index = 0;
+	int	index;
 
 	index = 0;
 	if (string[index] == '\'' || string[index] == '\"')
@@ -60,7 +60,7 @@ static int is_separator(char *string)
 
 void	partial_string(t_list *list, char *string, int start, int finish)
 {
-	char *temp;
+	char	*temp;
 
 	temp = (char *)ft_calloc(finish - start + 2, sizeof(char));
 	ft_memmove(temp, &string[start], finish - start + 1);
@@ -137,8 +137,8 @@ void	tokenize(t_list *list, char *string)
 
 t_list *parsing(char *line, char **envp)
 {
-	t_list *list;
-	t_list *now;
+	t_list	*list;
+	t_list	*now;
 
 	list = ft_lstnew(0);
 	tokenize(list, line);
@@ -160,8 +160,8 @@ t_list *parsing(char *line, char **envp)
 
 t_list *first_parsing(char *line, char **envp, int prev_result)
 {
-	t_list *list;
-	t_list *now;
+	t_list	*list;
+	t_list	*now;
 
 	list = ft_lstnew(0);
 	tokenize(list, line);
@@ -201,7 +201,7 @@ char	*env_expansion_string_a_env(char **string, char **envp, char *temp)
 
 	temp2 = 0;
 	index = 0;
-	while(envp[index])
+	while (envp[index])
 	{
 		if (ft_strncmp(envp[index], temp, ft_strlen(temp)) == 0)
 		{
@@ -236,9 +236,9 @@ void	env_expansion_string_a(char **string, char **envp, int *index)
 
 void	env_expansion_string(char **string, char **envp)
 {
-	int	index = 0;
-	int	i = 0;
+	int	index;
 
+	index = 0;
 	if ((*string)[index] == '\'')
 		return ;
 	while ((*string)[index])
@@ -281,11 +281,11 @@ void	qmark_expansion_string(char **string, int previous_code)
 
 void	quote_trim(t_list *list)
 {
-	t_list *cursor = list->next;
-	t_list	*prev = list;
-	int		lendex = 0;
-	char	*new_string = 0;
+	t_list	*cursor;
+	int		lendex;
+	char	*new_string;
 
+	cursor = list->next;
 	while (cursor)
 	{
 		if (cursor->content && (((char *)(cursor->content))[0] == '\'' || ((char *)(cursor->content))[0] == '\"'))
@@ -304,8 +304,11 @@ void	quote_trim(t_list *list)
 
 void	free_empty(t_list *list)
 {
-	t_list *cursor = list->next;
-	t_list *prev = list;
+	t_list	*cursor;
+	t_list	*prev;
+
+	cursor = list->next;
+	prev = list;
 	while (cursor)
 	{
 		if (cursor->content == 0 || *((char *)(cursor->content)) == 0)
@@ -326,8 +329,11 @@ void	free_empty(t_list *list)
 
 void	free_space(t_list *list)
 {
-	t_list *cursor = list->next;
-	t_list *prev = list;
+	t_list	*cursor;
+	t_list	*prev;
+
+	cursor = list->next;
+	prev = list;
 	while (cursor)
 	{
 		if (cursor->content && *((char *)(cursor->content)) == ' ')
@@ -370,14 +376,12 @@ void env_expansion(t_list *list, char **envp)
 	t_list	*cursor;
 
 	cursor = list->next;
-	
 	while (cursor)
 	{
 		env_expansion_string(((char **)&(cursor->content)), envp);
 		if (cursor)
 			cursor = cursor->next;
 	}
-	
 	// quote_trim(list);
 	free_empty(list);
 	// free_last_space(list);
@@ -389,21 +393,19 @@ void qmark_expansion(t_list *list, int pres)
 	t_list	*cursor;
 
 	cursor = list->next;
-	
 	while (cursor)
 	{
 		qmark_expansion_string(((char **)&(cursor->content)), pres);
 		if (cursor)
 			cursor = cursor->next;
 	}
-	
 	// quote_trim(list);
 	free_empty(list);
 }
 
 char	*ft_strjoin2(const char *replace, const char *source, int start, int finish)
 {
-	char temp[1];
+	char	temp[1];
 	int		len;
 	char	*ret_str;
 
