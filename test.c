@@ -623,7 +623,16 @@ int main(int argc, char **argv, char **envp)
 	result = 0;
 	line = 0;
 	list = NULL;
-	init_env(&env, envp);
+		int i = 0;
+	env.cp_envp = 0;
+	env.onlyenv = 0;
+	while (envp[i])
+	{
+		env.onlyenv = vector_add(env.onlyenv, envp[i]);
+		env.cp_envp = vector_add(env.cp_envp, envp[i]);
+		i++;
+	}
+	// init_env(&env, envp);
 	while (1)
 	{
 		main_while_init(&list, &line, &result, &env);

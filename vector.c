@@ -102,7 +102,7 @@ char	**vector_delete_index(char **vector, int delete_index)
 	
 	free(vector[delete_index]);
 	vector[delete_index] = 0;
-	vector_free(vector);
+	free(vector);
 	vector = 0;
 	return (new_vector);
 }
@@ -176,7 +176,7 @@ void	vector_replace(char **vector, int replace_index, char *replace_string)
 	if (replace_index >= get_vector_len(vector))
 		return ;
 	free(vector[replace_index]);
-	vector[replace_index] = replace_string;
+	vector[replace_index] = ft_strdup(replace_string);
 }
 
 // int main(void)
