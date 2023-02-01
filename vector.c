@@ -102,7 +102,7 @@ char	**vector_delete_index(char **vector, int delete_index)
 	
 	free(vector[delete_index]);
 	vector[delete_index] = 0;
-	free(vector);
+	vector_free(vector);
 	vector = 0;
 	return (new_vector);
 }
@@ -189,6 +189,12 @@ void	vector_replace(char **vector, int replace_index, char *replace_string)
 
 // 	// string[1] = ft_strdup("string one");
 // 	vector = vector_add(vector, ft_strdup("string one"));
+// 	vector = vector_add(vector, ft_strdup("string two"));
+// 	vector = vector_add(vector, ft_strdup("string three"));
+// 	vector = vector_add(vector, ft_strdup("string four"));
+// 	vector = vector_add(vector, ft_strdup("string five"));
+// 	vector = vector_add(vector, ft_strdup("string six"));
+// 	vector = vector_add(vector, ft_strdup("string seven"));
 // 	// vector_print(vector);
 // 	// string[2] = ft_strdup("string two");
 // 	// vector = vector_add(vector, string[2]);
@@ -202,6 +208,10 @@ void	vector_replace(char **vector, int replace_index, char *replace_string)
 // 	vector = vector_delete_index(vector, 0);
 // 	vector_print(vector);
 // 	vector = vector_delete_index(vector, 0);
+// 	vector_print(vector);
+// 	vector = vector_delete_index(vector, 0);
+// 	vector_print(vector);
+// 	vector = vector_delete_index(vector, 7);
 // 	vector_print(vector);
 // 	vector_free(vector);
 // 	system("leaks a.out | grep leaked");

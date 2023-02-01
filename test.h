@@ -58,12 +58,13 @@ static int is_separator(char *string);
 void ft_exit(void);
 void	handle_signal(void);
 void	blank_list_module(char **string, t_copy *env, t_list *new);
-
+void	parent_handle_signal(void);
+void	heredoc_handle_signal(void);
 
 void	free_space(t_list *list);
 void	quote_trim(t_list *list);
 int	quote_check(t_list *list);
-
+void	free_list(t_list *list);
 
 int	heredoc(t_list *list);
 int	delete_local_file(t_list *list);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/31 22:08:22 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 18:59:39 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,5 @@ void	ft_echo(char *line, t_copy *env)
 		head = head->next;
 	}
 	check_print(check);
+	free_list(head);
 }

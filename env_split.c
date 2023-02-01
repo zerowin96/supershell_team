@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   env_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 11:30:49 by minsulee          #+#    #+#             */
-/*   Updated: 2023/01/18 19:44:13 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 18:47:38 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
+
+static void	get_section_help(char *string, int *index)
+{
+	if (string[*index] == '\'')
+	{
+		(*index)++;
+		while (string[*index] != '\'' && string[*index])
+			(*index)++;
+		(*index)++;
+	}
+	else if (string[*index] == '\"')
+	{
+		(*index)++;
+		while (string[*index] != '\"' && string[*index])
+			(*index)++;
+		(*index)++;
+	}
+	else
+		(*index)++;
+}
 
 static void	get_section(char *string, int *index, int *start, int *finish)
 {
@@ -23,26 +43,12 @@ static void	get_section(char *string, int *index, int *start, int *finish)
 		*start = *index;
 		while (string[*index] != ' ' && string[*index])
 		{
-			if (string[*index] == '\'')
-			{
-				(*index)++;
-				while (string[*index] != '\'' && string[*index])
-					(*index)++;
-				(*index)++;
-			}
-			else if (string[*index] == '\"')
-			{
-				(*index)++;
-				while (string[*index] != '\"' && string[*index])
-					(*index)++;
-				(*index)++;
-			}
-			else
-				(*index)++;
+			get_section_help(string, index);
 		}
 		*finish = *index;
 	}
 }
+
 static char	**ft_linkedlist_to_split(t_list *list)
 {
 	char	**help2;
