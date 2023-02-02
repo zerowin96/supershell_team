@@ -66,9 +66,11 @@ int	here_doc_help(t_list *list)
 	if (sign)
 	{
 		unlink(fname);
+		free(fname);
 		return (sign);
 	}
 	free(list->next->content);
+	// free(fname);
 	list->next->content = fname;
 	return (0);
 }

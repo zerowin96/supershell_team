@@ -2,6 +2,7 @@
 
 void	vector_free(char **vector)
 {
+	// printf("vector_free vector 1 : %p\n", vector);
 	int	index;
 	if (!(vector))
 		return ;
@@ -9,9 +10,11 @@ void	vector_free(char **vector)
 	while (vector[index])
 	{
 		free(vector[index]);
-		vector[index] = 0;
+		// vector[index] = 0;
 		index++;
 	}
+	// printf("vector_free vector 2 : %p\n", vector);
+	// sleep(1);
 	free(vector);
 	// *vector = 0;
 }
@@ -147,8 +150,8 @@ char	**vector_add(char **vector, char *string)
 	}
 	new_vector[index] = ft_strdup(string);
 	// new_vector[index + 1] = 0; // ft_calloc이므로 없어도 괜찮다.
-	// vector_free(vector);
-	free(vector);
+	vector_free(vector);
+	// free(vector);
 	// vector = 0;
 
 	return (new_vector);

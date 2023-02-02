@@ -659,7 +659,7 @@ void	main_builtin(t_list *list, char *line, int *result, t_copy *env)
 		return ;
 	}
 	//test
-	ft_strtrim(command[0], "\'\"");
+	// ft_strtrim(command[0], "\'\"");
 	//test
 	main_builtin_fd_mid(fd);
 	(*result) = builtin_exec(temp_string, command, list->next, env);
@@ -676,7 +676,7 @@ int	main_while_init(t_list **list, char **line, int *result, t_copy *env)
 	(*line) = reading();
 	if ((*line) == 0 || (**line) == 0)
 		return (1);
-	(*list) = first_parsing((*line), env->cp_envp, (*result));
+	(*list) = first_parsing(line, env->cp_envp, (*result));
 	if ((*list) == 0)
 		return (1);
 	if (command_check((*list)))
@@ -700,35 +700,41 @@ int main(int argc, char **argv, char **envp)
 	result = 0;
 	line = 0;
 	list = NULL;
-		int i = 0;
-	env.cp_envp = 0;
-	env.onlyenv = 0;
-	// while (envp[i])
-	// {
-	// 	env.onlyenv = vector_add(env.onlyenv, envp[i]);
-	// 	env.cp_envp = vector_add(env.cp_envp, envp[i]);
-	// 	i++;
-	// }
+	write(2, "zero : ", 7);
+	system("leaks a.out | grep total");
 	init_env(&env, envp);
+	write(2, "init : ", 7);
+	system("leaks a.out | grep total");
 	while (1)
 	{
-		main_while_init(&list, &line, &result, &env);
+		if (main_while_init(&list, &line, &result, &env))
+			continue ;
+		write(2, "wini : ", 7);
+		system("leaks a.out | grep total");
 		if (pipe_exists(list->next) == 0 && \
 		builtin_check(line, list->next, &env, list->next->content))
 		{
-			// printf("main builtin\n");
+			write(2, "bchk : ", 7);
+			system("leaks a.out | grep total");
 			main_builtin(list, line, &result, &env);
+			write(2, "solb : ", 7);
+			system("leaks a.out | grep total");
 		}
 		else
 		{
+			write(2, "else : ", 7);
+			system("leaks a.out | grep total");
 			// printf("external\n");
 			handle_signal();
 			result = exec(list, line, &env);
+			write(2, "elen : ", 7);
+			system("leaks a.out | grep total");
 		}
 		delete_local_file(list->next);
 		free(line);
 		free_list(list);
-		// system("leaks a.out");
+		write(2, "endw : ", 7);
+		system("leaks a.out | grep total");
 	}
 }
 

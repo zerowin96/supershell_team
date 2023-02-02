@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 13:49:20 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 15:16:50 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,6 @@ int	only_n_check(char *string)
 		i++;
 	}
 	return (1);
-}
-
-int	flag_check(int flag, char *string)
-{
-	int	check;
-
-	check = 0;
-	if (flag == 1)
-		check = 1;
-	else if (flag == 2)
-		printf("%s", string);
-	return (check);
 }
 
 void	print_and_check_space(t_list *head)
@@ -85,9 +73,20 @@ void	ft_echo(char *line, t_copy *env)
 	flag = 0;
 	check = 0;
 	head = ft_lstnew(0);
-	blank_list_module(env_split(line), env, head);
 	temp = head;
+
+	// char **test = env_split(line);
+	// printf("vector_free vector 0 : %p\n", test);
+	write(2, "ech0 : ", 7);
+	system("leaks a.out | grep total");
+	blank_list_module(env_split(line), env, head);
+	// printf("vector_free vector 4 : %p\n", test);
+	// vector_free(test);
+	write(2, "ech1 : ", 7);
+	system("leaks a.out | grep total");
 	head = head->next;
 	running_echo(head);
 	free_list(temp);
+	write(2, "ech2 : ", 7);
+	system("leaks a.out | grep total");
 }

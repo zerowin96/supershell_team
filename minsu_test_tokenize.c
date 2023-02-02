@@ -119,7 +119,8 @@ void	tokenize(t_list *list, char *string)
 	{
 		if (string[index] >= 9 && string[index] <= 13 || string[index] == ' ')
 		{
-			partial_string(list, " ", 0, 1);
+			if (index)
+				partial_string(list, " ", 0, 1);
 			while (string[index] >= 9 && string[index] <= 13 || string[index] == ' ')
 				index++;
 		}
@@ -158,13 +159,33 @@ t_list *parsing(char *line, char **envp)
 	return (list);
 }
 
-t_list *first_parsing(char *line, char **envp, int prev_result)
+char	*listjoin(t_list *list)
+{
+	t_list	*cursor;
+	char	*temp = 0;
+	char	*temp1 = 0;
+
+	cursor = list->next;
+	temp1 = (char *)ft_calloc(1, sizeof(char));
+	while (cursor)
+	{
+		temp = ft_strjoin(temp1, cursor->content);
+		free(temp1);
+		temp1 = temp;
+		cursor = cursor->next;
+		// printf("|%s|\n", temp);
+	}
+	return (temp);
+}
+
+t_list *first_parsing(char **line, char **envp, int prev_result)
 {
 	t_list	*list;
 	t_list	*now;
 
 	list = ft_lstnew(0);
-	tokenize(list, line);
+	tokenize(list, *line);
+	free(*line);
 	if (quote_check(list))
 	{
 		//free_all_list(list);
@@ -181,6 +202,15 @@ t_list *first_parsing(char *line, char **envp, int prev_result)
 	// }
 	// printf("--------------------tokens are stored in linked list\n");
 	env_expansion(list, envp);//, result);
+
+	char *temp = listjoin(list);
+	// printf("temp : $%s$\n", temp);
+	free_list(list);
+	list = ft_lstnew(0);
+	tokenize(list, temp);
+	// env_expansion(list, envp);
+	*line = temp;
+
 
 	//TOKEN PRINT
 	// printf("--------------------TOKENS\n");

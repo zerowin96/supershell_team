@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_and_merge_space.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 21:20:27 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 15:34:40 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,32 @@ char	*assemble(t_list *dis)
 	t_list	*head;
 	char	*a;
 
-	a = ft_strdup("");
+	char	*temp = ft_strdup("");
 	head = dis;
 	while (head)
 	{
-		a = ft_strjoin(a, head->content);
+		a = ft_strjoin(temp, head->content);
+		free(temp);
+		temp = a;
 		head = head->next;
 	}
 	return (a);
 }
 
-char	*disassemble_assemble(char *fuck, char **envp)
+char	*disassemble_assemble(char *str, char **envp)
 {
 	t_list	*dis;
 	t_list	*head;
 	char	*a;
 
-	dis = ft_lstnew(0);
-	dis = parsing(fuck, envp);
+	// dis = ft_lstnew(0);
+	dis = parsing(str, envp);
 	head = dis;
 	quote_trim(head);
 	free_empty(head);
 	a = assemble(head);
+	system("leaks a.out | grep total");
+	free_list(dis);
 	return (a);
 }
 
