@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 19:21:53 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 21:50:08 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+#include <stdio.h>
 
 void	replace_cp_env_key(t_copy *env, char *string, int j)
 {
@@ -95,6 +96,12 @@ void	ft_export(char *line, t_copy *env)
 	{
 		sort_and_print(env->cp_envp);
 		free_list(temp);
+		return ;
+	}
+	if (export_error_check(head->next->content))
+	{
+		free_list(temp);
+		perror("EEEEEEERRRRORORORORROO\n");
 		return ;
 	}
 	while (head->next)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:22:48 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 21:50:25 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,6 @@ char		*ft_strjoin2(const char *rep, \
 void		quote_trim(t_list *list);
 void		qmark_expansion(t_list *list, int pres);
 char		*get_filename(void);
+int			export_error_check(char *string);
 
 #endif

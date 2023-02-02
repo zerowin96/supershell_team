@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_while_init.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:13:31 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 21:42:10 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*reading(void)
 {
 	char	*line;
 
-	line = readline("https://youtu.be/1Nvfy19zHDs  $ ");
+	line = readline("minishell 1.0$ ");
 	if (line == 0)
 	{
 		rl_replace_line("", 1);

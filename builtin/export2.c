@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:06:43 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 19:22:18 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 21:50:02 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,11 @@ void	sort_and_print(char **string)
 	only_sort(sorted_envp);
 	export_print(sorted_envp);
 	vector_free(sorted_envp);
+}
+
+int	export_error_check(char *string)
+{
+	if (!(ft_isalpha(string[0]) || string[0] == '_'))
+		return (1);
+	return (0);
 }
