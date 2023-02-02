@@ -144,21 +144,34 @@ static int	sep_kind(t_list *node)
 
 static int	builtin_check(char *line, t_list *node, t_copy *e, char *string)
 {
+	// printf("builtin check : %s\n", string);
+
+
+	int index = 0;
+	// printf("builtin check : %s\n", temp_string);
 	if (ft_strncmp(string, "echo\0", 5) == 0)
-		return (1);
+		index = 1;
+		// return (1);
 	else if (ft_strncmp(string, "cd\0", 3) == 0)
-		return (2);
+		index = 2;
+		// return (2);
 	else if (ft_strncmp(string, "pwd\0", 4) == 0)
-		return (3);
+		index = 3;
+		// return (3);
 	else if (ft_strncmp(string, "export\0", 7) == 0)
-		return (4);
+		index = 4;
+		// return (4);
 	else if (ft_strncmp(string, "unset\0", 6) == 0)
-		return (5);
+		index = 5;
+		// return (5);
 	else if (ft_strncmp(string, "env\0", 4) == 0)
-		return (6);
+		index = 6;
+		// return (6);
 	else if (ft_strncmp(string, "exit\0", 5) == 0)
-		return (7);
-	return (0);
+		index = 7;
+		// return (7);
+	// free(temp_string);
+	return (index);
 }
 
 char	*reading(void)
@@ -205,10 +218,14 @@ int		builtin_exec(char *line, char **command, t_list *node, t_copy *e)
 	char	*temp_string;
 	int		index;
 
+	// vector_print(command);
 	index = builtin_check(temp_string, node, e, command[0]);
 	free_space(node);
 	if (index == 1)
+	{
 		ft_echo(line, e);
+		return (0);
+	}
 	else if (index == 2)
 		return (builtin_exec_cd(node, e, command));
 	else if (index == 3)
@@ -319,7 +336,11 @@ int	command_run(t_list* list, char *line, t_copy *e)
 		command_run_fd_prev(temp, pipefd);
 		pid = fork();
 		if (pid == 0)
+		{
+			// write(2, "child process running\n", 23);
 			child_process(temp, line, e, pipefd);
+			exit (127);
+		}
 		else if (pid < 0)
 		{
 			perror("fork failed");
@@ -399,11 +420,16 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 	int	sep;
 	int	res;
 
+	// printf("command_split\n");
+	// vector_print(*command);
 	while (temp && ((char *)(temp->content))[0] != '|')
 	{
 		sep = sep_kind(temp);
-		if (((char *)(temp->content))[0] == ' ' && (*command))
+		if (((char *)(temp->content))[0] == ' ')
+		{
+			if (*command)
 				(*string) = string_connect((*string), " ");
+		}
 		else if (sep >= 1 && sep <= 4)
 		{
 			res = command_split_separator(&temp, fd, sep);
@@ -418,6 +444,20 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 		}
 		temp = temp->next;
 	}
+	// printf("command split done\n");
+	// vector_print(*command);
+	char *temp_string;
+	if ((**command)[0] == (**command)[ft_strlen((**command)) - 1] && ((**command)[0] == '\'' || (**command)[0] == '\"'))
+	{
+		temp_string = ft_strdup(&(**command)[1]);
+		temp_string[ft_strlen(temp_string) - 1] = 0;
+	}
+	else
+		temp_string = ft_strdup((**command));
+	free(**command);
+	**command = temp_string;
+
+
 	return (command_split_delspace(temp, string), 0);
 }
 
@@ -437,16 +477,50 @@ void	child_process_fd_pre(int (*fd)[2])
 		close(fd[NEXT][READ]);
 }
 
+void	quote_out_command_unhead(char ***command)
+{
+	int		index;
+	char	*temp_string;
+
+	index = 1;
+	if ((*command)[0] == 0)
+		return ;
+	while ((*command)[index])
+	{
+		// printf("unquoting : $%s$\n", (*command)[index]);
+		if ((*command)[index][0] == (*command)[index][ft_strlen(((*command)[index])) - 1] && \
+		((*command)[index][0] == '\'' || (*command)[index][0] == '\"'))
+		{
+			// printf("got into if\n");
+			temp_string = ft_strdup(&((*command)[index][1]));
+			temp_string[ft_strlen(temp_string) - 1] = 0;
+		}
+		else
+		{
+			// printf("got into else\n");
+			temp_string = ft_strdup((*command)[index]);
+		}
+		free ((*command)[index]);
+		(*command)[index] = temp_string;
+		// printf("unquoted  : $%s$\n", (*command)[index]);
+		index++;
+	}
+}
+
 void	child_process_run(char **command, char **envp)
 {
 	int		path_index;
 	char	**paths;
 	int		errcheck;
 
+	// printf("child process run\n");
 	path_index = 0;
 	errcheck = 0;
 	paths = get_path_split(envp);
 	path_index = check_access(command[0], paths, X_OK);
+	// printf("running command : \n");
+	quote_out_command_unhead(&command);
+	// vector_print(command);
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
 	else if (path_index > 1)
@@ -473,23 +547,23 @@ void	child_process(t_list *list, char *line, t_copy *e, int fd[2][2])
 	command = 0;
 	temp_string = 0;
 	tnum = command_split(list, fd, &command, &temp_string);
+	// vector_print(command);
 	if (tnum)
 		exit (tnum);
 	child_process_fd_pre(fd);
-	result = builtin_exec(line, command, list, e);
-	if (result)
-	{
-		free(temp_string);
-		free_list(list);
-		exit (result);
-	}
-	// if (builtin_check(temp_string, list, e, command[0]))
+	// result = builtin_exec(line, command, list, e);
+	// if (result)
 	// {
-	// 	result = builtin_exec(temp_string, list, e, \
-	// 				builtin_check(temp_string, list, e, command[0]));
 	// 	free(temp_string);
+	// 	free_list(list);
 	// 	exit (result);
 	// }
+	if (builtin_check(temp_string, list, e, command[0]))
+	{
+		result = builtin_exec(temp_string, command, list, e);
+		free(temp_string);
+		exit (result);
+	}
 	free(temp_string);
 	free_space(list);
 	child_process_run(command, e->cp_envp);
@@ -584,6 +658,9 @@ void	main_builtin(t_list *list, char *line, int *result, t_copy *env)
 		(*result) = tnum;
 		return ;
 	}
+	//test
+	ft_strtrim(command[0], "\'\"");
+	//test
 	main_builtin_fd_mid(fd);
 	(*result) = builtin_exec(temp_string, command, list->next, env);
 	if (command)
@@ -626,21 +703,25 @@ int main(int argc, char **argv, char **envp)
 		int i = 0;
 	env.cp_envp = 0;
 	env.onlyenv = 0;
-	while (envp[i])
-	{
-		env.onlyenv = vector_add(env.onlyenv, envp[i]);
-		env.cp_envp = vector_add(env.cp_envp, envp[i]);
-		i++;
-	}
-	// init_env(&env, envp);
+	// while (envp[i])
+	// {
+	// 	env.onlyenv = vector_add(env.onlyenv, envp[i]);
+	// 	env.cp_envp = vector_add(env.cp_envp, envp[i]);
+	// 	i++;
+	// }
+	init_env(&env, envp);
 	while (1)
 	{
 		main_while_init(&list, &line, &result, &env);
 		if (pipe_exists(list->next) == 0 && \
 		builtin_check(line, list->next, &env, list->next->content))
+		{
+			// printf("main builtin\n");
 			main_builtin(list, line, &result, &env);
+		}
 		else
 		{
+			// printf("external\n");
 			handle_signal();
 			result = exec(list, line, &env);
 		}
@@ -650,3 +731,11 @@ int main(int argc, char **argv, char **envp)
 		// system("leaks a.out");
 	}
 }
+
+
+// cat < infile | awk "{count++} END {print count}"
+
+// ls -al | > a.txt
+
+// export a="ls -la"
+// $a

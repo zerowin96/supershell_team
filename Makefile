@@ -6,7 +6,7 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/01/31 13:26:30 by minsulee         ###   ########seoul.kr   #
+#    Updated: 2023/02/01 19:49:33 by minsulee         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ all :
 #	make -C libft clean
 #	make -C get_next_line all
 #	make -C get_next_line clean
-	gcc -g3 -lreadline -L/Users/minsulee/.brew/opt/readline/lib -I/Users/minsulee/.brew/opt/readline/include libft/libft.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c heredoc.c signal.c
+	gcc -g3 -lreadline -L/Users/minsulee/.brew/opt/readline/lib -I/Users/minsulee/.brew/opt/readline/include libft/libft.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c heredoc.c signal.c export2.c split_and_merge_space.c
 #	gcc -g3 -lreadline -L/Users/minsulee/.brew/opt/readline/lib -I/Users/minsulee/.brew/opt/readline/include libft/libft.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c heredoc.c signal.c
 #	gcc -g3 -o minishell -lreadline libft/libft.a get_next_line/get_next_line.a cd.c echo.c env_split.c env.c exit.c export.c minsu_test_tokenize.c pwd.c test.c unset.c vector.c && chmod 777 minishell
 
