@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 20:13:34 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 20:49:52 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 18:28:15 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 char	**only_pick_key(char **key_vector)
 {

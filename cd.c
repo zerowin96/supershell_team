@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 19:07:18 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 21:05:50 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 18:26:23 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 char	*get_pwd(t_copy *env)
 {

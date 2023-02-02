@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exec.c                                     :+:      :+:    :+:   */
+/*   run_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:02:10 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 18:02:25 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:27:35 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 int	builtin_exec_cd(t_list *node, t_copy *e, char **command)
 {

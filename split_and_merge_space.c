@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 16:38:18 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:28:04 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 char	*assemble(t_list *dis)
 {

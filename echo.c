@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 17:48:56 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:26:21 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 int	only_n_check(char *string)
 {

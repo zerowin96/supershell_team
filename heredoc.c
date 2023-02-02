@@ -1,4 +1,4 @@
-#include "test.h"
+#include "main.h"
 
 char	*get_filename(void);
 void	temp_list_print(t_list *list);
@@ -70,7 +70,6 @@ int	here_doc_help(t_list *list)
 		return (sign);
 	}
 	free(list->next->content);
-	// free(fname);
 	list->next->content = fname;
 	return (0);
 }
@@ -156,15 +155,3 @@ int	delete_local_file(t_list *list)
 	}
 	return (0);
 }
-
-// void	temp_list_print(t_list *list)
-// {
-// 	if (!(list->content))
-// 		list = list->next;
-// 	while (list)
-// 	{
-// 		printf("%s ", list->content);
-// 		list = list->next;
-// 	}
-// 	printf("\n");
-// }

@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 11:30:49 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/01 18:47:38 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:26:20 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 static void	get_section_help(char *string, int *index)
 {

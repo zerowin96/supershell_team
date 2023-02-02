@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 18:05:20 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:27:49 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 void	main_builtin_init(int (*fd)[2], char ***command, char **temp_string)
 {

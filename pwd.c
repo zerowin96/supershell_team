@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 14:44:52 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 17:48:56 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:27:34 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 void	ft_pwd(void)
 {

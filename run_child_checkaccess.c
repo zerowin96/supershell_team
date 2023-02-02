@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:14:40 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 18:14:47 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:27:42 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 int	check_access_h(char *name, char *path, int permission)
 {

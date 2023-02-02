@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:06:43 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 17:48:56 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:26:32 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {

@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 20:45:50 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 17:35:44 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:26:32 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 void	ft_exit(int value)
 {

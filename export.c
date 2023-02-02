@@ -6,11 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 16:38:14 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 18:26:32 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
+#include "main.h"
 
 void	replace_cp_env_key(t_copy *env, char *string, int j)
 {
