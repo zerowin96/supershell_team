@@ -39,6 +39,7 @@ void ft_export(char *line, t_copy *env);
 char	**vector_add(char **vector, char *string);
 void	vector_print(char **vector);
 void	vector_replace(char **vector, int replace_index, char *replace_string);
+void	vector_replace2(char **vector, int replace_index, char *replace_string);
 char	**vector_delete_index(char **vector, int delete_index);
 void	vector_free(char **vector);
 int		string_compare(char *string, char *compare);

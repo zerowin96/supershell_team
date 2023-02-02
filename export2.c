@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:06:43 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 19:31:19 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 20:46:27 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,5 @@ void	sort_and_print(char **string)
 	}
 	only_sort(sorted_envp);
 	export_print(sorted_envp);
-	//sorted_envp 프리 예정
+	vector_free(sorted_envp);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split and merge space.c                            :+:      :+:    :+:   */
+/*   split_and_merge_space.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 17:15:59 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 21:20:27 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	blank_list_module(char **string, t_copy *env, t_list *new)
 	{
 		temp = disassemble_assemble(string[i], env->cp_envp);
 		ft_lstadd_back(&new, ft_lstnew(temp));
+		free(string[i]);
 		i++;
 	}
+	free(string);
 }

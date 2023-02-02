@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 17:12:58 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 20:48:35 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,12 @@ void	find_equals_sign(char *string, t_copy *env)
 
 void	ft_export(char *line, t_copy *env)
 {
+	t_list	*temp;
 	t_list	*head;
 
 	head = ft_lstnew(0);
 	blank_list_module(env_split(line), env, head);
+	temp = head;
 	head = head->next;
 	if (head->next == NULL)
 	{
@@ -100,4 +102,5 @@ void	ft_export(char *line, t_copy *env)
 		find_equals_sign(head->next->content, env);
 		head = head->next;
 	}
+	free_list(temp);
 }

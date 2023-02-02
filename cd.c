@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 19:07:18 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/30 21:19:58 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 21:05:50 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,21 @@ void	change_oldpwd(t_copy *env)
 	while (env->cp_envp[i] && env->onlyenv[i])
 	{
 		if (ft_strncmp(env->cp_envp[i], "OLDPWD=", 7) == 0)
-			env->cp_envp[i] = ft_strjoin("OLDPWD=", env_pwd);
+			vector_replace2(env->cp_envp, i, ft_strjoin("OLDPWD=", env_pwd));
 		if (ft_strncmp(env->onlyenv[i], "OLDPWD=", 7) == 0)
-			env->onlyenv[i] = ft_strjoin("OLDPWD=", env_pwd);
+			vector_replace2(env->onlyenv, i, ft_strjoin("OLDPWD=", env_pwd));
 		i++;
 	}
 	while (env->cp_envp[i])
 	{
 		if (ft_strncmp(env->cp_envp[i], "OLDPWD=", 7) == 0)
-			env->cp_envp[i] = ft_strjoin("OLDPWD=", env_pwd);
+			vector_replace2(env->cp_envp, i, ft_strjoin("OLDPWD=", env_pwd));
 		i++;
 	}
 	while (env->onlyenv[i])
 	{
 		if (ft_strncmp(env->onlyenv[i], "OLDPWD=", 7) == 0)
-			env->onlyenv[i] = ft_strjoin("OLDPWD=", env_pwd);
+			vector_replace2(env->onlyenv, i, ft_strjoin("OLDPWD=", env_pwd));
 		i++;
 	}
 }
@@ -77,21 +77,21 @@ void	change_pwd(t_copy *env, char *pwd)
 	while (env->cp_envp[i] && env->onlyenv[i])
 	{
 		if (ft_strncmp(env->cp_envp[i], "PWD=", 4) == 0)
-			env->cp_envp[i] = ft_strjoin("PWD=", pwd);
+			vector_replace2(env->cp_envp, i, ft_strjoin("PWD=", pwd));
 		if (ft_strncmp(env->onlyenv[i], "PWD=", 4) == 0)
-			env->onlyenv[i] = ft_strjoin("PWD=", pwd);
+			vector_replace2(env->onlyenv, i, ft_strjoin("PWD=", pwd));
 		i++;
 	}
 	while (env->cp_envp[i])
 	{
 		if (ft_strncmp(env->cp_envp[i], "PWD=", 4) == 0)
-			env->cp_envp[i] = ft_strjoin("PWD=", pwd);
+			vector_replace2(env->cp_envp, i, ft_strjoin("PWD=", pwd));
 		i++;
 	}
 	while (env->onlyenv[i])
 	{
 		if (ft_strncmp(env->onlyenv[i], "PWD=", 4) == 0)
-			env->onlyenv[i] = ft_strjoin("PWD=", pwd);
+			vector_replace2(env->onlyenv, i, ft_strjoin("PWD=", pwd));
 		i++;
 	}
 }

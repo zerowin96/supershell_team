@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 20:13:34 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 19:31:11 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/01 20:49:52 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,7 @@ void	ft_unset(char *line, t_copy *env)
 		erase_env(env, &key_env, head->next->content);
 		head = head->next;
 	}
+	free_list(temp);
+	vector_free(key_export);
+	vector_free(key_env);
 }
