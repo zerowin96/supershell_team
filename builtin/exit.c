@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/08 09:48:53 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:44:45 by minsulee         ###   ########seoul.kr  */
+/*   Created: 2023/01/18 20:45:50 by yeham             #+#    #+#             */
+/*   Updated: 2023/02/02 18:52:19 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../main.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	ft_exit(int value)
 {
-	void	*address;
-
-	address = (void *)malloc(count * size);
-	if (address == 0)
-		return ;
-	ft_bzero(address, count * size);
-	return (address);
+	exit(value);
 }

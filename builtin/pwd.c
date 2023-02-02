@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/08 09:48:53 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:44:45 by minsulee         ###   ########seoul.kr  */
+/*   Created: 2023/01/17 14:44:52 by yeham             #+#    #+#             */
+/*   Updated: 2023/02/02 18:56:58 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../main.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	ft_pwd(void)
 {
-	void	*address;
+	char	*pwd;
 
-	address = (void *)malloc(count * size);
-	if (address == 0)
-		return ;
-	ft_bzero(address, count * size);
-	return (address);
+	pwd = 0;
+	pwd = getcwd(NULL, 0);
+	printf("%s\n", pwd);
+	free(pwd);
 }

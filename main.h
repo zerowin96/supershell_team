@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 18:46:20 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 19:54:15 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@
 # define PREV 0
 # define NEXT 1
 
+// #define malloc(s) my_alloc(s)
+
+// void	*my_alloc(size_t s)
+// {
+	
+// }
 
 typedef struct s_cnt
 {
@@ -87,26 +93,25 @@ int			heredoc(t_list *list);
 int			delete_local_file(t_list *list);
 int			command_split(t_list *temp, int (*fd)[2], \
 				char ***command, char **string);
-void		main_builtin(t_list *list, char *line, int *result, t_copy *env);
+void		main_builtin(t_list *list, int *result, t_copy *env);
 int			builtin_exec(char *line, char **command, t_list *node, t_copy *e);
-int			command_run(t_list* list, char *line, t_copy *e);
-void		child_process(t_list *list, char *line, t_copy *e, int fd[2][2]);
+int			command_run(t_list* list, t_copy *e);
+void		child_process(t_list *list, t_copy *e, int fd[2][2]);
 void		quote_out_command_one(char ***command);
 void		quote_out_command_unhead(char ***command);
-int			quote_check(t_list *list);
 int			main_while_init(t_list **list, \
 				char **line, int *result, t_copy *env);
 char		*string_connect(char *dst, char *src);
 int			command_split_separator(t_list **temp, int (*fd)[2], int sep);
 int			pipe_exists(t_list *line);
-int			builtin_check(char *line, t_list *node, t_copy *e, char *string);
+int			builtin_check(char *string);
 int			check_access(char *name, char **paths, int permission);
 int			sep_kind(t_list *node);
 void		tokenize(t_list *list, char *string);
 char		*ft_strjoin2(const char *replace, \
 				const char *source, int start, int finish);
 void		quote_trim(t_list *list);
-void 		qmark_expansion(t_list *list, int pres);
-void 		env_expansion(t_list *list, char **envp);
+void		qmark_expansion(t_list *list, int pres);
+char		*get_filename(void);
 
 #endif

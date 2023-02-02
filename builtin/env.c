@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/08 09:48:53 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:44:45 by minsulee         ###   ########seoul.kr  */
+/*   Created: 2023/01/10 19:17:01 by yeham             #+#    #+#             */
+/*   Updated: 2023/02/02 18:52:18 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../main.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	ft_env(t_copy *env)
 {
-	void	*address;
+	int	i;
 
-	address = (void *)malloc(count * size);
-	if (address == 0)
-		return ;
-	ft_bzero(address, count * size);
-	return (address);
+	i = 0;
+	while (env->onlyenv[i])
+	{
+		printf("%s\n", env->onlyenv[i]);
+		i++;
+	}
 }
