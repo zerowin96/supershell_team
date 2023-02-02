@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 20:45:50 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/19 14:19:47 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 17:35:44 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
-void ft_exit(void)
+void	ft_exit(int value)
 {
-	exit(0);
+	exit(value);
 }

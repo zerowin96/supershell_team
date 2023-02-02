@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 16:23:47 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 16:38:14 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ void	ft_export(char *line, t_copy *env)
 
 	head = ft_lstnew(0);
 	blank_list_module(env_split(line), env, head);
-	write(2, "ept0 : ", 7);
-	system("leaks a.out | grep total");
 	temp = head;
 	head = head->next;
 	if (head->next == NULL)
@@ -100,14 +98,10 @@ void	ft_export(char *line, t_copy *env)
 		free_list(temp);
 		return ;
 	}
-	write(2, "ept1 : ", 7);
-	system("leaks a.out | grep total");
 	while (head->next)
 	{
 		find_equals_sign(head->next->content, env);
 		head = head->next;
 	}
-	write(2, "ept2 : ", 7);
-	system("leaks a.out | grep total");
 	free_list(temp);
 }

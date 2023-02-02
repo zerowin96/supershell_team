@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 14:44:52 by yeham             #+#    #+#             */
-/*   Updated: 2023/01/18 12:45:44 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 17:48:56 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,6 @@ void	ft_pwd(void)
 
 	pwd = 0;
 	pwd = getcwd(NULL, 0);
-	printf("@@@@pwd === %s\n", pwd);
+	printf("%s\n", pwd);
 	free(pwd);
 }

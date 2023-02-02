@@ -6,7 +6,7 @@ char	*ft_strjoin2(const char *replace, const char *source, int start, int finish
 
 int	is_ifs(int c)
 {
-	return ((c == ' ' || c =='\n' || c == '\t'));
+	return ((c == ' ' || c == '\n' || c == '\t'));
 }
 
 static int	is_separator_quote(char *string)
@@ -56,7 +56,6 @@ static int	is_separator(char *string)
 		return (0);
 	return (index);
 }
-
 
 void	partial_string(t_list *list, char *string, int start, int finish)
 {
@@ -146,16 +145,6 @@ t_list *parsing(char *line, char **envp)
 	if (quote_check(list))
 		return (0);
 	env_expansion(list, envp);
-
-	//TOKEN PRINT
-	// printf("--------------------TOKENS\n");
-	// now = list->next;
-	// while (now)
-	// {
-	// 	printf("%s\n", now->content);
-	// 	now = now->next;
-	// }
-	// printf("--------------------tokens are stored in linked list\n");
 	return (list);
 }
 
@@ -173,7 +162,6 @@ char	*listjoin(t_list *list)
 		free(temp1);
 		temp1 = temp;
 		cursor = cursor->next;
-		// printf("|%s|\n", temp);
 	}
 	return (temp);
 }
@@ -182,45 +170,23 @@ t_list *first_parsing(char **line, char **envp, int prev_result)
 {
 	t_list	*list;
 	t_list	*now;
+	char	*temp;
 
 	list = ft_lstnew(0);
 	tokenize(list, *line);
 	free(*line);
 	if (quote_check(list))
 	{
-		//free_all_list(list);
 		return (0);
-		//::change the value of return into "command not found-ish"
 	}
 	qmark_expansion(list, prev_result);
-	// printf("--------------------TOKENS\n");
-	// now = list->next;
-	// while (now)
-	// {
-	// 	printf("%s\n", now->content);
-	// 	now = now->next;
-	// }
-	// printf("--------------------tokens are stored in linked list\n");
-	env_expansion(list, envp);//, result);
+	env_expansion(list, envp);
 
-	char *temp = listjoin(list);
-	// printf("temp : $%s$\n", temp);
+	temp = listjoin(list);
 	free_list(list);
 	list = ft_lstnew(0);
 	tokenize(list, temp);
-	// env_expansion(list, envp);
 	*line = temp;
-
-
-	//TOKEN PRINT
-	// printf("--------------------TOKENS\n");
-	// now = list->next;
-	// while (now)
-	// {
-	// 	printf("%s\n", now->content);
-	// 	now = now->next;
-	// }
-	// printf("--------------------tokens are stored in linked list\n");
 	return (list);
 }
 

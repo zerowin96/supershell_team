@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 19:17:01 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 20:28:40 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 17:48:56 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,4 @@ void	ft_env(t_copy *env)
 		printf("%s\n", env->onlyenv[i]);
 		i++;
 	}
-	return ;
 }

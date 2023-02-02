@@ -6,12 +6,11 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 11:41:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 13:01:40 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 17:27:00 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
-
 
 void	ft_signal(int signum)
 {
@@ -28,12 +27,14 @@ void	heredoc_signal(int signum)
 {
 	if (signum != SIGINT)
 		return ;
+	printf("\n");
 	exit(130);
 }
 
 void	handle_signal(void)
 {
 	struct sigaction	new;
+
 	new.sa_flags = 0;
 	sigemptyset(&new.sa_mask);
 	new.__sigaction_u.__sa_handler = ft_signal;

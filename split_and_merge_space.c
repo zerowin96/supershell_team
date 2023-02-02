@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 15:34:40 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 16:38:18 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,11 @@ char	*disassemble_assemble(char *str, char **envp)
 	t_list	*head;
 	char	*a;
 
-	// dis = ft_lstnew(0);
 	dis = parsing(str, envp);
 	head = dis;
 	quote_trim(head);
 	free_empty(head);
 	a = assemble(head);
-	system("leaks a.out | grep total");
 	free_list(dis);
 	return (a);
 }
