@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:55:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:53:17 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:23:23 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	command_run_fd_post(int (*fd)[2])
 	}
 }
 
-int	command_run(t_list* list, t_copy *e)
+int	command_run(t_list *list, t_copy *e)
 {
 	int		pipefd[2][2];
 	int		pid;

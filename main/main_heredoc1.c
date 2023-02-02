@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:56:19 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:12:52 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:20:19 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int	here_doc_help(t_list *list)
 	list->next->content = fname;
 	return (0);
 }
-
 
 int	delete_local_file(t_list *list)
 {

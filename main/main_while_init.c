@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:03:01 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:13:31 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*reading(void)
 {
 	char	*line;
 
-	line = readline("minishell-1.0$ ");
+	line = readline("https://youtu.be/1Nvfy19zHDs  $ ");
 	if (line == 0)
 	{
 		rl_replace_line("", 1);

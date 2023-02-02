@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:26:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 18:56:39 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:20:32 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ char	**vector_delete_index(char **vector, int delete_index)
 	int		index;
 
 	index = 0;
-	if (!vector || !get_vector_len(vector) || (get_vector_len(vector) <= delete_index))
+	if (!vector || !get_vector_len(vector) || \
+		(get_vector_len(vector) <= delete_index))
 		return (vector);
 	if (get_vector_len(vector) == 1)
 	{

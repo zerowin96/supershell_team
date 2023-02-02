@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_and_merge_space.c                            :+:      :+:    :+:   */
+/*   builtin_util.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 18:56:42 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:19:50 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ char	*assemble(t_list *dis)
 {
 	t_list	*head;
 	char	*a;
+	char	*temp;
 
-	char	*temp = ft_strdup("");
+	temp = ft_strdup("");
 	head = dis;
 	while (head)
 	{

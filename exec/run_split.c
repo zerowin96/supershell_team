@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:49:16 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:54:51 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:21:27 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ void	command_split_delspace(char **temp_string)
 			break ;
 	}
 }
-
-
 
 int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 {

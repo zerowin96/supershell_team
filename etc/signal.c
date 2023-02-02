@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 11:41:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 18:56:40 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/02 20:23:12 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	heredoc_handle_signal(void)
 void	parent_handle_signal(void)
 {
 	struct sigaction	new;
-	
+
 	new.sa_flags = 0;
 	sigemptyset(&new.sa_mask);
 	new.__sigaction_u.__sa_handler = SIG_IGN;
