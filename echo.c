@@ -6,11 +6,13 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/01 13:55:33 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/02 13:49:20 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft/libft.h"
 #include "test.h"
+#include <stdio.h>
 
 int	only_n_check(char *string)
 {
@@ -34,21 +36,49 @@ int	flag_check(int flag, char *string)
 	if (flag == 1)
 		check = 1;
 	else if (flag == 2)
-		printf("%s ", string);
+		printf("%s", string);
 	return (check);
 }
 
-void	check_print(int check)
+void	print_and_check_space(t_list *head)
 {
+	printf("%s", (char *)head->next->content);
+	if (head->next->next)
+		printf(" ");
+}
+
+void	running_echo(t_list *head)
+{
+	int	flag;
+	int	check;
+
+	flag = 0;
+	check = 0;
+	while (head->next)
+	{
+		if (ft_strncmp(head->next->content, "-n", 2) == 0 && flag != 2)
+		{
+			flag = only_n_check(head->next->content);
+			if (flag == 1)
+				check = 1;
+			else
+				print_and_check_space(head);
+		}
+		else
+		{
+			flag = 2;
+			print_and_check_space(head);
+		}
+		head = head->next;
+	}
 	if (check == 0)
 		printf("\n");
-	if (check == 1)
-		printf("\b");
 }
 
 void	ft_echo(char *line, t_copy *env)
 {
 	t_list	*head;
+	t_list	*temp;
 	int		flag;
 	int		check;
 
@@ -56,20 +86,8 @@ void	ft_echo(char *line, t_copy *env)
 	check = 0;
 	head = ft_lstnew(0);
 	blank_list_module(env_split(line), env, head);
+	temp = head;
 	head = head->next;
-	while (head->next)
-	{
-		if (ft_strncmp(head->next->content, "-n", 2) == 0 && flag != 2)
-		{
-			flag = only_n_check(head->next->content);
-			check = flag_check(flag, head->next->content);
-		}
-		else
-		{
-			printf("%s ", head->next->content);
-			flag = 2;
-		}
-		head = head->next;
-	}
-	check_print(check);
+	running_echo(head);
+	free_list(temp);
 }
