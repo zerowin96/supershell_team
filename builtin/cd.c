@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 19:07:18 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 20:46:31 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 11:53:01 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+#include <unistd.h>
 
 char	*get_pwd(t_copy *env)
 {
@@ -96,20 +97,13 @@ void	change_pwd(t_copy *env, char *pwd)
 	}
 }
 
-void	ft_cd(char *next, t_copy *env)
+int	ft_cd(char *next, t_copy *env)
 {
 	char	*now;
 	char	*env_home;
 
 	env_home = get_home(env);
-	if (next == NULL && chdir(env_home) == 0)
-	{
-		now = getcwd(NULL, 0);
-		change_oldpwd(env);
-		change_pwd(env, now);
-		free(now);
-	}
-	else if (chdir(next) == 0)
+	if ((next == NULL && chdir(env_home) == 0) || chdir(next) == 0)
 	{
 		now = getcwd(NULL, 0);
 		change_oldpwd(env);
@@ -118,6 +112,8 @@ void	ft_cd(char *next, t_copy *env)
 	}
 	else
 	{
-		perror("No such file o directory\n");
+		write(2, "No such file or directory\n", 27);
+		return (1);
 	}
+	return (0);
 }

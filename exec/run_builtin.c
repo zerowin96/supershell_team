@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:02:10 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 10:17:23 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 11:58:19 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,10 @@ int	builtin_exec_cd(t_list *node, t_copy *e, char **command)
 			return (1);
 		}
 		else
-			ft_cd((char *)node->next->content, e);
+			return (ft_cd((char *)node->next->content, e));
 	}
 	else
-		ft_cd(NULL, e);
-	return (0);
+		return (ft_cd(NULL, e));
 }
 
 int	builtin_exec_exit(char **command)
@@ -59,7 +58,7 @@ int	builtin_exec(char *line, char **command, t_list *node, t_copy *e)
 	else if (index == 3)
 		ft_pwd();
 	else if (index == 4)
-		ft_export(line, e);
+		return (ft_export(line, e));
 	else if (index == 5)
 		ft_unset(line, e);
 	else if (index == 6)
@@ -67,5 +66,4 @@ int	builtin_exec(char *line, char **command, t_list *node, t_copy *e)
 	else if (index == 7)
 		return (builtin_exec_exit(command));
 	return (0);
-	// update required : store exit code of result of executed builtin into variable "result"
 }

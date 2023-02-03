@@ -6,12 +6,13 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 21:50:08 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/03 11:43:59 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
 #include <stdio.h>
+#include <unistd.h>
 
 void	replace_cp_env_key(t_copy *env, char *string, int j)
 {
@@ -83,7 +84,7 @@ void	find_equals_sign(char *string, t_copy *env)
 		same_check(env, string);
 }
 
-void	ft_export(char *line, t_copy *env)
+int	ft_export(char *line, t_copy *env)
 {
 	t_list	*temp;
 	t_list	*head;
@@ -93,21 +94,18 @@ void	ft_export(char *line, t_copy *env)
 	temp = head;
 	head = head->next;
 	if (head->next == NULL)
-	{
 		sort_and_print(env->cp_envp);
-		free_list(temp);
-		return ;
-	}
-	if (export_error_check(head->next->content))
-	{
-		free_list(temp);
-		perror("EEEEEEERRRRORORORORROO\n");
-		return ;
-	}
 	while (head->next)
 	{
+		if (export_error_check(head->next->content))
+		{
+			free_list(temp);
+			write(2, "not a valid identifier\n", 23);
+			return (1);
+		}
 		find_equals_sign(head->next->content, env);
 		head = head->next;
 	}
 	free_list(temp);
+	return (0);
 }

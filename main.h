@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 21:50:25 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/03 11:48:03 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_list		*first_parsing(char **line, char **envp, int prev_result);
 t_list		*parsing(char *line, char **envp);
 void		ft_unset(char *line, t_copy *env);
 void		ft_env(t_copy *e);
-void		ft_export(char *line, t_copy *env);
+int			ft_export(char *line, t_copy *env);
 char		**vector_add(char **vector, char *string);
 void		vector_print(char **vector);
 void		vector_replace(char **vector, \
@@ -67,7 +67,7 @@ char		*disassemble_assemble(char *str, char **envp);
 int			ft_strcmp(const char *s1, const char *s2);
 void		ft_echo(char *line, t_copy *env);
 void		ft_pwd(void);
-void		ft_cd(char *next, t_copy *env);
+int			ft_cd(char *next, t_copy *env);
 int			is_separator(char *string);
 void		ft_exit(int value);
 void		handle_signal(void);
