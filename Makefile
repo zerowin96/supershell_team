@@ -6,13 +6,13 @@
 #    By: yeham <yeham@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/02/03 11:52:28 by yeham            ###   ########.fr        #
+#    Updated: 2023/02/03 12:02:37 by yeham            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -MMD
 
 CMPFLAGS = libft/libft.a -lreadline -L${HOME}/.brew/opt/readline/lib
 INFLAGS	= -I${HOME}/.brew/opt/readline/include 
@@ -27,6 +27,8 @@ SRCS	:= $(BUILTIN_SRCS) $(ETC_SRCS) $(EXEC_SRCS) $(MAIN_SRCS) $(PARSE_SRCS)
 
 OBJS = $(SRCS:.c=.o)
 
+DEPS = $(SRCS:.c=.d)
+
 all : $(NAME)
 
 $(NAME) : $(OBJS) libft/libft.a
@@ -40,7 +42,7 @@ libft/libft.a :
 
 clean :
 	make -C libft clean
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(DEPS)
 
 fclean :
 	make clean
@@ -52,3 +54,5 @@ re :
 	make all
 
 .PHONY : all clean fclean re
+
+-include $(DEPS)
