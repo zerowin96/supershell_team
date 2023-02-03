@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:23:14 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 14:44:19 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	child_process_run(char **command, char **envp)
 		perror("error on execve");
 		exit (1);
 	}
-	perror("command not found");
+	write(2, "command not found\n", 19);
 	vector_free(command);
 	exit(127);
 }

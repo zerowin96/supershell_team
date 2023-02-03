@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:14:40 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:01:32 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 14:43:18 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	check_access(char *name, char **paths, int permission)
 	int	index;
 
 	index = 0;
+	if (!paths)
+		return (0);
 	while (paths[index])
 	{
 		if (check_access_h(name, paths[index], permission))
@@ -59,5 +61,5 @@ int	check_access(char *name, char **paths, int permission)
 		else if (name[0] == '/')
 			return (1);
 	}
-	return (-1);
+	return (0);
 }
