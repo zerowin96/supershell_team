@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_while_init.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 21:42:10 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/03 13:41:44 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ char	*reading(void)
 	}
 	if (line && *line)
 		add_history(line);
+	else
+		free(line);
 	return (line);
 }
 

@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:27:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:22:22 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 13:35:16 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ t_list	*first_parsing(char **line, char **envp, int prev_result)
 	free(*line);
 	if (quote_check(list))
 	{
+		free_list(list);
 		return (0);
 	}
 	qmark_expansion(list, prev_result);
