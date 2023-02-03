@@ -6,7 +6,7 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/02/02 20:04:58 by minsulee         ###   ########seoul.kr   #
+#    Updated: 2023/02/03 09:35:39 by minsulee         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,17 +30,22 @@ OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME) : $(OBJS) libft/libft.a
 	cc $(CFLAGS) $(OBJS) -o $(NAME) $(CMPFLAGS)
+
+libft/libft.a :
+	make -C libft bonus
 
 %.o : %.c
 	cc $(CFLAGS) -c $< -o $@ $(INFLAGS)
 
 clean :
+	make -C libft clean
 	rm -f $(OBJS)
 
 fclean :
 	make clean
+	make -C libft fclean
 	rm -f $(NAME)
 
 re : 

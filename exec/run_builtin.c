@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:02:10 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:51:45 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 10:17:23 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,7 @@ int	builtin_exec(char *line, char **command, t_list *node, t_copy *e)
 	index = builtin_check(command[0]);
 	free_space(node);
 	if (index == 1)
-	{
 		ft_echo(line, e);
-		return (0);
-	}
 	else if (index == 2)
 		return (builtin_exec_cd(node, e, command));
 	else if (index == 3)

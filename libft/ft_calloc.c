@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 09:48:53 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:44:45 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 09:36:45 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 	address = (void *)malloc(count * size);
 	if (address == 0)
-		return ;
+		return (0);
 	ft_bzero(address, count * size);
 	return (address);
 }
