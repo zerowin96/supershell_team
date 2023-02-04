@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 14:44:19 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 21:54:05 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ void	child_process_run(char **command, char **envp)
 	errcheck = 0;
 	paths = get_path_split(envp);
 	path_index = check_access(command[0], paths, X_OK);
+	printf("path index == %d\n", path_index);
+	// CHECK IF INPUT IS FOLDER OR NOT
+	// CHECK IF 
 	quote_out_command_unhead(&command);
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
@@ -79,6 +82,7 @@ void	child_process(t_list *list, t_copy *e, int fd[2][2])
 
 	command = 0;
 	temp_string = 0;
+	child_handle_signal();
 	tnum = command_split(list, fd, &command, &temp_string);
 	if (tnum)
 		exit (tnum);

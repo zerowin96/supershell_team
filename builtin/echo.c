@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 18:52:04 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 14:03:58 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	only_n_check(char *string)
 
 void	print_and_check_space(t_list *head)
 {
-	printf("%s", (char *)head->next->content);
+	ft_putstr_fd((char *)head->next->content, 1);
 	if (head->next->next)
-		printf(" ");
+		write(1, " ", 1);
 }
 
 void	running_echo(t_list *head)
@@ -58,7 +58,7 @@ void	running_echo(t_list *head)
 		head = head->next;
 	}
 	if (check == 0)
-		printf("\n");
+		write(1, "\n", 1);
 }
 
 void	ft_echo(char *line, t_copy *env)

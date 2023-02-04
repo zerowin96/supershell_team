@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:23:37 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 13:33:32 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/03 20:41:21 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,14 @@ int	quote_check(t_list *list)
 		if (((char *)(list->content))[len - 1] != '\'' || len == 1)
 			printf("minishell: quote not closed: close quote\n");
 		else
-			return (1);
+			return (0);
 	}
 	else if (((char *)(list->content))[0] == '\"')
 	{
 		if (((char *)(list->content))[len - 1] != '\"' || len == 1)
 			printf("minishell: quote not closed: close quote\n");
 		else
-			return (1);
+			return (0);
 	}
 	else
 		return (0);

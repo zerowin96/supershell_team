@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 12:02:05 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/03 14:26:29 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void		handle_signal(void);
 void		blank_list_module(char **string, t_copy *env, t_list *new);
 void		parent_handle_signal(void);
 void		heredoc_handle_signal(void);
+void		child_handle_signal(void);
 void		sort_and_print(char **string);
 void		free_space(t_list *list);
 int			quote_check(t_list *list);
