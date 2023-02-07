@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:55:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:23:23 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/06 18:29:00 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	command_run_fd_post(int (*fd)[2])
 	}
 }
 
-int	command_run(t_list *list, t_copy *e)
+int	command_run(t_list *list, t_copy *e, int result)
 {
 	int		pipefd[2][2];
 	int		pid;
@@ -71,7 +71,7 @@ int	command_run(t_list *list, t_copy *e)
 		command_run_fd_prev(list, pipefd);
 		pid = fork();
 		if (pid == 0)
-			child_process(list, e, pipefd);
+			child_process(&list, e, pipefd, result);
 		else if (pid < 0)
 		{
 			perror("fork failed");
@@ -82,6 +82,10 @@ int	command_run(t_list *list, t_copy *e)
 			list = list->next;
 		if (list)
 			list = list->next;
+
+		//test
+		sleep(1);
+		//test
 	}
 	return (status_return(pid));
 }

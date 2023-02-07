@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 20:19:50 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/06 17:29:54 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ void	blank_list_module(char **string, t_copy *env, t_list *new)
 	int		i;
 
 	i = 0;
+	// printf("blank list module\n");
 	while (string[i])
 	{
+		printf("%s\n", string[i]);
 		temp = disassemble_assemble(string[i], env->cp_envp);
 		ft_lstadd_back(&new, ft_lstnew(temp));
 		free(string[i]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:02:10 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 13:53:36 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/07 17:55:30 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,26 @@ int	builtin_exec(char *line, char **command, t_list *node, t_copy *e)
 {
 	int		index;
 
+
+	//협의 내용에 따라, LIST로 재전달하기로 함.
+	// printf("run single builtin : $%s$",)
+	// vector_print("run single builtin", command);
 	index = builtin_check(command[0]);
+
 	free_space(node);
 	if (index == 1)
-		ft_echo(line, e);
+	{
+		int in = 1;
+		while (command[in])
+		{
+			ft_putstr_fd(command[in], 1);
+			in++;
+			if (command[in])
+				ft_putchar_fd(' ', 1);
+		}
+		ft_putstr_fd("\n", 1);
+	}
+		// ft_echo(line, e);
 	else if (index == 2)
 		return (builtin_exec_cd(node, e, command));
 	else if (index == 3)

@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:49:16 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:21:27 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/05 14:58:00 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 		if (((char *)(temp->content))[0] == ' ')
 		{
 			if (*command)
+			{
+				(*command) = vector_add((*command), " ");
 				(*string) = string_connect((*string), " ");
+			}
 		}
 		else if (sep >= 1 && sep <= 4)
 		{
@@ -75,6 +78,6 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 		}
 		temp = temp->next;
 	}
-	quote_out_command_one(command);
+	// quote_out_command_one(command);
 	return (command_split_delspace(string), 0);
 }

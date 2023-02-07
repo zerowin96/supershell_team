@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:29:16 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 13:33:43 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/07 17:29:25 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,42 @@ void	tokenize_separator(t_list *list, char *string, int *index)
 	(*index) += (is_separator(&string[(*index)]) - 1);
 	finish = (*index);
 	partial_string(list, string, start, finish);
+}
+
+void	tokenize_2(t_list *list, char *string)
+{
+	int		index;
+
+	index = 0;
+	while (string[index])
+	{
+		if ((string[index] >= 9 && string[index] <= 13) || string[index] == ' ')
+		{
+			// if (index)
+			// 	partial_string(list, " ", 0, 1);
+			int start = index;	// index;
+			while (string[index] >= 9 && (string[index] <= 13 \
+			|| string[index] == ' '))
+				index++;
+			int finish = (index - 1); // index;
+			int	length = finish - start + 1;
+			char *temp = (char *)ft_calloc(length + 1, sizeof(char));
+			int i = 0;
+			while (i < length)
+				temp[i++] = ' ';
+			partial_string(list, temp, 0, length);
+			free(temp);
+		}
+		if (is_separator(&string[index]))
+			tokenize_separator(list, string, &index);
+		else if (string[index] && string[index] == '$')
+			tokenize_expansion(list, string, &index);
+		else if (string[index] && string[index] != ' ')
+			tokenize_space(list, string, &index);
+		if (string[index] == 0)
+			break ;
+		index++;
+	}
 }
 
 void	tokenize(t_list *list, char *string)

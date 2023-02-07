@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:19:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:01:01 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/06 15:56:22 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,16 @@ void	main_init_env(t_copy *env, char **envp, char **argv, int argc)
 	}
 }
 
+int	main_single_builtin_check(t_list **list, int *result, t_copy *env)
+{
+	if (pipe_exists((*list)->next))
+		return (0);
+	else
+		if (main_builtin(list, result, env))
+			return (1);
+	return (0);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_list	*list;
@@ -44,13 +54,15 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (main_while_init(&list, &line, &result, &env))
 			continue ;
-		if (pipe_exists(list->next) == 0 && \
-		builtin_check(list->next->content))
-			main_builtin(list, &result, &env);
+		// if (pipe_exists(list->next) == 0 && \
+		// builtin_check(list->next->content))
+		// 	main_builtin(list, &result, &env);
+		if (main_single_builtin_check(&list, &result, &env))
+			;
 		else
 		{
 			handle_signal();
-			result = command_run(list->next, &env);
+			result = command_run(list->next, &env, result);
 		}
 		delete_local_file(list->next);
 		free(line);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/03 14:03:58 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/05 22:58:13 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	ft_echo(char *line, t_copy *env)
 	int		flag;
 	int		check;
 
+	// printf("echo input : %s\n", line);
 	flag = 0;
 	check = 0;
 	head = ft_lstnew(0);

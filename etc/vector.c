@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:26:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 20:20:32 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/04 19:58:59 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ char	**vector_add(char **vector, char *string)
 		}
 	}
 	new_vector[index] = ft_strdup(string);
-	vector_free(vector);
+	if (vector)
+		vector_free(vector);
 	return (new_vector);
 }
