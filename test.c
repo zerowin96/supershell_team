@@ -1,86 +1,116 @@
+// #include "main.h"
 
-#include "test.h"
-
-// typedef struct s_command
+// int	main(int argc, char **argv, char **envp)
 // {
-// 	char	**command;
-// 	int		priority;
-	// no || or && : all 1s
-	// if any of them available : rise from 1;
-	// example : echo "123" && echo "456"
-	// echo 123 : priority 0;
-	// echo 456 : priority 1;
-	// 아니, 아니지. 선후관계를 어떻게 하면 더 쉽게 파악할 수 있을까?
 
+
+// 	int	fd[2][2];
+// 	t_list *list;
+// 	list = 0;
+// 	fd[0][0] = 0;
+// 	fd[0][1] = 0;
+// 	fd[1][0] = 0;
+// 	fd[0][1] = 0;
+
+// 	while (1)
+// 	{
+// 		char **command = 0;
+// 		char	*string = 0;
+// 		char *line = readline("in : ");
+// 		if (line == 0 || *line == 0)
+// 		{
+// 			free(line);
+// 			continue;
+// 		}
+// 		list = ft_lstnew(0);
+// 		tokenize(list, line);
+// 		list_print("after tokenizing", list);
+
+
+// 		command_split(list->next, fd, &command, &string);
+// 		vector_print("after spliting", command);
+// 		free_list(list);
+// 		list = vector_to_list(&command);
+// 		// vector_free(command);
+// 		ft_lstadd_front(&list, ft_lstnew(0));
+// 		list_print("after spliting", list);
+
+
+// 		qmark_expansion(list, 0);
+// 		env_expansion(list, envp);
+// 		// printf("after expansion\n");
+// 		list_print("after expansion", list);
+
+
+
+// 		list_whitespace_split(list);
+// 		// printf();
+// 		list_print("after whitespace split", list);
+
+
+// 		// quote_trim(list);
+// 		// printf("after trimming quote\n");
+
+
+
+// 		quote_trim(list);
+// 		list_print("after trimming quote", list);
+
+
+
+
+
+
+
+
+// 		printf("string : %s$\n", string);
+// 		free(string);
+// 		// free(string);
+// 		// // string = listjoin(list);
+// 		// t_list *temp_listjoin;
+// 		// temp_listjoin = list;
+// 		// char	*temp_string = (char *)ft_calloc(1, sizeof(char));
+// 		// char	*temp_string1;
+// 		// while (temp_listjoin)
+// 		// {
+// 		// 	temp_string1 = string_connect(temp_string, temp_listjoin->content);
+// 		// 	// free(temp_string);
+// 		// 	temp_string = temp_string1;
+// 		// 	temp_listjoin = temp_listjoin->next;
+// 		// }
+// 		// string = temp_string;
+// 		// printf("listjoin : %s$\n", string);
+// 		// free_list(list);
+// 		// list = ft_lstnew(0);
+// 		// tokenize(list, string);
+// 		// list_print("retokenized", list);
+// 		list_tie(list);
+// 		list_print("tied", list);
+// 		free_space(list);
+// 		free_empty(list);
+// 		list_print("space and empty has freed", list);
+// 		// vector_print("after spliting", command);
+// 		// vector_free(command);
+// 		command = list_to_vector(list);
+// 		vector_print("after all", command);
+
+
+// 		free(line);
+// 		free_list(list);
+// 		vector_free(command);
+// 		// free(string);
+// 	}
 // }
 
-// shapeof readline_family(prototype)
-// {
-// 	char *readline(const char *prompt);
-// 	then : "prompt" on prompt;
-
-// 	void rl_clear_history(void);
-// 	then : clear history;
-
-// 	rl_on_new_line
-// 	rl_replace_line
-// 	re_redisplay
-// 	add_history
+// gcc -g3 telib -I${HOME}/.brew/opt/readline/include parsing/*.c exec/*.c builtin/*.cst.c -lreadline etc/*.c libft/libft.a -L${HOME}/.brew/opt/readline/
+// gcc -g3 -lreadline etc/*.c libft/libft.a -L${HOME}/.brew/opt/readline/lib -I${HOME}/.brew/opt/readline/include parsing/*.c exec/*.c builtin/*.c test_func.c test.c
 
 
-// }kkk
-// 바보?????
 
-char *reading(void)
-{
-	char *line;
-	line = 0;
 
-	line = readline("./minishell >$");
-	if (line && *line)
-		add_history(line);
-	return (line);
-}
 
-void exec(t_list *list)
-{
-	t_list *now;
+// gcc -g3 -lreadline etc/*.c libft/libft.a -L${HOME}/.brew/opt/readline/lib -I${HOME}/.brew/opt/readline/include parsing/*.c exec/*.c builtin/*.c test_func.c main/*
+// for MAIN TEST
 
-	now = list -> next;
-	printf("exec\n");
-}
 
-int main(int argc, char **argv, char **envp)
-{
-	// char *test[] = {"/bin/echo", "abcd", "efgh", 0};
-	char *line;
-	t_list *list;
-
-	line = 0;
-	list = NULL;
-	while (1)
-	{
-		line = reading();
-		list = parsing(line);
-		exec(list);
-		// readline () line 값을 parsing()
-		// parsing () parsing 값을 char **에 담아
-		// exec() char **을 실행시켜 (bulitin 유무 확인) 없으면 (< << > >>) 확인 exec 실행 (pipex)
-		// 
-
-		// cd 
-
-		// if (line)
-		// {
-		// 	free(line);
-		// 	line = (char *)NULL;
-		// }
-		// line = readline("enter a line :");
-		// printf("line i got : |%s|\n", line);
-		// if (line && *line)
-		// 	add_history(line); 
-		// rl_on_new_line();
-	}
-	// rl_clear_history();
-	// execve(test[0], test, envp);
-}
+    //   ' ec"ho" "123"$USER"$USER"'$USER'456 '
