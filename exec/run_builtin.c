@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:02:10 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:09:09 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 22:05:44 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,37 +47,44 @@ int	builtin_exec(char *line, char **command, t_list *node, t_copy *e)
 {
 	int		index;
 
-
-	//협의 내용에 따라, LIST로 재전달하기로 함.
-	// printf("run single builtin : $%s$",)
-	// vector_print("run single builtin", command);
 	index = builtin_check(command[0]);
+	// t_list *temp = vector_to_list(&command);
+	// while(temp)
+	// {
+	// 	printf("command == %s\n", (char *)temp->content);
+	// 	temp = temp->next;
+	// }
 
-	free_space(node);
-	if (index == 1)
+	int index1 = 0;
+	char *temp_line = 0;\
+	char *temp_line2;
+	while (command[index1])
 	{
-		int in = 1;
-		while (command[in])
+		temp_line2 = ft_strjoin(temp_line, command[index1]);
+		free(temp_line);
+		index1++;
+		if (command[index1])
 		{
-			ft_putstr_fd(command[in], 1);
-			in++;
-			if (command[in])
-				ft_putchar_fd(' ', 1);
-		}
-		ft_putstr_fd("\n", 1);
+			temp_line = ft_strjoin(temp_line2, " ");
+			free(temp_line2);
+		}	
 	}
-		// ft_echo(line, e);
+	temp_line = temp_line2;
+
+	if (index == 1)
+		ft_echo(temp_line, e);
 	else if (index == 2)
 		return (builtin_exec_cd(node, e, command));
 	else if (index == 3)
 		ft_pwd();
 	else if (index == 4)
-		return (ft_export(line, e));
+		return (ft_export(temp_line, e));
 	else if (index == 5)
-		ft_unset(line, e);
+		ft_unset(temp_line, e);
 	else if (index == 6)
 		ft_env(e);
 	else if (index == 7)
 		return (builtin_exec_exit(command));
+	free(temp_line);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_util.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:36:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 15:36:10 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 20:04:53 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,13 @@ void	quote_trim(t_list *list)
 	cursor = list->next;
 	while (cursor)
 	{
-		while (!cursor->content)
+		while (cursor && !cursor->content)
 			cursor = cursor->next;
 		if (cursor == 0)
 			break ;
 		lendex = ft_strlen((char *)cursor->content);
 		// printf("lendex = %d\n", lendex);
-		if (lendex == 0)
+		if (lendex < 2)
 			;
 		else if (((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1])
 			;

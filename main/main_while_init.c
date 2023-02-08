@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:42:01 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 20:35:16 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,6 @@ int	main_while_init(t_list **list, char **line, int *result, t_copy *env)
 {
 	handle_signal();
 	(*line) = reading();
-	// char	*to_free;
-	// int		space_len = 0;
-
-	// if ((*line) == 0 || (**line) == 0)
-	// 	return (1);
-	// while ((*line)[space_len] == ' ' || (*line)[space_len] == '\t')
-	// 	space_len++;
-	// printf("space_len : %d\n", space_len);
-	// to_free = *line;
-	// if ((*line)[space_len] == 0)
-	// 	*line = ft_strdup("");
-	// else
-	// 	(*line) = ft_strdup((*line) + space_len);
-	// free(to_free);	
 
 	if ((*line) == 0 || (**line) == 0)
 	{

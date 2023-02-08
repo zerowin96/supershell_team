@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_util.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/06 17:29:54 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 20:45:10 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	blank_list_module(char **string, t_copy *env, t_list *new)
 	// printf("blank list module\n");
 	while (string[i])
 	{
-		printf("%s\n", string[i]);
 		temp = disassemble_assemble(string[i], env->cp_envp);
 		ft_lstadd_back(&new, ft_lstnew(temp));
 		free(string[i]);

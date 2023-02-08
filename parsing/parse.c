@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:27:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:16:26 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 22:08:17 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,6 @@ t_list	*parsing(char *line, char **envp)
 	tokenize(list, line);
 	if (quote_check(list))
 		return (0);
-
-	int index;
-
-	// I MEAN, LET'S DELETE THIS PART
-	if (envp)
-		index = 1;
-	else if (envp == 0)
-		index = 2;
-	else
-		env_expansion(list, envp);
-
 	return (list);
 }
 

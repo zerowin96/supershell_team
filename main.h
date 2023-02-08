@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:11:33 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 21:49:56 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void		quote_trim(t_list *list);
 void		qmark_expansion(t_list *list, int pres);
 char		*get_filename(void);
 int			export_error_check(char *string);
+void	child_command_error(char *command, int errcheck);
 
 
 void	list_print(char *string, t_list *list);

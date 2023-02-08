@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/08 19:07:35 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 21:50:24 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	ft_echo(char *line, t_copy *env)
 	head = ft_lstnew(0);
 	blank_list_module(env_split(line), env, head);
 	temp = head;
-	head = head->next;
+	head = head ->next;
 	running_echo(head);
 	free_list(temp);
 }

@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:25:28 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 20:07:26 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 
 	temp_list = vector_to_list(&command);
 	free(command);
-	
 	ft_lstadd_front(&temp_list, ft_lstnew(0));
 	qmark_expansion(temp_list, *result);
 	env_expansion(temp_list, env->cp_envp);
@@ -77,7 +76,7 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 	free_empty(temp_list);
 	command = list_to_vector(temp_list);
 	free_list(temp_list);
-	if (!((*list)->next) || (!command || !(builtin_check(command[0]))))
+	if (!((*list)->next) || !command || !(builtin_check(command[0])))
 	{
 		if (temp_string)
 			free(temp_string);

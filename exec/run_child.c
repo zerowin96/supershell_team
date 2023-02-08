@@ -6,7 +6,7 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:32:29 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 20:10:51 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,7 @@ void	child_process_run(char **command, char **envp)
 	else if (path_index > 1)
 		errcheck = execve(ft_strjoin(paths[path_index - 2], \
 		ft_strjoin("/", command[0])), command, envp);
-	if (errcheck < 0)
-	{
-		perror("error on execve");
-		exit (1);
-	}
-	write(2, "command not found\n", 19);
-	ft_putstr_fd(command[0], 2);
-	ft_putstr_fd("\n", 2);
+	child_command_error(command[0], errcheck);
 	vector_free(command);
 	exit(127);
 }
