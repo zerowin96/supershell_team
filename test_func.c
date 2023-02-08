@@ -1,28 +1,16 @@
 #include "main.h"
 
-// void	vector_print(char *string, char **vector);
-// void	list_print(char *string, t_list *list);
-// char	*listjoin(t_list *list);
-
-
 void	list_print(char *string, t_list *list)
 {
 	printf("%s\n", string);
 	t_list	*print_temp;
 	print_temp = list;
 	int index = 0;
-	// printf("__________\n");
 	while (print_temp)
 	{
-		// if (print_temp == print_temp->next)
-		// {
-		// 	printf("warning!!!!!\n");
-		// 	return ;
-		// }
 		printf("%16s$ %4zu %16p, %16p %16p  \n", print_temp->content, ft_strlen(print_temp->content), print_temp, print_temp->content, print_temp->next);
 		print_temp = print_temp->next;
 		index++;
-		// sleep(1);
 	}
 	printf("\n");
 	printf("==========\n");
@@ -40,13 +28,10 @@ t_list *vector_to_list(char ***vector)
 	int index = 0;
 	while ((*vector)[index])
 	{
-		// printf("vector_to_list : put $%s$ into list\n", (*vector)[index]);
 		ft_lstadd_back(&list, ft_lstnew((*vector)[index]));
 		index++;
 	}
-	// return (list);
 	t_list *temp = 0;
-	// temp = list->next;
 	if (list->next)
 		temp = list->next;
 	free(list->content);
@@ -101,7 +86,6 @@ char	**whitespace_split(char *string)
 		start = index;
 		while (!(ml_iswhite(string[index])) && string[index])
 			index++;
-		// finish = index; //index == null이나 whitespace
 		if (string[index] == 0)
 			finish = 1;
 		string[index] = 0;
@@ -112,7 +96,6 @@ char	**whitespace_split(char *string)
 		if (finish)
 			break;
 	}
-	// vector_print("whitespace_split +++++++++++++++++++", split);
 	return (split);
 }
 
@@ -145,8 +128,6 @@ void	list_whitespace_split(t_list *list)
 		else
 		{
 			vector = whitespace_split(list->content);
-			// vector_print("whitespace vector print", vector);
-			// vector = list_to_vector(list);
 			temp[0] = vector_to_list(&vector);
 			temp[1] = list->next;
 
@@ -158,24 +139,8 @@ void	list_whitespace_split(t_list *list)
 			while (prev->next)
 				prev = prev->next;
 			prev->next = list;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			// vector_free(vector);
 			free(vector);
 			vector = 0;
-			// list_print("f++++++++++++++++++++++++++++++++++++++++++++++++ ", head);
 			continue;
 		}
 		prev = list;
@@ -194,23 +159,12 @@ void	list_tie(t_list *temp)
 	tie_prev = list->next;
 	while(tie_temp)
 	{
-		// printf("%s\n", tie_temp->content);
 		if (tie_temp->content == 0 || tie_prev->content == 0)
 		{
 			tie_prev = tie_temp;
 			tie_temp = tie_prev->next;
 			continue;
 		}
-		// if (((char *)(tie_temp->content))[0] == 0)
-		// {
-		// 	tie_prev->next = tie_temp->next;
-		// 	free(tie_temp->content);
-		// 	tie_temp->content = 0;
-		// 	free(tie_temp);
-		// 	tie_temp = tie_prev->next;
-		// }
-		// else if (ft_strncmp(tie_prev->content, " ", 2) == 0 \
-		&& ft_strncmp(tie_temp->content, " ", 2) == 0)
 		if (ft_strncmp(tie_prev->content, " ", 2) \
 		&& ft_strncmp(tie_temp->content, " ", 2))
 		{
@@ -232,27 +186,6 @@ void	list_tie(t_list *temp)
 	}
 }
 
-// void		quote_trim(t_list *list);
-
-// void	list_print(char *string, t_list *list)
-// {
-// 	printf("%s\n", string);
-// 	t_list	*print_temp;
-// 	print_temp = list->next;
-// 	int index = 0;
-// 	// printf("__________\n");
-// 	while (print_temp)
-// 	{
-// 		printf("%s$  ", print_temp->content);
-// 		print_temp = print_temp->next;
-// 		index++;
-// 	}
-// 	printf("\n");
-// 	printf("==========\n");
-// }
-
-
-
 void	vector_print(char *string, char **vector)
 {
 	printf("%s\n", string);
@@ -268,34 +201,4 @@ void	vector_print(char *string, char **vector)
 	}
 	printf("\n");
 	printf("==========\n");
-}
-
-void	list_tie_2(t_list *temp)
-{
-	t_list	*tie_temp;
-	t_list	*tie_prev;
-	t_list	*list = temp;
-	if (!list->next)
-		return ;
-	tie_temp = list->next->next;
-	tie_prev = list->next;
-	while(tie_temp)
-	{
-		// printf("%s\n", tie_temp->content);
-		if (tie_temp->content == 0 || tie_prev->content == 0)
-		{
-			tie_prev = tie_temp;
-			tie_temp = tie_prev->next;
-			continue;
-		}
-		char	*temp_string;
-		temp_string = ft_strjoin(tie_prev->content, tie_temp->content);
-		free (tie_prev->content);
-		tie_prev->content = temp_string;
-		tie_prev->next = tie_temp->next;
-		free(tie_temp->content);
-		tie_temp->content = 0;
-		free(tie_temp);
-		tie_temp = tie_prev->next;
-	}
 }

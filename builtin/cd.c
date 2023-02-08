@@ -6,12 +6,11 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 19:07:18 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/03 11:53:01 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 19:08:01 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
-#include <unistd.h>
 
 char	*get_pwd(t_copy *env)
 {

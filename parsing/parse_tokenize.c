@@ -6,11 +6,12 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:29:16 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/07 17:29:25 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 21:23:45 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+#include <stdlib.h>
 
 void	partial_string(t_list *list, char *string, int start, int finish)
 {
@@ -39,7 +40,7 @@ void	tokenize_expansion(t_list *list, char *string, int *index)
 	(*index)--;
 }
 
-void	tokenize_space(t_list *list, char *string, int *index)
+void	tokenize_string(t_list *list, char *string, int *index)
 {
 	int	start;
 	int	finish;
@@ -64,36 +65,38 @@ void	tokenize_separator(t_list *list, char *string, int *index)
 	partial_string(list, string, start, finish);
 }
 
+void	tokenize_space(t_list *list, char *string, int *index)
+{
+	int start = (*index);
+
+	while (string[(*index)] >= 9 && (string[(*index)] <= 13 \
+	|| string[(*index)] == ' '))
+		(*index)++;
+	int finish = ((*index) - 1);
+	int	length = finish - start + 1;
+	char *temp = (char *)ft_calloc(length + 1, sizeof(char));
+	int i = 0;
+	while (i < length)
+		temp[i++] = ' ';
+	partial_string(list, temp, 0, length);
+	free(temp);
+}
+
 void	tokenize_2(t_list *list, char *string)
 {
-	int		index;
+	int	index;
 
 	index = 0;
 	while (string[index])
 	{
 		if ((string[index] >= 9 && string[index] <= 13) || string[index] == ' ')
-		{
-			// if (index)
-			// 	partial_string(list, " ", 0, 1);
-			int start = index;	// index;
-			while (string[index] >= 9 && (string[index] <= 13 \
-			|| string[index] == ' '))
-				index++;
-			int finish = (index - 1); // index;
-			int	length = finish - start + 1;
-			char *temp = (char *)ft_calloc(length + 1, sizeof(char));
-			int i = 0;
-			while (i < length)
-				temp[i++] = ' ';
-			partial_string(list, temp, 0, length);
-			free(temp);
-		}
+			tokenize_space(list, string, &index);
 		if (is_separator(&string[index]))
 			tokenize_separator(list, string, &index);
 		else if (string[index] && string[index] == '$')
 			tokenize_expansion(list, string, &index);
 		else if (string[index] && string[index] != ' ')
-			tokenize_space(list, string, &index);
+			tokenize_string(list, string, &index);
 		if (string[index] == 0)
 			break ;
 		index++;
@@ -120,7 +123,7 @@ void	tokenize(t_list *list, char *string)
 		else if (string[index] && string[index] == '$')
 			tokenize_expansion(list, string, &index);
 		else if (string[index] && string[index] != ' ')
-			tokenize_space(list, string, &index);
+			tokenize_string(list, string, &index);
 		if (string[index] == 0)
 			break ;
 		index++;

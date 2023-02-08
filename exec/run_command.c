@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:55:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 13:06:01 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 20:05:37 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,6 @@ int	command_run(t_list *list, t_copy *e, int result)
 			list = list->next;
 		if (list)
 			list = list->next;
-
-		//test
-		// sleep(1);
-		//test
 	}
 	return (status_return(pid));
 }

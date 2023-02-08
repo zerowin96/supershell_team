@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:10:47 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 22:13:26 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,12 @@ void	child_process_run(char **command, char **envp)
 	errcheck = 0;
 	paths = get_path_split(envp);
 	path_index = check_access(command[0], paths, X_OK);
-
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
 	else if (path_index > 1)
 		errcheck = execve(ft_strjoin(paths[path_index - 2], \
 		ft_strjoin("/", command[0])), command, envp);
-	if (errcheck < 0)
-	{
-		perror("error on execve");
-		exit (1);
-	}
-	write(2, "command not found\n", 19);
-	ft_putstr_fd(command[0], 2);
-	ft_putstr_fd("\n", 2);
+	child_command_error(command[0], errcheck);
 	vector_free(command);
 	exit(127);
 }
@@ -77,9 +69,6 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 	char	**command;
 	char	*temp_string;
 	int		tnum;
-	// int		result;
-
-	t_list	*temp;
 
 	command = 0;
 	temp_string = 0;
@@ -87,37 +76,18 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 	tnum = command_split(*list, fd, &command, &temp_string);
 	if (tnum)
 		exit (tnum);
-	
-
-
-	t_list	*temp_list;
-	temp_list = vector_to_list(&command);
-	ft_lstadd_front(&temp_list, ft_lstnew(0));
-	qmark_expansion(temp_list, result);
-	env_expansion(temp_list, e->cp_envp);
-	quote_trim(temp_list);
-	free_empty(temp_list);
-	list_tie(temp_list);
-	free_space(temp_list);
-	free_empty(temp_list);
-	free(command);
-	command = list_to_vector(temp_list);
+	parse_expand(&command, result, e);
 	child_process_fd_pre(fd);
 	if (command == 0 || command[0] == 0)
 	{
-		if (command)
-			vector_free(command);
+		vector_free(command);
 		exit (0);
 	}
-
 	if (builtin_check(command[0]))
 	{
 		result = builtin_exec(temp_string, command, *list, e);
-		free(temp_string);
 		exit (result);
 	}
-	free(temp_string);
-	free_space(*list);
 	child_process_run(command, e->cp_envp);
 	exit (127);
 }

@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:36:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 15:36:10 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 22:11:46 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,22 @@ void	free_empty(t_list *list)
 	prev = list;
 	while (cursor)
 	{
-		// printf("%16p : FREE_EMPTY : **%s**\n", cursor, cursor->content);
-		if (cursor->content == 0)
+		if (cursor->content == 0 || !(((char *)(cursor->content))[0]))
 		{
-			prev->next = cursor->next;
-			free(cursor);
-			cursor = prev->next;
-		}
-		else if (((char *)(cursor->content))[0] == 0)
-		{
+		// 	prev->next = cursor->next;
+		// 	free(cursor);
+		// }
+		// else if (((char *)(cursor->content))[0] == 0)
+		// {
 			prev->next = cursor->next;
 			if (cursor->content)
 				free(cursor->content);
 			cursor->content = 0;
 			free(cursor);
-			cursor = prev->next;
 		}
 		else
-		{
-			cursor = cursor->next;
 			prev = prev->next;
-		}
+		cursor = prev->next;
 	}
 }
 
@@ -76,7 +71,6 @@ void	free_space(t_list *list)
 	prev = list;
 	while (cursor)
 	{
-		// if (cursor->content && *((char *)(cursor->content)) == ' ')
 		if (cursor->content && ft_strncmp((cursor->content), " ", 2) == 0)
 		{
 			prev->next = cursor->next;
@@ -93,44 +87,6 @@ void	free_space(t_list *list)
 	}
 }
 
-void	quote_trim(t_list *list)
-{
-	t_list	*cursor;
-	int		lendex;
-	char	*new_string;
-
-	cursor = list->next;
-	while (cursor)
-	{
-		while (!cursor->content)
-			cursor = cursor->next;
-		if (cursor == 0)
-			break ;
-		lendex = ft_strlen((char *)cursor->content);
-		// printf("lendex = %d\n", lendex);
-		if (lendex == 0)
-			;
-		else if (((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1])
-			;
-		else if ((((char *)(cursor->content))[0] == '\'' \
-			|| ((char *)(cursor->content))[0] == '\"'))
-		{
-			// if (lendex == 1)
-			// 	lendex++;
-			// lendex = ft_strlen((char *)cursor->content);
-			new_string = (char *)ft_calloc(lendex - 1, sizeof(char));
-			ft_memmove(new_string, \
-				&(((char *)(cursor->content))[1]), lendex - 2);
-			new_string[lendex - 2] = 0;
-			// printf("new_string : %s\n", new_string);
-			free(cursor->content);
-			// cursor->content = 0;
-			cursor->content = new_string;
-		}
-		cursor = cursor->next;
-	}
-}
-
 void	quote_trim_partial(t_list *list)
 {
 	t_list	*cursor;
@@ -141,11 +97,11 @@ void	quote_trim_partial(t_list *list)
 	if (cursor == 0)
 		return ;
 	lendex = ft_strlen((char *)cursor->content);
-	// printf("lendex = %d\n", lendex);
-	if (lendex < 2)
+	if (lendex < 2 ||
+	(((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1]))
 		;
-	else if (((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1])
-		;
+	// else if (((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1])
+	// 	;
 	else if ((((char *)(cursor->content))[0] == '\'' \
 		|| ((char *)(cursor->content))[0] == '\"'))
 	{
@@ -156,6 +112,40 @@ void	quote_trim_partial(t_list *list)
 		free(cursor->content);
 		cursor->content = new_string;
 	}
-	cursor = cursor->next;
+}
 
+void	quote_trim(t_list *list)
+{
+	t_list	*cursor;
+	int		lendex;
+	char	*new_string;
+
+	cursor = list->next;
+	while (cursor)
+	{
+		while (cursor && !cursor->content)
+			cursor = cursor->next;
+		if (cursor == 0)
+			break ;
+		quote_trim_partial(cursor);
+		cursor = cursor->next;
+		// if (cursor == 0)
+		// 	break ;
+		// lendex = ft_strlen((char *)cursor->content);
+		// if (lendex < 2)
+		// 	;
+		// else if (((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1])
+		// 	;
+		// else if ((((char *)(cursor->content))[0] == '\'' \
+		// 	|| ((char *)(cursor->content))[0] == '\"'))
+		// {
+		// 	new_string = (char *)ft_calloc(lendex - 1, sizeof(char));
+		// 	ft_memmove(new_string, \
+		// 		&(((char *)(cursor->content))[1]), lendex - 2);
+		// 	new_string[lendex - 2] = 0;
+		// 	free(cursor->content);
+		// 	cursor->content = new_string;
+		// }
+		// cursor = cursor->next;
+	}
 }

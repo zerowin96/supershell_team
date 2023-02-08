@@ -6,13 +6,12 @@
 /*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/03 11:43:59 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 22:06:23 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
-#include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 
 void	replace_cp_env_key(t_copy *env, char *string, int j)
 {
@@ -107,5 +106,6 @@ int	ft_export(char *line, t_copy *env)
 		head = head->next;
 	}
 	free_list(temp);
+	free(line);
 	return (0);
 }

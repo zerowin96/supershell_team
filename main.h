@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 15:49:31 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 22:12:27 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void		ft_echo(char *line, t_copy *env);
 void		ft_pwd(void);
 int			ft_cd(char *next, t_copy *env);
 int			is_separator(char *string);
-void		ft_exit(int value);
 void		handle_signal(void);
 void		blank_list_module(char **string, t_copy *env, t_list *new);
 void		parent_handle_signal(void);
@@ -112,6 +111,7 @@ void		quote_trim(t_list *list);
 void		qmark_expansion(t_list *list, int pres);
 char		*get_filename(void);
 int			export_error_check(char *string);
+void	child_command_error(char *command, int errcheck);
 
 
 void	list_print(char *string, t_list *list);
@@ -123,4 +123,6 @@ void	list_whitespace_split(t_list *list);
 void	list_tie(t_list *temp);
 void	vector_print(char *string, char **vector);
 void	list_tie_2(t_list *temp);
+void	ft_exit(char *command, char *next_command);
+void	parse_expand(char ***command, int result, t_copy *env);
 #endif

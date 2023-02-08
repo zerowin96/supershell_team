@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main_while_init.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:39:59 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 20:35:16 by yeham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+#include <stdlib.h>
 
 int	command_check(t_list *list)
 {
@@ -65,14 +66,7 @@ int	main_while_init(t_list **list, char **line, int *result, t_copy *env)
 {
 	handle_signal();
 	(*line) = reading();
-	// if ((*line) == 0)
-	// 	return (1);
-	// if ((**line) == 0)
-	// {
-	// 	free(*line);
-	// 	(*line) = 0;
-	// 	return (1);
-	// }
+
 	if ((*line) == 0 || (**line) == 0)
 	{
 		free(*line);
