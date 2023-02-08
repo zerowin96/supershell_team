@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 16:02:18 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:09:23 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 	free_empty(temp_list);
 	command = list_to_vector(temp_list);
 	free_list(temp_list);
-
-	if (!((*list)->next) || !(builtin_check(command[0])))
+	if (!((*list)->next) || (!command || !(builtin_check(command[0]))))
 	{
 		if (temp_string)
 			free(temp_string);

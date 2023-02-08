@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:19:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/06 15:56:22 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:09:55 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		if (main_while_init(&list, &line, &result, &env))
+		{
+			free(line);
 			continue ;
-		// if (pipe_exists(list->next) == 0 && \
-		// builtin_check(list->next->content))
-		// 	main_builtin(list, &result, &env);
+		}
 		if (main_single_builtin_check(&list, &result, &env))
 			;
 		else

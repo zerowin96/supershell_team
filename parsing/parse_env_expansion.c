@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:32:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 15:57:00 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:07:53 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,20 +335,18 @@ void	env_expansion_string(t_list **cursor, char **envp)
 			{
 				string[index] = 0;
 				vector = vector_add(vector, &(string[start]));
-				// printf("%s\n", &(string[start]));
 				string[index] = '$';
 			}
-			start = index++; // now start = &
+			start = index++;
 			while (ft_isalnum(string[index]) || string[index] == '_')
 				index++;
 			finish = index - 1;
 
 			int temp_char = string[index];
 			string[index] = 0;
-			// printf("%s\n", &(string[start]));
 			vector = vector_add(vector, &(string[start]));
 			string[index] = temp_char;
-			start = index; // now start = next of $ENV
+			start = index;
 		}
 		else
 			index++;
@@ -356,13 +354,15 @@ void	env_expansion_string(t_list **cursor, char **envp)
 	if (index != start)
 		vector = vector_add(vector, &(string[start]));
 
-	// printf("+++++++++++++++++++++++++++\n\n\n\n\n\n\n\n");
-	// vector_print("EXPANDING", vector);
+
 
 	// write(2, " 002 : ", 8);
 	// system("leaks a.out | grep total");
-	// vector_print("BEFORE EXPANSION", vector);
-	t_list *temp_expand;;
+
+
+
+
+	t_list *temp_expand;
 	t_list *temp_cursor;
 	temp_expand = ft_lstnew(0);
 	if (vector)
@@ -389,35 +389,54 @@ void	env_expansion_string(t_list **cursor, char **envp)
 		}
 	}
 	vector_free(vector);
-
-	// list_print("TEST0", temp_expand);
 	list_tie(temp_expand);
-	// list_print("TEST1", temp_expand);
 
-	t_list *new = temp_expand;
+	// write(2, " 003 : ", 8);
+	// system("leaks a.out | grep total");
+
+
+
+
+
+
+	t_list *new = temp_expand->next;
 	if (new == 0)
 	{
+		free(temp_expand->content);
+		free(temp_expand);
 		free((*cursor)->content);
-		(*cursor)->content = ft_lstnew(0);
+		(*cursor)->content = ft_strdup("");
 		(*cursor) = (*cursor)->next;
+	
 		return ;
 	}
+		
 	t_list *old_last;
 	old_last = (*cursor)->next;
+		
 	t_list *new_last;
+	// t_list *new_last;
+		
 	new_last = new;
+		
 	while (new_last->next)
 		new_last = new_last->next;
+		
+	// free(new_last->next);
 	new_last->next = old_last;
-	if (new)
-	{
-		free((*cursor)->content);
-		(*cursor)->content = new->content;
-		(*cursor)->next = new->next;
-	}
+		
+	free((*cursor)->content);
+	(*cursor)->content = new->content;
+	(*cursor)->next = new->next;
+		
 	(*cursor) = old_last;
+	// free(temp_expand->content);
+	// free(temp_expand);
 
 
+
+	int temp_number = 0;
+	free(new);
 
 
 
@@ -454,4 +473,5 @@ void	env_expansion(t_list *list, char **envp)
 	// list_print("env_expansion_POST", list);
 	// system("leaks a.out");
 	// exit (1);
+
 }

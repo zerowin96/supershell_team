@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/06 10:58:15 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:06:53 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,6 @@ int	main_while_init(t_list **list, char **line, int *result, t_copy *env)
 		return (0);
 	free((*line));
 	free_list((*list));
+	(*line) = 0;
 	return (1);
 }

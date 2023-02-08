@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:27:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/06 10:58:25 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 17:25:55 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,56 +67,8 @@ t_list	*first_parsing(char **line, char **envp, int prev_result)
 		free_list(list);
 		return (0);
 	}
-	// qmark_expansion(list, prev_result);
-	// env_expansion(list, envp);
-
-
-	// temp = listjoin(list);
-	// free_list(list);
-	// list = ft_lstnew(0);
-	// tokenize(list, temp);
-	// *line = temp;
-
-	// quote_trim(list);
-	// t_list	*print_temp;
-	// print_temp = list->next;
-	// printf("__________list_print\n");
-	// while (print_temp)
-	// {
-	// 	printf("%s$\n", print_temp->content);
-	// 	print_temp = print_temp->next;
-	// }
-
-
-
-
-
-
-
-
-
-		// tie_temp = tie_temp->next;
-	// }
-
-	// printf("__________tie_print\n");
-	// print_temp = list->next;
-	// // printf("__________list_print\n");
-	// while (print_temp)
-	// {
-	// 	printf("%s$\n", print_temp->content);
-	// 	print_temp = print_temp->next;
-	// }
-
-
-
-
-
-
-
-
-
-
-
+	write(2, " 00.01 : ", 8);
+	system("leaks a.out | grep total");
 	return (list);
 }
 
