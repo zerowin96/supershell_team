@@ -22,6 +22,7 @@ void	list_print(char *string, t_list *list)
 		printf("%16s$ %4zu %16p, %16p %16p  \n", print_temp->content, ft_strlen(print_temp->content), print_temp, print_temp->content, print_temp->next);
 		print_temp = print_temp->next;
 		index++;
+		// sleep(1);
 	}
 	printf("\n");
 	printf("==========\n");
@@ -44,7 +45,7 @@ t_list *vector_to_list(char ***vector)
 		index++;
 	}
 	// return (list);
-	t_list *temp;
+	t_list *temp = 0;
 	// temp = list->next;
 	if (list->next)
 		temp = list->next;
@@ -193,6 +194,13 @@ void	list_tie(t_list *temp)
 	tie_prev = list->next;
 	while(tie_temp)
 	{
+		// printf("%s\n", tie_temp->content);
+		if (tie_temp->content == 0 || tie_prev->content == 0)
+		{
+			tie_prev = tie_temp;
+			tie_temp = tie_prev->next;
+			continue;
+		}
 		// if (((char *)(tie_temp->content))[0] == 0)
 		// {
 		// 	tie_prev->next = tie_temp->next;
@@ -260,4 +268,34 @@ void	vector_print(char *string, char **vector)
 	}
 	printf("\n");
 	printf("==========\n");
+}
+
+void	list_tie_2(t_list *temp)
+{
+	t_list	*tie_temp;
+	t_list	*tie_prev;
+	t_list	*list = temp;
+	if (!list->next)
+		return ;
+	tie_temp = list->next->next;
+	tie_prev = list->next;
+	while(tie_temp)
+	{
+		// printf("%s\n", tie_temp->content);
+		if (tie_temp->content == 0 || tie_prev->content == 0)
+		{
+			tie_prev = tie_temp;
+			tie_temp = tie_prev->next;
+			continue;
+		}
+		char	*temp_string;
+		temp_string = ft_strjoin(tie_prev->content, tie_temp->content);
+		free (tie_prev->content);
+		tie_prev->content = temp_string;
+		tie_prev->next = tie_temp->next;
+		free(tie_temp->content);
+		tie_temp->content = 0;
+		free(tie_temp);
+		tie_temp = tie_prev->next;
+	}
 }

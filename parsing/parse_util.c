@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:36:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/07 14:20:21 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 15:36:10 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,4 +129,33 @@ void	quote_trim(t_list *list)
 		}
 		cursor = cursor->next;
 	}
+}
+
+void	quote_trim_partial(t_list *list)
+{
+	t_list	*cursor;
+	int		lendex;
+	char	*new_string;
+
+	cursor = list;
+	if (cursor == 0)
+		return ;
+	lendex = ft_strlen((char *)cursor->content);
+	// printf("lendex = %d\n", lendex);
+	if (lendex < 2)
+		;
+	else if (((char *)(cursor->content))[0] != ((char *)(cursor->content))[lendex - 1])
+		;
+	else if ((((char *)(cursor->content))[0] == '\'' \
+		|| ((char *)(cursor->content))[0] == '\"'))
+	{
+		new_string = (char *)ft_calloc(lendex - 1, sizeof(char));
+		ft_memmove(new_string, \
+			&(((char *)(cursor->content))[1]), lendex - 2);
+		new_string[lendex - 2] = 0;
+		free(cursor->content);
+		cursor->content = new_string;
+	}
+	cursor = cursor->next;
+
 }

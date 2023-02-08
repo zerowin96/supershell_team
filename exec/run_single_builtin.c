@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/07 17:12:30 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 15:57:21 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,26 +71,33 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 	free(command);
 	ft_lstadd_front(&temp_list, ft_lstnew(0));
 	// list_whitespace_split(temp_list);
-	quote_trim(temp_list);
+	// list_print("MAIN 0", temp_list);
 	qmark_expansion(temp_list, *result);
+	// list_print("MAIN 1", temp_list);
 	env_expansion(temp_list, env->cp_envp);
-	list_tie(temp_list);
+	// list_print("MAIN 2", temp_list);
+	// list_tie(temp_list);
+	quote_trim(temp_list);
+	// list_print("MAIN 3", temp_list);
+	free_empty(temp_list);
+	// list_print("MAIN 4", temp_list);
 	// vector_print("AFTER EXPANSION", command);
 	// list_print("AFTER SPLIT", temp_list);
 	// vector_print("AFTER SPLIT", command);
-
+	list_tie(temp_list);
+	// list_print("MAIN 5", temp_list);
 	// quote_trim(temp_list);
 	free_space(temp_list);
 	// free_space(temp_list);
 	// list_print("after freeing space", temp_list);
 	// list_print("BEFORE_FREE_EMPTY", temp_list);
 	free_empty(temp_list);
-	// list_print("AFTER ALL", temp_list);
+	// list_print("SINGLE_BUILTIN_RUN", temp_list);
 	command = list_to_vector(temp_list);
 
 
 
-
+	// exit (1111111111);
 
 	// free_list((*list));
 	// (*list) = vector_to_list(&command);

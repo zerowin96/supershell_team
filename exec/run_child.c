@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/07 19:19:09 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 15:13:37 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,22 +107,25 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 	ft_lstadd_front(&temp_list, ft_lstnew(0));
 	// list_print("child 0", temp_list);
 	// list_whitespace_split(temp_list);
-	// list_print("child 1", temp_list);
-	quote_trim(temp_list);
-	// list_print("child 2", temp_list);
 	qmark_expansion(temp_list, result);
-	// list_print("child 3", temp_list);
+	// list_print("child 1", temp_list);
 	env_expansion(temp_list, e->cp_envp);
-	// list_print("child 4", temp_list);
-	list_tie(temp_list);
-	// list_print("child 5", temp_list);
+	// list_print("child 2", temp_list);
+	// list_tie(temp_list);
+	quote_trim(temp_list);
+	free_empty(temp_list);
+	// list_print("child 2.5", temp_list);
 	// list_print("child 3", temp_list);
+	// list_print("child 5", temp_list);
+	// list_print("child 4", temp_list);
 	// temp = vector_to_list(&command);
 	// free_space(temp);
 	// free_empty(temp);
+	list_tie(temp_list);
 	free_space(temp_list);
 	// free_space(temp_list);
 	free_empty(temp_list);
+	// list_print("CHILD_RUN", temp_list);
 	// vector_free(command);
 	free(command);
 	command = list_to_vector(temp_list);

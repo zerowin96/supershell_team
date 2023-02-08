@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/07 17:30:36 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 15:49:31 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void		env_expansion(t_list *list, char **envp);
 // void		env_expansion_string(t_list **list, char **envp)
 // void		env_expansion_string(char **string, char **envp);
 void		env_expansion_string(t_list **list, char **envp);
+// void	env_expansion_string(t_list *cursor, char **envp);
 char		**env_split(char *command);
 void		free_empty(t_list *list);
 char		*assemble(t_list *dis);
@@ -121,5 +122,5 @@ char	**whitespace_split(char *string);
 void	list_whitespace_split(t_list *list);
 void	list_tie(t_list *temp);
 void	vector_print(char *string, char **vector);
-
+void	list_tie_2(t_list *temp);
 #endif
