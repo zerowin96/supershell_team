@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:32:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:07:53 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:39:19 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -435,10 +435,8 @@ void	env_expansion_string(t_list **cursor, char **envp)
 
 
 
-	int temp_number = 0;
+	// int temp_number = 0;
 	free(new);
-
-
 
 }
 

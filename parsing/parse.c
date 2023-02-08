@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:27:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 17:25:55 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:32:21 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ t_list	*first_parsing(char **line, char **envp, int prev_result)
 		free_list(list);
 		return (0);
 	}
-	write(2, " 00.01 : ", 8);
-	system("leaks a.out | grep total");
+	// write(2, " 00.01 : ", 8);
+	// system("leaks a.out | grep total");
 	return (list);
 }
 

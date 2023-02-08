@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:06:53 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:39:59 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ char	*reading(void)
 	if (line && *line)
 		add_history(line);
 	else
+	{
 		free(line);
+		line = 0;
+	}
 	return (line);
 }
 
@@ -62,8 +65,20 @@ int	main_while_init(t_list **list, char **line, int *result, t_copy *env)
 {
 	handle_signal();
 	(*line) = reading();
+	// if ((*line) == 0)
+	// 	return (1);
+	// if ((**line) == 0)
+	// {
+	// 	free(*line);
+	// 	(*line) = 0;
+	// 	return (1);
+	// }
 	if ((*line) == 0 || (**line) == 0)
+	{
+		free(*line);
+		(*line) = 0;
 		return (1);
+	}
 	(*list) = first_parsing(line, env->cp_envp, (*result));
 	if ((*list) == 0)
 		return (1);

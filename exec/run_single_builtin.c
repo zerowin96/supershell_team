@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:09:23 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:33:46 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,6 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 	if (temp_string)
 		free(temp_string);
 	main_builtin_fd_post(fd);
+	system("leaks a.out | grep total");
 	return (1);
 }
