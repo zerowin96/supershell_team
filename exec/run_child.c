@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 15:13:37 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/08 16:00:56 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,7 @@ void	child_process_run(char **command, char **envp)
 	errcheck = 0;
 	paths = get_path_split(envp);
 	path_index = check_access(command[0], paths, X_OK);
-	// printf("path index == %d\n", path_index);
-	// CHECK IF INPUT IS FOLDER OR NOT
-	// CHECK IF 
-	// quote_out_command_unhead(&command);
-	// printf("%s is running\n", command[0]);
-	// vector_print("child process run", command);
-	// printf("----------\n");
+
 	if (path_index == 1)
 		errcheck = execve(command[0], command, envp);
 	else if (path_index > 1)
@@ -94,48 +88,20 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 	if (tnum)
 		exit (tnum);
 	
-	// static int index;
-	// printf("------child_process_------\n");
-	// list_print("list", *list);
-	// vector_print("vector", command);
 
 
-	//test
 	t_list	*temp_list;
-	// free_list(temp_list);
 	temp_list = vector_to_list(&command);
 	ft_lstadd_front(&temp_list, ft_lstnew(0));
-	// list_print("child 0", temp_list);
-	// list_whitespace_split(temp_list);
 	qmark_expansion(temp_list, result);
-	// list_print("child 1", temp_list);
 	env_expansion(temp_list, e->cp_envp);
-	// list_print("child 2", temp_list);
-	// list_tie(temp_list);
 	quote_trim(temp_list);
 	free_empty(temp_list);
-	// list_print("child 2.5", temp_list);
-	// list_print("child 3", temp_list);
-	// list_print("child 5", temp_list);
-	// list_print("child 4", temp_list);
-	// temp = vector_to_list(&command);
-	// free_space(temp);
-	// free_empty(temp);
 	list_tie(temp_list);
 	free_space(temp_list);
-	// free_space(temp_list);
 	free_empty(temp_list);
-	// list_print("CHILD_RUN", temp_list);
-	// vector_free(command);
 	free(command);
 	command = list_to_vector(temp_list);
-	// command = list_to_vector(*list);
-	// printf("child process\n");
-	// list_print("child process", temp_list);
-	// vector_print("child FIN", command);
-	// list_print("child FIN", temp_list);
-	// printf("command : &&%s&&\n", command[0]);
-	//test
 	child_process_fd_pre(fd);
 	if (command == 0 || command[0] == 0)
 	{
@@ -152,7 +118,6 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 	}
 	free(temp_string);
 	free_space(*list);
-	// system("leaks a.out");
 	child_process_run(command, e->cp_envp);
 	exit (127);
 }
