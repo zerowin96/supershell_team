@@ -3,29 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:19:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 19:37:57 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/09 13:59:49 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
 
+void	print_art(void)
+{
+	char	buf[2];
+	int		fd;
+	int		r;
+	int		i;
+
+	i = 1;
+	fd = open("/Users/yeham/Desktop/art.txt", O_RDONLY);
+	if (fd < 0)
+		return ;
+	else
+	{
+		r = read(fd, buf, 1);
+		while (r > 0)
+		{
+			buf[1] = '\0';
+			printf("\033[0;3%dm%s\033[0m", i, buf);
+			r = read(fd, buf, 1);
+			i++;
+			if (i == 7)
+				i = 1;
+		}
+	}
+	printf("\n");
+}
+
 void	main_init_env(t_copy *env, char **envp, char **argv, int argc)
 {
-	int	i;
+	int	index;
 
+	print_art();
 	if (argv)
 		argc = 0;
 	env->cp_envp = 0;
 	env->onlyenv = 0;
-	i = 0;
-	while (envp[i])
+	index = 0;
+	while (envp[index])
 	{
-		env->onlyenv = vector_add(env->onlyenv, envp[i]);
-		env->cp_envp = vector_add(env->cp_envp, envp[i]);
-		i++;
+		env->onlyenv = vector_add(env->onlyenv, envp[index]);
+		env->cp_envp = vector_add(env->cp_envp, envp[index]);
+		index++;
 	}
 }
 
@@ -52,14 +80,12 @@ int	main(int argc, char **argv, char **envp)
 	main_init_env(&env, envp, argv, argc);
 	while (1)
 	{
-		if (main_while_init(&list, &line, &result, &env))
+		if (main_while_init(&list, &line, &result))
 		{
 			free(line);
 			continue ;
 		}
-		if (main_single_builtin_check(&list, &result, &env))
-			;
-		else
+		if (!(main_single_builtin_check(&list, &result, &env)))
 		{
 			handle_signal();
 			result = command_run(list->next, &env, result);

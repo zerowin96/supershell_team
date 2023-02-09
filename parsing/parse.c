@@ -6,27 +6,24 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:27:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 22:12:02 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 14:58:15 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
 #include <stdlib.h>
 
-t_list	*parsing(char *line, char **envp)
+t_list	*parsing(char *line)
 {
 	t_list	*list;
-	int index;
 
 	list = ft_lstnew(0);
-	tokenize(list, line);
-	if (quote_check(list))
-		return (0);
+	tokenize_2(list, line);
 	return (list);
 }
 
 char	*listjoin(t_list *list)
-{
+{	
 	t_list	*cursor;
 	char	*temp;
 	char	*temp1;
@@ -45,7 +42,7 @@ char	*listjoin(t_list *list)
 	return (temp);
 }
 
-t_list	*first_parsing(char **line, char **envp, int prev_result)
+t_list	*first_parsing(char **line)
 {
 	t_list	*list;
 
@@ -59,4 +56,3 @@ t_list	*first_parsing(char **line, char **envp, int prev_result)
 	}
 	return (list);
 }
-

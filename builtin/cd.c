@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 19:07:18 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/08 19:08:01 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/09 12:00:54 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	ft_cd(char *next, t_copy *env)
 	}
 	else
 	{
-		write(2, "No such file or directory\n", 27);
+		perror("");
 		return (1);
 	}
 	return (0);

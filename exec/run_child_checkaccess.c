@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:14:40 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/03 14:43:18 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/08 23:43:59 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,3 @@ int	check_access(char *name, char **paths, int permission)
 	}
 	return (0);
 }
-
-

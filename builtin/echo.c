@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 20:57:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/08 21:50:24 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/09 13:57:46 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	running_echo(t_list *head)
 		write(1, "\n", 1);
 }
 
-void	ft_echo(char *line, t_copy *env)
+void	ft_echo(char **command)
 {
 	t_list	*head;
 	t_list	*temp;
@@ -71,7 +71,7 @@ void	ft_echo(char *line, t_copy *env)
 	flag = 0;
 	check = 0;
 	head = ft_lstnew(0);
-	blank_list_module(env_split(line), env, head);
+	blank_list_module(command, head);
 	temp = head;
 	head = head ->next;
 	running_echo(head);

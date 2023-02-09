@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:29:16 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 21:23:45 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 10:59:50 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,65 +67,20 @@ void	tokenize_separator(t_list *list, char *string, int *index)
 
 void	tokenize_space(t_list *list, char *string, int *index)
 {
-	int start = (*index);
+	int		start;
+	int		length;
+	char	*temp;
+	int		space_len;
 
+	start = (*index);
 	while (string[(*index)] >= 9 && (string[(*index)] <= 13 \
 	|| string[(*index)] == ' '))
 		(*index)++;
-	int finish = ((*index) - 1);
-	int	length = finish - start + 1;
-	char *temp = (char *)ft_calloc(length + 1, sizeof(char));
-	int i = 0;
-	while (i < length)
-		temp[i++] = ' ';
+	length = ((*index) - 1) - start + 1;
+	temp = (char *)ft_calloc(length + 1, sizeof(char));
+	space_len = 0;
+	while (space_len < length)
+		temp[space_len++] = ' ';
 	partial_string(list, temp, 0, length);
 	free(temp);
-}
-
-void	tokenize_2(t_list *list, char *string)
-{
-	int	index;
-
-	index = 0;
-	while (string[index])
-	{
-		if ((string[index] >= 9 && string[index] <= 13) || string[index] == ' ')
-			tokenize_space(list, string, &index);
-		if (is_separator(&string[index]))
-			tokenize_separator(list, string, &index);
-		else if (string[index] && string[index] == '$')
-			tokenize_expansion(list, string, &index);
-		else if (string[index] && string[index] != ' ')
-			tokenize_string(list, string, &index);
-		if (string[index] == 0)
-			break ;
-		index++;
-	}
-}
-
-void	tokenize(t_list *list, char *string)
-{
-	int		index;
-
-	index = 0;
-	while (string[index])
-	{
-		if ((string[index] >= 9 && string[index] <= 13) || string[index] == ' ')
-		{
-			if (index)
-				partial_string(list, " ", 0, 1);
-			while (string[index] >= 9 && (string[index] <= 13 \
-			|| string[index] == ' '))
-				index++;
-		}
-		if (is_separator(&string[index]))
-			tokenize_separator(list, string, &index);
-		else if (string[index] && string[index] == '$')
-			tokenize_expansion(list, string, &index);
-		else if (string[index] && string[index] != ' ')
-			tokenize_string(list, string, &index);
-		if (string[index] == 0)
-			break ;
-		index++;
-	}
 }

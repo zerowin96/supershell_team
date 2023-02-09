@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 11:41:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/03 14:58:27 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/08 22:45:20 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
-#include <signal.h>
-#include <sys/signal.h>
 
 void	ft_signal(int signum)
 {

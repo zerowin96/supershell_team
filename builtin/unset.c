@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 20:13:34 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/02 18:56:53 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/09 13:58:43 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	erase_env(t_copy *env, char ***key_env, char *string)
 	}	
 }
 
-void	ft_unset(char *line, t_copy *env)
+void	ft_unset(char **command, t_copy *env)
 {
 	char	**key_env;
 	char	**key_export;
@@ -92,7 +92,7 @@ void	ft_unset(char *line, t_copy *env)
 	t_list	*temp;
 
 	head = ft_lstnew(0);
-	blank_list_module(env_split(line), env, head);
+	blank_list_module(command, head);
 	temp = head;
 	head = head->next;
 	if (head->next == NULL)

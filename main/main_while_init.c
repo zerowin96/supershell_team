@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_while_init.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 20:35:16 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/09 14:00:29 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,17 @@ char	*reading(void)
 	return (line);
 }
 
-int	main_while_init(t_list **list, char **line, int *result, t_copy *env)
+int	main_while_init(t_list **list, char **line, int *result)
 {
 	handle_signal();
 	(*line) = reading();
-
 	if ((*line) == 0 || (**line) == 0)
 	{
 		free(*line);
 		(*line) = 0;
 		return (1);
 	}
-	(*list) = first_parsing(line, env->cp_envp, (*result));
+	(*list) = first_parsing(line);
 	if ((*list) == 0)
 		return (1);
 	if (command_check((*list)))

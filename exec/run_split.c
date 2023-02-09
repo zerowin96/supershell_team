@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:49:16 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/05 14:58:00 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 12:02:01 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ void	command_split_delspace(char **temp_string)
 	}
 }
 
+void	command_split_h(char ***command, char **string, char *addition)
+{
+	(*command) = vector_add((*command), addition);
+	(*string) = string_connect((*string), addition);
+}
+
 int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 {
 	int	sep;
@@ -60,10 +66,7 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 		if (((char *)(temp->content))[0] == ' ')
 		{
 			if (*command)
-			{
-				(*command) = vector_add((*command), " ");
-				(*string) = string_connect((*string), " ");
-			}
+				command_split_h(command, string, " ");
 		}
 		else if (sep >= 1 && sep <= 4)
 		{
@@ -72,12 +75,8 @@ int	command_split(t_list *temp, int (*fd)[2], char ***command, char **string)
 			temp = temp->next;
 		}
 		else
-		{
-			(*command) = vector_add((*command), (char *)(temp->content));
-			(*string) = string_connect((*string), temp->content);
-		}
+			command_split_h(command, string, (temp->content));
 		temp = temp->next;
 	}
-	// quote_out_command_one(command);
 	return (command_split_delspace(string), 0);
 }

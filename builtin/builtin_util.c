@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_util.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/08 20:45:10 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/09 14:05:17 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ char	*assemble(t_list *dis)
 	char	*a;
 	char	*temp;
 
+	a = 0;
+	if (dis == 0)
+		return (a);
 	temp = ft_strdup("");
 	head = dis;
 	while (head)
@@ -30,34 +33,30 @@ char	*assemble(t_list *dis)
 	return (a);
 }
 
-char	*disassemble_assemble(char *str, char **envp)
+char	*disassemble_assemble(char *str)
 {
 	t_list	*dis;
 	t_list	*head;
-	char	*a;
+	char	*result;
 
-	dis = parsing(str, envp);
+	dis = parsing(str);
 	head = dis;
-	quote_trim(head);
-	free_empty(head);
-	a = assemble(head);
+	//free_empty(head);
+	result = assemble(head);
 	free_list(dis);
-	return (a);
+	return (result);
 }
 
-void	blank_list_module(char **string, t_copy *env, t_list *new)
+void	blank_list_module(char **string, t_list *new)
 {
 	char	*temp;
 	int		i;
 
 	i = 0;
-	// printf("blank list module\n");
 	while (string[i])
 	{
-		temp = disassemble_assemble(string[i], env->cp_envp);
+		temp = disassemble_assemble(string[i]);
 		ft_lstadd_back(&new, ft_lstnew(temp));
-		free(string[i]);
 		i++;
 	}
-	free(string);
 }

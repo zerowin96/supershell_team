@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeham <yeham@student.42.fr>                +#+  +:+       +#+        */
+/*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:56:08 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/08 22:06:23 by yeham            ###   ########.fr       */
+/*   Updated: 2023/02/09 13:58:27 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,15 @@ void	find_equals_sign(char *string, t_copy *env)
 		same_check(env, string);
 }
 
-int	ft_export(char *line, t_copy *env)
+int	ft_export(char **command, t_copy *env)
 {
+	int		result;
 	t_list	*temp;
 	t_list	*head;
 
+	result = 0;
 	head = ft_lstnew(0);
-	blank_list_module(env_split(line), env, head);
+	blank_list_module(command, head);
 	temp = head;
 	head = head->next;
 	if (head->next == NULL)
@@ -98,14 +100,14 @@ int	ft_export(char *line, t_copy *env)
 	{
 		if (export_error_check(head->next->content))
 		{
-			free_list(temp);
 			write(2, "not a valid identifier\n", 23);
-			return (1);
+			head = head->next;
+			result = 1;
+			continue ;
 		}
 		find_equals_sign(head->next->content, env);
 		head = head->next;
 	}
 	free_list(temp);
-	free(line);
-	return (0);
+	return (result);
 }
