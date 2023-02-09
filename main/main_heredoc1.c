@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:56:19 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 14:45:44 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 21:43:19 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ int	here_doc_help2(int fd, char *limiter)
 	{
 		parent_handle_signal();
 		waitpid(pid, &status, 0);
-		if (status >> 8)
-			return (status >> 8);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		return (WTERMSIG(status) + 128);
 	}
 	return (0);
 }

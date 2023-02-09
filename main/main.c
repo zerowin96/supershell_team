@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:19:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 21:34:37 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 21:49:36 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		if (!(main_single_builtin_check(&list, &result, &env)))
-		{
-			handle_signal();
 			result = command_run(list->next, &env, result);
-		}
 		delete_local_file(list->next);
 		free(line);
 		free_list(list);
