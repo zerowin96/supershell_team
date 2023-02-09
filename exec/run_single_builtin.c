@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 17:17:04 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 17:43:18 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 	tnum = command_split((*list)->next, fd, &command, &temp_string);
 	if (tnum)
 	{
+		vector_free(command);
+		free(temp_string);
 		(*result) = tnum;
 		return (tnum);
 	}

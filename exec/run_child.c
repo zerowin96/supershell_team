@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/08 22:47:52 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 17:43:18 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,11 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 	child_handle_signal();
 	tnum = command_split(*list, fd, &command, &temp_string);
 	if (tnum)
+	{
+		vector_free(command);
+		free(temp_string);
 		exit (tnum);
+	}
 	parse_expand(&command, result, e);
 	child_process_fd_pre(fd);
 	if (command == 0 || command[0] == 0)
