@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 14:04:59 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 17:17:04 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,22 +52,14 @@ void	parse_expand(char ***command, int result, t_copy *env)
 
 	temp_list = vector_to_list(command);
 	free(*command);
-	list_print("   1", temp_list);
 	ft_lstadd_front(&temp_list, ft_lstnew(0));
 	qmark_expansion(temp_list, result);
-	list_print("   2", temp_list);
 	env_expansion(temp_list, env->cp_envp);
-	list_print("   3", temp_list);
 	quote_trim(temp_list);
-	list_print("   4", temp_list);
 	free_empty(temp_list);
-	list_print("   5", temp_list);
 	list_tie(temp_list);
-	list_print("   6", temp_list);
 	free_space(temp_list);
-	list_print("   7", temp_list);
 	free_empty(temp_list);
-	list_print("   8", temp_list);
 	(*command) = list_to_vector(temp_list);
 	free_list(temp_list);
 }

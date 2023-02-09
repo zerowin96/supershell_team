@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 13:59:59 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 17:17:23 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@
 # define PREV 0
 # define NEXT 1
 
-// typedef struct s_cnt
-// {
-// 	char	**order;
-// 	int		pipe_cnt;
-// 	int		q_flag;
-// }	t_cnt;
 typedef struct s_copy
 {
 	char	**cp_envp;
@@ -58,10 +52,7 @@ void		vector_free(char **vector);
 int			string_compare(char *string, char *compare);
 int			get_vector_len(char **vector);
 void		env_expansion(t_list *list, char **envp);
-// void		env_expansion_string(t_list **list, char **envp)
-// void		env_expansion_string(char **string, char **envp);
 void		env_expansion_string(t_list **list, char **envp);
-// void	env_expansion_string(t_list *cursor, char **envp);
 char		**env_split(char *command);
 void		free_empty(t_list *list);
 char		*assemble(t_list *dis);
@@ -104,26 +95,17 @@ void		qmark_expansion(t_list *list, int pres);
 char		*get_filename(void);
 int			export_error_check(char *string);
 void		child_command_error(char *command, int errcheck);
-
-// void		list_print(char *string, t_list *list);
 t_list		*vector_to_list(char ***vector);
 char		**list_to_vector(t_list *list);
 int			ml_iswhite(char c);
-// char		**whitespace_split(char *string);
-// void		list_whitespace_split(t_list *list);
 void		list_tie(t_list *temp);
-
-// void		list_tie_2(t_list *temp);
 void		ft_exit(char *command, char *next_command);
 void		parse_expand(char ***command, int result, t_copy *env);
-
 void		tokenize_space(t_list *list, char *string, int *index);
 void		tokenize_separator(t_list *list, char *string, int *index);
 void		tokenize_string(t_list *list, char *string, int *index);
 void		tokenize_expansion(t_list *list, char *string, int *index);
 void		partial_string(t_list *list, char *string, int start, int finish);
-void		vector_print(char *string, char **vector);
-void		list_print(char *string, t_list *list);
 char		**env_expansion_string_vector(char *string);
 void		env_expansion_v2elst(t_list **temp_expand, \
 				char ***vector, char **envp);
