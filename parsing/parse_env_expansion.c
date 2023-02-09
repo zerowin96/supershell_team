@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:32:31 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 16:15:19 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 19:26:19 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*env_expansion_string_a_env(char **envp, char *temp)
 	char	*key;
 
 	index = ft_strlen(temp);
-	key = (char *)ft_calloc(index, sizeof(char));
+	key = (char *)ft_calloc(index + 1, sizeof(char));
 	ft_memmove(key, &temp[1], index - 1);
 	key[index - 1] = '=';
 	temp2 = 0;
