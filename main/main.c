@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:19:11 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 13:59:49 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 21:34:37 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	main_init_env(t_copy *env, char **envp, char **argv, int argc)
 	int	index;
 
 	print_art();
-	if (argv)
+	if (!argv)
 		argc = 0;
 	env->cp_envp = 0;
 	env->onlyenv = 0;
