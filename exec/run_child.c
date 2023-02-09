@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:54:33 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 17:43:18 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 18:50:34 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,7 @@ void	child_process(t_list **list, t_copy *e, int fd[2][2], int result)
 		exit (0);
 	}
 	if (builtin_check(command[0]))
-	{
-		result = builtin_exec(command, e);
-		exit (result);
-	}
+		exit (builtin_exec(command, e));
 	child_process_run(command, e->cp_envp);
 	exit (127);
 }

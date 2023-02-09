@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:59:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 17:43:18 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 18:49:41 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,5 @@ int	main_builtin(t_list **list, int *result, t_copy *env)
 	main_builtin_fd_mid(fd);
 	(*result) = builtin_exec(command, env);
 	free(temp_string);
-	main_builtin_fd_post(fd);
-	return (1);
+	return (main_builtin_fd_post(fd), 1);
 }
