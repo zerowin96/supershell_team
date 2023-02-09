@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:11:25 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/02 19:02:36 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/09 18:55:28 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ int	command_split_separator_read(t_list *temp, int (*fd)[2], int sep)
 	if (fd[PREV][READ] < 0)
 	{
 		if (sep == 1)
-			perror("file not found");
+			perror("");
 		else
-			perror("heredoc temp file error");
+			perror("");
 		return (1);
 	}
 	return (0);
@@ -35,7 +35,7 @@ int	command_split_separator_write(t_list *temp, int (*fd)[2], int sep)
 		fd[NEXT][WRITE] = open(((char *)(temp->next->content)), \
 		O_RDWR | O_APPEND | O_CREAT, 0644);
 	if (fd[NEXT][WRITE] < 0)
-		return (perror("file open error"), 1);
+		return (perror(""), 1);
 	return (0);
 }
 
