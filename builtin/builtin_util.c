@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 17:15:58 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/09 14:05:17 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/09 16:14:55 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ char	*disassemble_assemble(char *str)
 
 	dis = parsing(str);
 	head = dis;
-	//free_empty(head);
 	result = assemble(head);
 	free_list(dis);
 	return (result);
