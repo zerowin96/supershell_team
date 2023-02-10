@@ -6,7 +6,7 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/02/10 09:30:10 by minsulee         ###   ########.fr        #
+#    Updated: 2023/02/10 10:31:26 by minsulee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,8 +28,6 @@ SRCS	:= $(BUILTIN_SRCS) $(ETC_SRCS) $(EXEC_SRCS) $(MAIN_SRCS) $(PARSE_SRCS)
 
 OBJS = $(SRCS:.c=.o)
 
-DEPS = $(SRCS:.c=.d)
-
 all : $(NAME)
 
 $(NAME) : $(OBJS) $(HEADER) libft/libft.a 
@@ -43,7 +41,7 @@ libft/libft.a :
 
 clean :
 	make -C libft clean
-	rm -f $(OBJS) $(DEPS)
+	rm -f $(OBJS)
 
 fclean :
 	make clean
