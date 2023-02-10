@@ -6,13 +6,13 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/02/10 09:22:17 by minsulee         ###   ########.fr        #
+#    Updated: 2023/02/10 09:30:10 by minsulee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror -MMD
+CFLAGS = -Wall -Wextra -Werror
 
 CMPFLAGS = libft/libft.a -lreadline -L${HOME}/.brew/opt/readline/lib
 INFLAGS	= -I${HOME}/.brew/opt/readline/include
