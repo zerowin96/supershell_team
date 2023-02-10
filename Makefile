@@ -6,7 +6,7 @@
 #    By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 10:09:55 by yeham             #+#    #+#              #
-#    Updated: 2023/02/09 17:33:05 by minsulee         ###   ########.fr        #
+#    Updated: 2023/02/10 09:22:17 by minsulee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ ETC_SRCS = $(addprefix etc/, signal.c signal2.c vector.c vector2.c)
 EXEC_SRCS = $(addprefix exec/, run_builtin.c run_child_checkaccess.c run_child_errcheck.c run_child.c run_command.c run_single_builtin.c run_split.c run_split_sep.c run_util_general.c run_util_quote.c)
 MAIN_SRCS = $(addprefix main/, main.c main_heredoc1.c main_heredoc2.c main_while_init.c)
 PARSE_SRCS = $(addprefix parsing/, parse.c parse_env_expansion.c parse_env_expansion2.c parse_qm_expansion.c parse_sep.c parse_tokenize.c parse_tokenize2.c parse_util.c parse_util2.c)
+HEADER	= main.h
 
 SRCS	:= $(BUILTIN_SRCS) $(ETC_SRCS) $(EXEC_SRCS) $(MAIN_SRCS) $(PARSE_SRCS)
 
@@ -31,13 +32,13 @@ DEPS = $(SRCS:.c=.d)
 
 all : $(NAME)
 
-$(NAME) : $(OBJS) libft/libft.a
+$(NAME) : $(OBJS) $(HEADER) libft/libft.a 
 	cc $(CFLAGS) $(OBJS) -o $(NAME) $(CMPFLAGS)
 
 libft/libft.a :
 	make -C libft bonus
 
-%.o : %.c
+%.o : %.c $(HEADER)
 	cc $(CFLAGS) -c $< -o $@ $(INFLAGS)
 
 clean :
@@ -54,5 +55,3 @@ re :
 	make all
 
 .PHONY : all clean fclean re
-
--include $(DEPS)

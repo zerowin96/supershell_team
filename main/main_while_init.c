@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:09:01 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 21:33:47 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/10 09:03:31 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ char	*reading(void)
 int	main_while_init(t_list **list, char **line, int *result)
 {
 	handle_signal();
+	g_result = 0;
 	(*line) = reading();
+	if (g_result)
+		(*result) = g_result;
 	if ((*line) == 0 || (**line) == 0)
 	{
 		free(*line);

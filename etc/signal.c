@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 11:41:32 by yeham             #+#    #+#             */
-/*   Updated: 2023/02/08 22:45:20 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/10 09:02:36 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	ft_signal(int signum)
 	printf("\n");
 	rl_replace_line("", 1);
 	rl_redisplay();
+	g_result = 130;
 }
 
 void	child_signal(int signum)

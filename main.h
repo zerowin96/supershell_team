@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 18:45:46 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 17:17:23 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/10 09:15:47 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # define WRITE 1
 # define PREV 0
 # define NEXT 1
+
+int		g_result;
 
 typedef struct s_copy
 {

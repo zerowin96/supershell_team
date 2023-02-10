@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:55:59 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/09 21:35:00 by minsulee         ###   ########.fr       */
+/*   Updated: 2023/02/10 09:07:48 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	status_return(int pid)
 	}
 	return (ret_status);
 }
-
 
 void	command_run_fd_prev(t_list *temp, int (*fd)[2])
 {
