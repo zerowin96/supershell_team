@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 16:39:02 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/10 08:57:25 by minsulee         ###   ########.fr       */
+/*   Created: 2023/01/10 19:17:01 by yeham             #+#    #+#             */
+/*   Updated: 2023/02/02 18:52:18 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../main.h"
 
-char	*ft_strdup(const char *src)
+void	ft_env(t_copy *env)
 {
-	char	*dst;
-	size_t	src_len;
+	int	i;
 
-	src_len = ft_strlen(src);
-	dst = (char *)ml_malloc((src_len + 1) * sizeof(char));
-	if (dst == 0)
-		return (0);
-	dst[src_len] = 0;
-	ft_strlcpy(dst, src, src_len + 1);
-	return (dst);
+	i = 0;
+	while (env->onlyenv[i])
+	{
+		printf("%s\n", env->onlyenv[i]);
+		i++;
+	}
 }

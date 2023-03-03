@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 21:25:44 by minsulee          #+#    #+#             */
-/*   Updated: 2022/07/20 13:42:06 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/10 08:56:41 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	char	*ret_str_temp;
 	int		index;
 
-	ret_str = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
+	ret_str = (char *)ml_malloc((ft_strlen(s) + 1) * sizeof(char));
 	if (ret_str == 0)
 		return (ret_str);
 	ft_bzero(ret_str, (ft_strlen(s) + 1));

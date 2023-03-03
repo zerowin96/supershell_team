@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:12:04 by minsulee          #+#    #+#             */
-/*   Updated: 2022/07/19 14:34:22 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/10 08:56:22 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 
 	first_char = first_char_finder(s1, set);
 	index = get_last_char_idx(first_char, set);
-	ret = (char *)malloc((index + 1) * sizeof(char));
+	ret = (char *)ml_malloc((index + 1) * sizeof(char));
 	if (ret == 0)
 		return (ret);
 	ft_bzero(ret, index + 1);

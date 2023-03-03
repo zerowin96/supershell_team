@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 16:06:16 by minsulee          #+#    #+#             */
-/*   Updated: 2022/07/20 13:58:08 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/10 09:05:41 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*new_str_gen(char const *s, char c)
 	str_len = 0;
 	while ((s[str_len] != c) && s[str_len])
 		str_len ++;
-	ret = (char *)malloc((str_len + 1) * sizeof(char));
+	ret = (char *)ml_malloc((str_len + 1) * sizeof(char));
 	if (ret == 0)
 		return (ret);
 	ft_bzero(ret, str_len + 1);
@@ -85,7 +85,7 @@ char	**ft_split(char const *s, char c)
 	size_t	ret_len;
 
 	ret_len = new_str_counter(s, c);
-	ret = (char **)malloc((ret_len + 1) * sizeof(char *));
+	ret = (char **)ml_malloc((ret_len + 1) * sizeof(char *));
 	if (ret == 0)
 		return (ret);
 	ft_bzero(ret, ret_len + 1);

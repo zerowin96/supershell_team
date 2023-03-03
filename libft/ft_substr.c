@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:18:02 by minsulee          #+#    #+#             */
-/*   Updated: 2022/07/19 21:46:57 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/10 08:56:29 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		len = 0;
 	else if (len >= ft_strlen(s + start))
 		len = ft_strlen(s + start);
-	ret = (char *)malloc((len + 1) * sizeof(char));
+	ret = (char *)ml_malloc((len + 1) * sizeof(char));
 	if (ret == 0)
 		return (0);
 	ft_bzero(ret, len + 1);

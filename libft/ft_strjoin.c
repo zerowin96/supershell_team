@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 11:03:42 by minsulee          #+#    #+#             */
-/*   Updated: 2022/07/19 21:47:17 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/10 08:57:19 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	new_str_len = s1_len + s2_len;
-	new_str = (char *)malloc((new_str_len + 1) * sizeof(char));
+	new_str = (char *)ml_malloc((new_str_len + 1) * sizeof(char));
 	if (new_str == 0)
 		return (new_str);
 	ft_bzero(new_str, new_str_len + 1);

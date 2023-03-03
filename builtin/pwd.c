@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 16:39:02 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/10 08:57:25 by minsulee         ###   ########.fr       */
+/*   Created: 2023/01/17 14:44:52 by yeham             #+#    #+#             */
+/*   Updated: 2023/02/02 18:56:58 by minsulee         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../main.h"
 
-char	*ft_strdup(const char *src)
+void	ft_pwd(void)
 {
-	char	*dst;
-	size_t	src_len;
+	char	*pwd;
 
-	src_len = ft_strlen(src);
-	dst = (char *)ml_malloc((src_len + 1) * sizeof(char));
-	if (dst == 0)
-		return (0);
-	dst[src_len] = 0;
-	ft_strlcpy(dst, src, src_len + 1);
-	return (dst);
+	pwd = 0;
+	pwd = getcwd(NULL, 0);
+	printf("%s\n", pwd);
+	free(pwd);
 }

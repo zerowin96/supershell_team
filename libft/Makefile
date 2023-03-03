@@ -35,7 +35,8 @@ ft_strrchr.c \
 ft_strtrim.c \
 ft_substr.c \
 ft_tolower.c \
-ft_toupper.c
+ft_toupper.c \
+ft_ml_malloc.c
 
 SRCS_BONUS := ft_lstadd_back.c \
 ft_lstadd_front.c \
@@ -50,6 +51,7 @@ ft_lstsize.c
 OBJS	:= $(SRCS:.c=.o)
 OBJS_BONUS :=	$(SRCS_BONUS:.c=.o)
 NAME	:= libft.a
+HEADER	:= libft.h
 
 ifdef WITH_BONUS
 	OBJECTS = $(OBJS) $(OBJS_BONUS)
@@ -59,10 +61,10 @@ endif
 
 all : $(NAME)
 
-$(NAME) : $(OBJECTS)
+$(NAME) : $(OBJECTS) $(HEADER)
 	$(AR) $(ARFLAGS) $@ $?
 
-%.o : %.c
+%.o : %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean :

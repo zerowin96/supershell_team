@@ -6,7 +6,7 @@
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 20:23:17 by minsulee          #+#    #+#             */
-/*   Updated: 2022/07/19 21:42:38 by minsulee         ###   ########seoul.kr  */
+/*   Updated: 2023/02/10 08:58:49 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_itoa(int n)
 	if (n < 0)
 		sign = 1;
 	ret_str_len = decimal_len(n) + sign + 1;
-	ret_str = (char *)malloc((ret_str_len) * sizeof(char));
+	ret_str = (char *)ml_malloc((ret_str_len) * sizeof(char));
 	if (ret_str == 0)
 		return (ret_str);
 	ft_bzero(ret_str, ret_str_len);

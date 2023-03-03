@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_ml_malloc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minsulee <minsulee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 16:39:02 by minsulee          #+#    #+#             */
-/*   Updated: 2023/02/10 08:57:25 by minsulee         ###   ########.fr       */
+/*   Created: 2023/02/10 08:51:28 by minsulee          #+#    #+#             */
+/*   Updated: 2023/02/10 09:20:42 by minsulee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <unistd.h>
 
-char	*ft_strdup(const char *src)
+void	*ml_malloc(size_t size)
 {
-	char	*dst;
-	size_t	src_len;
+	void	*ret;
 
-	src_len = ft_strlen(src);
-	dst = (char *)ml_malloc((src_len + 1) * sizeof(char));
-	if (dst == 0)
-		return (0);
-	dst[src_len] = 0;
-	ft_strlcpy(dst, src, src_len + 1);
-	return (dst);
+	ret = malloc(size);
+	if (ret == 0)
+	{
+		write(2, "\n", 1);
+		write(2, "Memory Allocation Error\n", 25);
+		exit(1);
+	}
+	return (ret);
 }
